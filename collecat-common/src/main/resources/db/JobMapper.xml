@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sf.collecat.common.mapper.JobMapper" >
+  <resultMap id="BaseResultMap" type="com.sf.collecat.common.model.Job" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="time_field" property="timeField" jdbcType="VARCHAR" />
+    <result column="time_field_start" property="timeFieldStart" jdbcType="TIMESTAMP" />
+    <result column="time_field_end" property="timeFieldEnd" jdbcType="TIMESTAMP" />
+    <result column="job_sql" property="jobSql" jdbcType="VARCHAR" />
+    <result column="mysql_url" property="mysqlUrl" jdbcType="VARCHAR" />
+    <result column="mysql_username" property="mysqlUsername" jdbcType="VARCHAR" />
+    <result column="mysql_password" property="mysqlPassword" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="modified_time" property="modifiedTime" jdbcType="TIMESTAMP" />
+    <result column="kafka_topic" property="kafkaTopic" jdbcType="VARCHAR" />
+    <result column="kafka_url" property="kafkaUrl" jdbcType="VARCHAR" />
+    <result column="kafka_cluster_name" property="kafkaClusterName" jdbcType="VARCHAR" />
+    <result column="kafka_topic_tokens" property="kafkaTopicTokens" jdbcType="VARCHAR" />
+    <result column="kafka_message_size" property="kafkaMessageSize" jdbcType="INTEGER" />
+    <result column="message_format" property="messageFormat" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="node_assigned_to" property="nodeAssignedTo" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, time_field, time_field_start, time_field_end, job_sql, mysql_url, mysql_username, 
+    mysql_password, created_time, modified_time, kafka_topic, kafka_url, kafka_cluster_name, 
+    kafka_topic_tokens, kafka_message_size, message_format, status, node_assigned_to
+  </sql>
+  <select id="selectAllUncompletedByNodeID" resultType="com.sf.collecat.common.model.Job" parameterType="java.lang.Integer">
+    select
+    *
+    from job
+    where status = 0
+    and node_assigned_to = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllExceptionJob" resultType="com.sf.collecat.common.model.Job">
+    select
+    *
+    from job
+    where status = 2
+  </select>
+  <select id="selectAllJob" resultType="com.sf.collecat.common.model.Job">
+    select
+    *
+    from job
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    *
+    from job
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from job
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sf.collecat.common.model.Job" useGeneratedKeys="true" keyProperty="id">
+    insert into job (id, time_field, time_field_start,
+      time_field_end, job_sql, mysql_url, 
+      mysql_username, mysql_password, created_time, 
+      modified_time, kafka_topic, kafka_url, 
+      kafka_cluster_name, kafka_topic_tokens, kafka_message_size, 
+      message_format, status, node_assigned_to
+      )
+    values (#{id,jdbcType=INTEGER}, #{timeField,jdbcType=VARCHAR}, #{timeFieldStart,jdbcType=TIMESTAMP}, 
+      #{timeFieldEnd,jdbcType=TIMESTAMP}, #{jobSql,jdbcType=VARCHAR}, #{mysqlUrl,jdbcType=VARCHAR}, 
+      #{mysqlUsername,jdbcType=VARCHAR}, #{mysqlPassword,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{modifiedTime,jdbcType=TIMESTAMP}, #{kafkaTopic,jdbcType=VARCHAR}, #{kafkaUrl,jdbcType=VARCHAR}, 
+      #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaTopicTokens,jdbcType=VARCHAR}, #{kafkaMessageSize,jdbcType=INTEGER}, 
+      #{messageFormat,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{nodeAssignedTo,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Job" >
+    insert into job
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="timeField != null" >
+        time_field,
+      </if>
+      <if test="timeFieldStart != null" >
+        time_field_start,
+      </if>
+      <if test="timeFieldEnd != null" >
+        time_field_end,
+      </if>
+      <if test="jobSql != null" >
+        job_sql,
+      </if>
+      <if test="mysqlUrl != null" >
+        mysql_url,
+      </if>
+      <if test="mysqlUsername != null" >
+        mysql_username,
+      </if>
+      <if test="mysqlPassword != null" >
+        mysql_password,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="modifiedTime != null" >
+        modified_time,
+      </if>
+      <if test="kafkaTopic != null" >
+        kafka_topic,
+      </if>
+      <if test="kafkaUrl != null" >
+        kafka_url,
+      </if>
+      <if test="kafkaClusterName != null" >
+        kafka_cluster_name,
+      </if>
+      <if test="kafkaTopicTokens != null" >
+        kafka_topic_tokens,
+      </if>
+      <if test="kafkaMessageSize != null" >
+        kafka_message_size,
+      </if>
+      <if test="messageFormat != null" >
+        message_format,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="nodeAssignedTo != null" >
+        node_assigned_to,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="timeField != null" >
+        #{timeField,jdbcType=VARCHAR},
+      </if>
+      <if test="timeFieldStart != null" >
+        #{timeFieldStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeFieldEnd != null" >
+        #{timeFieldEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobSql != null" >
+        #{jobSql,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlUrl != null" >
+        #{mysqlUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlUsername != null" >
+        #{mysqlUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlPassword != null" >
+        #{mysqlPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null" >
+        #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="kafkaTopic != null" >
+        #{kafkaTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaUrl != null" >
+        #{kafkaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaClusterName != null" >
+        #{kafkaClusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaTopicTokens != null" >
+        #{kafkaTopicTokens,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaMessageSize != null" >
+        #{kafkaMessageSize,jdbcType=INTEGER},
+      </if>
+      <if test="messageFormat != null" >
+        #{messageFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="nodeAssignedTo != null" >
+        #{nodeAssignedTo,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sf.collecat.common.model.Job" >
+    update job
+    <set >
+      <if test="timeField != null" >
+        time_field = #{timeField,jdbcType=VARCHAR},
+      </if>
+      <if test="timeFieldStart != null" >
+        time_field_start = #{timeFieldStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeFieldEnd != null" >
+        time_field_end = #{timeFieldEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jobSql != null" >
+        job_sql = #{jobSql,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlUrl != null" >
+        mysql_url = #{mysqlUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlUsername != null" >
+        mysql_username = #{mysqlUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlPassword != null" >
+        mysql_password = #{mysqlPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null" >
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="kafkaTopic != null" >
+        kafka_topic = #{kafkaTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaUrl != null" >
+        kafka_url = #{kafkaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaClusterName != null" >
+        kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaTopicTokens != null" >
+        kafka_topic_tokens = #{kafkaTopicTokens,jdbcType=VARCHAR},
+      </if>
+      <if test="kafkaMessageSize != null" >
+        kafka_message_size = #{kafkaMessageSize,jdbcType=INTEGER},
+      </if>
+      <if test="messageFormat != null" >
+        message_format = #{messageFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="nodeAssignedTo != null" >
+        node_assigned_to = #{nodeAssignedTo,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sf.collecat.common.model.Job" >
+    update job
+    set time_field = #{timeField,jdbcType=VARCHAR},
+      time_field_start = #{timeFieldStart,jdbcType=TIMESTAMP},
+      time_field_end = #{timeFieldEnd,jdbcType=TIMESTAMP},
+      job_sql = #{jobSql,jdbcType=VARCHAR},
+      mysql_url = #{mysqlUrl,jdbcType=VARCHAR},
+      mysql_username = #{mysqlUsername,jdbcType=VARCHAR},
+      mysql_password = #{mysqlPassword,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      kafka_topic = #{kafkaTopic,jdbcType=VARCHAR},
+      kafka_url = #{kafkaUrl,jdbcType=VARCHAR},
+      kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR},
+      kafka_topic_tokens = #{kafkaTopicTokens,jdbcType=VARCHAR},
+      kafka_message_size = #{kafkaMessageSize,jdbcType=INTEGER},
+      message_format = #{messageFormat,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      node_assigned_to = #{nodeAssignedTo,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

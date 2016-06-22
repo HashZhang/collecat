@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="context1" targetRuntime="MyBatis3">
+        <!-- 抑制警告 -->
+        <property name="suppressTypeWarnings" value="true"/>
+
+        <!-- generate entity时，生成hashcode和equals方法 -->
+        <!-- <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" /> -->
+        <!-- generate entity时，生成serialVersionUID -->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <!-- 这个插件只会增加字符串字段映射到一个JDBC字符的方法 -->
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+        <!-- genenat entity时,生成toString -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+
+        <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/collecat?useUnicode=true&amp;charaterEncoding=utf-8"
+                        userId="root" password="kingzhx9">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- generate Model -->
+        <javaModelGenerator targetPackage="com.sf.collecat.common.model"
+                            targetProject="${project.build.directory}/../src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+            <property name="isMergeable" value="false"/>
+        </javaModelGenerator>
+
+        <!-- generate xml -->
+        <sqlMapGenerator targetPackage="db"
+                         targetProject="${project.build.directory}/../src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- generate Mapper -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.sf.collecat.common.mapper"
+                             targetProject="${project.build.directory}/../src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 
+		  catalog CDATA #IMPLIED
+		  schema CDATA #IMPLIED
+		  tableName CDATA #REQUIRED
+		  alias CDATA #IMPLIED
+		  domainObjectName CDATA #IMPLIED
+		  enableInsert CDATA #IMPLIED
+		  enableSelectByPrimaryKey CDATA #IMPLIED
+		  enableUpdateByPrimaryKey CDATA #IMPLIED
+		  enableDeleteByPrimaryKey CDATA #IMPLIED
+		  enableCountByExample CDATA #IMPLIED
+		  enableUpdateByExample CDATA #IMPLIED
+		  enableDeleteByExample CDATA #IMPLIED
+		  enableSelectByExample CDATA #IMPLIED
+		  selectByExampleQueryId CDATA #IMPLIED
+		  selectByPrimaryKeyQueryId CDATA #IMPLIED
+		  modelType CDATA #IMPLIED
+		  escapeWildcards CDATA #IMPLIED
+		  delimitIdentifiers CDATA #IMPLIED
+		  delimitAllColumns CDATA #IMPLIED
+         -->
+        <table schema="" tableName="job" domainObjectName="Job" modelType="flat"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <!--<table schema="" tableName="node" domainObjectName="Node" modelType="flat"-->
+               <!--enableCountByExample="false" enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false">-->
+        <!--</table>-->
+        <!--<table schema="" tableName="task" domainObjectName="Task" modelType="flat"-->
+               <!--enableCountByExample="false" enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false">-->
+        <!--</table>-->
+
+    </context>
+</generatorConfiguration>
