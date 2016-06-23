@@ -28,8 +28,7 @@ public class JobListener implements TreeCacheListener {
     public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent treeCacheEvent) throws Exception {
         switch (treeCacheEvent.getType()) {
             case NODE_ADDED:
-            case NODE_UPDATED:
-            {
+            case NODE_UPDATED: {
                 newJob(treeCacheEvent.getData().getPath(), new String(treeCacheEvent.getData().getData(), Constants.STRING_ENCODING));
                 break;
             }
@@ -48,8 +47,9 @@ public class JobListener implements TreeCacheListener {
                         String id = path.substring(path.lastIndexOf("/") + 1);
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.append(Constants.JOB_DETAIL_PATH).append("/").append(id);
-                        Job job =  JSON.parseObject(curatorClient.getData(stringBuilder.toString()),Job.class);
-                        while(workerPool.getJobQueue()==null);
+                        Job job = JSON.parseObject(curatorClient.getData(stringBuilder.toString()), Job.class);
+                        while (workerPool.getJobQueue() == null) {
+                        }
                         workerPool.getJobQueue().put(job);
                     }
                 } finally {

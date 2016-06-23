@@ -1,6 +1,7 @@
 package com.sf.collecat.node.zk;
 
 import com.sf.collecat.common.Constants;
+import com.sf.collecat.node.common.NodeConstants;
 import com.sf.collecat.node.executor.WorkerPool;
 import com.sf.collecat.node.zk.listener.JobListener;
 import com.sf.collecat.node.zk.listener.NodeListener;
@@ -48,11 +49,11 @@ public class CuratorClient {
                     .forPath(Constants.TEM_NODE_PATH);
 
         } catch (UnknownHostException e) {
-            LOGGER.error("Cannot get localhost ip address!");
+            LOGGER.error(NodeConstants.CANNOT_GET_IPADDRESS);
         } catch (UnsupportedEncodingException e) {
             LOGGER.error("Unsupporting encoding!");
         } catch (Exception e) {
-            LOGGER.error("ZK Exception:", e);
+            LOGGER.error(NodeConstants.ZK_EXCEPTION, e);
         }
         this.em_path = em_path;
         this.nodeCache = new TreeCache(this.client, em_path);
@@ -62,7 +63,7 @@ public class CuratorClient {
             String ip = InetAddress.getLocalHost().getHostAddress();
             this.client.setData().forPath(em_path, ip.getBytes(Constants.STRING_ENCODING));
         } catch (Exception e) {
-            LOGGER.error("ZK exception:", e);
+            LOGGER.error(NodeConstants.ZK_EXCEPTION, e);
         }
     }
 
@@ -70,7 +71,7 @@ public class CuratorClient {
         try {
             this.client.setData().forPath(path, data.getBytes(Constants.STRING_ENCODING));
         } catch (Exception e) {
-            LOGGER.error("ZK exception:", e);
+            LOGGER.error(NodeConstants.ZK_EXCEPTION, e);
         }
     }
 
@@ -79,7 +80,7 @@ public class CuratorClient {
         try {
             rusult = new String(this.client.getData().forPath(path), Constants.STRING_ENCODING);
         } catch (Exception e) {
-            LOGGER.error("ZK exception:", e);
+            LOGGER.error(NodeConstants.ZK_EXCEPTION, e);
         }
         return rusult;
     }
@@ -96,7 +97,7 @@ public class CuratorClient {
             }
             this.jobCache.start();
         } catch (Exception e) {
-            LOGGER.error("ZK exception:", e);
+            LOGGER.error(NodeConstants.ZK_EXCEPTION, e);
         }
     }
 

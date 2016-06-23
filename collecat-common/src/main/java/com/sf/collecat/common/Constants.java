@@ -18,4 +18,6 @@ public interface Constants {
     int JOB_INIT_VALUE = 0;
     int JOB_FINISHED_VALUE = 1;
     int JOB_EXCEPTION_VALUE = 2;
+
+    String ZK_EXCEPTION = "Caught ZK Exception!";
 }

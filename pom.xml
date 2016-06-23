@@ -4,6 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+
+    <parent>
+        <groupId>com.sf.sgs</groupId>
+        <artifactId>sgs-framework-boot-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+
     <groupId>com.sf</groupId>
     <artifactId>collecat</artifactId>
     <packaging>pom</packaging>
@@ -19,7 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- dubbo and dubbox -->
         <org.springframework.version>3.2.9.RELEASE</org.springframework.version>
-        <dubbo_version>2.8.4</dubbo_version>
+        <dubbo_version>2.5.4</dubbo_version>
         <javassist_version>3.15.0-GA</javassist_version>
         <netty_version>5.0.0.Alpha2</netty_version>
         <mina_version>1.1.7</mina_version>
