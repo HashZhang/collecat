@@ -27,33 +27,6 @@ public class KafkaConsumer {
 
         // 注册消费任务，String方式, 简易模式
         KafkaConsumerRegister.registerStringConsumer(consumeConfig, new PrintMessageListener());
-
-//        ThreadUtil.sleep(10000);
-
-//        KafkaConsumerRegister.unregister(topic);
-
-//        // 注册消费任务，String方式, 个性化参数模式
-//        ConsumeOptionalConfig optionalConfig = new ConsumeOptionalConfig();
-//        optionalConfig.setAutoOffsetResetMinute(80);
-//        optionalConfig.setAutoOffsetReset(AutoOffsetReset.CUSTOM);
-//        optionalConfig.setConsumeExceptionHandler(new IConsumeExceptionHandler() {
-//
-//			@Override
-//			public boolean accept(Throwable e, int calcCount) {
-//				// write logic code
-//				return false;
-//			}
-//		});
-//        KafkaConsumerRegister.registerStringConsumer(consumeConfig, new PrintMessageListener(), optionalConfig);
-
-//        // 注册消费任务，byte[]方式, 简易模式
-//        KafkaConsumerRegister.registerByteArrayConsumer(consumeConfig, new PrintByteArrayMessageListener());
-
-//        // 注册消费任务，byte[]方式, 个性化参数模式
-//        ConsumeOptionalConfig optionalConfig = new ConsumeOptionalConfig();
-//        optionalConfig.setMessageGroupSize(20);
-//        optionalConfig.setAutoOffsetReset(AutoOffsetReset.NOW);
-//        KafkaConsumerRegister.registerByteArrayConsumer(consumeConfig, new PrintByteArrayMessageListener(),optionalConfig);
     }
 
     private static class PrintMessageListener implements IStringMessageConsumeListener {
@@ -70,16 +43,7 @@ public class KafkaConsumer {
         int count = 0;
 
         public void onMessage(List<String> list) throws KafkaConsumeRetryException {
-//            try {
-//                for (String data : list) {
-//                    bufferedWriter.write(data);
-//                    System.out.println(data);
-//                }
-//                bufferedWriter.flush();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            System.out.println(++count);
+            System.out.println(++count+":"+list.size());
         }
     }
 }

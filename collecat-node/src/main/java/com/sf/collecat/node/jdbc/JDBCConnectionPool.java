@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -33,7 +32,7 @@ public class JDBCConnectionPool {
         try {
             JDBCConnection jdbcConnection = null;
             DruidDataSource druidDataSource = null;
-            if (!connMap.containsKey(url) || ((druidDataSource = connMap.get(url)) == null)) {
+            if (!connMap.containsKey(url) || (connMap.get(url) == null)) {
                 if (reentrantLock.tryLock()) {
                     try {
                         druidDataSource = new DruidDataSource();
@@ -43,13 +42,16 @@ public class JDBCConnectionPool {
                         druidDataSource.setInitialSize(1);
                         druidDataSource.setMinIdle(1);
                         druidDataSource.setMaxActive(maxPoolSize);
+                        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+                        druidDataSource.setMinEvictableIdleTimeMillis(300000);
                         druidDataSource.init();
                         connMap.put(job.getMysqlUrl(), druidDataSource);
                     } finally {
                         reentrantLock.unlock();
                     }
                 } else {
-                    while (!connMap.containsKey(url)) ;
+                    while (!connMap.containsKey(url)) {
+                    }
                 }
             }
             druidDataSource = connMap.get(url);

@@ -9,14 +9,60 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <skipAssemblyDEV>false</skipAssemblyDEV>
-        <skipAssemblyUAT>true</skipAssemblyUAT>
-        <skipAssemblyPROD>true</skipAssemblyPROD>
-        <env.devMode>1.0</env.devMode>
-    </properties>
-
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env.devMode>dev</env.devMode>
+                <skipAssemblyDEV>false</skipAssemblyDEV>
+                <skipAssemblyUAT>true</skipAssemblyUAT>
+                <skipAssemblySTG>true</skipAssemblySTG>
+                <skipAssemblyPROD>true</skipAssemblyPROD>
+            </properties>
+        </profile>
+        <profile>
+            <id>uat</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <env.devMode>uat</env.devMode>
+                <skipAssemblyDEV>true</skipAssemblyDEV>
+                <skipAssemblyUAT>false</skipAssemblyUAT>
+                <skipAssemblySTG>true</skipAssemblySTG>
+                <skipAssemblyPROD>true</skipAssemblyPROD>
+            </properties>
+        </profile>
+        <profile>
+            <id>stg</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <env.devMode>stg</env.devMode>
+                <skipAssemblyDEV>true</skipAssemblyDEV>
+                <skipAssemblyUAT>true</skipAssemblyUAT>
+                <skipAssemblySTG>false</skipAssemblySTG>
+                <skipAssemblyPROD>true</skipAssemblyPROD>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <env.devMode>prod</env.devMode>
+                <skipAssemblyDEV>true</skipAssemblyDEV>
+                <skipAssemblyUAT>true</skipAssemblyUAT>
+                <skipAssemblySTG>true</skipAssemblySTG>
+                <skipAssemblyPROD>false</skipAssemblyPROD>
+            </properties>
+        </profile>
+    </profiles>
 
     <artifactId>collecat-manager</artifactId>
 

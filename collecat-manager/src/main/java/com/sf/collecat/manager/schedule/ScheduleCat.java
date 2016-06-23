@@ -24,9 +24,11 @@ public class ScheduleCat {
     private JobMapper jobMapper;
     private List<Task> tasks;
     private ExecutorService pool = Executors.newFixedThreadPool(10);
-    private ExecutorService businessPool = Executors.newFixedThreadPool(1);
+    private ExecutorService businessPool1 = Executors.newFixedThreadPool(1);
+    private ExecutorService businessPool2 = Executors.newFixedThreadPool(1);
     private CuratorClient curatorClient;
     private CleanJob cleanJob;
+    private ResetJob resetJob;
 
     public void init() {
         tasks = new ArrayList<>();
@@ -119,7 +121,7 @@ public class ScheduleCat {
         final Scheduler s = new Scheduler();
         s.schedule("* * * * *", new Runnable() {
             public void run() {
-                businessPool.submit(cleanJob);
+                businessPool1.submit(cleanJob);
             }
         });
         // Starts the scheduler.
@@ -128,5 +130,21 @@ public class ScheduleCat {
 
     public void insertTask(Task task) {
         taskMapper.insert(task);
+    }
+
+    public ResetJob getResetJob() {
+        return resetJob;
+    }
+
+    public void setResetJob(final ResetJob resetJob) {
+        this.resetJob = resetJob;
+        final Scheduler s = new Scheduler();
+        s.schedule("* * * * *", new Runnable() {
+            public void run() {
+                businessPool2.submit(resetJob);
+            }
+        });
+        // Starts the scheduler.
+        s.start();
     }
 }
