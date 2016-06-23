@@ -6,9 +6,6 @@ import com.sf.kafka.api.consume.KafkaConsumeRetryException;
 import com.sf.kafka.api.consume.KafkaConsumerRegister;
 import com.sf.kafka.exception.KafkaException;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -60,27 +57,29 @@ public class KafkaConsumer {
     }
 
     private static class PrintMessageListener implements IStringMessageConsumeListener {
-        static BufferedWriter bufferedWriter = null;
-
-        static {
-            try {
-                FileWriter fileWriter = new FileWriter("D:/log.csv");
-                bufferedWriter = new BufferedWriter(fileWriter);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        //        static BufferedWriter bufferedWriter = null;
+//
+//        static {
+//            try {
+//                FileWriter fileWriter = new FileWriter("D:/log.csv");
+//                bufferedWriter = new BufferedWriter(fileWriter);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        int count = 0;
 
         public void onMessage(List<String> list) throws KafkaConsumeRetryException {
-            try {
-                for (String data : list) {
-                    bufferedWriter.write(data);
-                    System.out.println(data);
-                }
-                bufferedWriter.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                for (String data : list) {
+//                    bufferedWriter.write(data);
+//                    System.out.println(data);
+//                }
+//                bufferedWriter.flush();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            System.out.println(++count);
         }
     }
 }

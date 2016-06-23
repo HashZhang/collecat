@@ -29,9 +29,13 @@ public class JDBCConnection {
         try {
             statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(job.getJobSql());
-            resultSet.last();
-            int count = resultSet.getRow();
-            int size = (count / job.getKafkaMessageSize()) + 1;
+            int size = 0;
+            if(resultSet.last()) {
+                int count = resultSet.getRow();
+                size = (count / job.getKafkaMessageSize()) + 1;
+            } else{
+                size = 0;
+            }
             String[] results = new String[size];
             resultSet.beforeFirst();
             for (int i = 0; i < size; i++) {
