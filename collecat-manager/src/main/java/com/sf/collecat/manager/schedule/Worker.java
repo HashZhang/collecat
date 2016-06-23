@@ -41,6 +41,7 @@ public class Worker implements Runnable {
             return;
         }
         try {
+            LOGGER.info("task start:{}",task.toString());
             Date date = new Date();
             List<Job> jobs = SQLParser.parse(task, date);
             for (Job job : jobs) {

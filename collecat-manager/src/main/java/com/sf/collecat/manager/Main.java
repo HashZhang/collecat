@@ -2,9 +2,12 @@ package com.sf.collecat.manager;
 
 import com.sf.collecat.common.mapper.TaskMapper;
 import com.sf.collecat.common.model.Task;
+import com.sf.collecat.manager.config.mycat.XMLSchemaLoader;
 import com.sf.collecat.manager.config.mycat.util.ConfigUtil;
 import com.sf.collecat.manager.schedule.ScheduleCat;
 import com.sf.collecat.manager.util.PropertyLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -46,6 +49,7 @@ public class Main {
                     break;
             }
         }
+        System.out.println("ColleCat-Manager is running now! ");
         while (true) {
             TimeUnit.DAYS.sleep(1L);
         }

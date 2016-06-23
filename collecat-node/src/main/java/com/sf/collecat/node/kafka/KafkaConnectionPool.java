@@ -14,26 +14,25 @@ public class KafkaConnectionPool {
     @Value("${kafka.connection.poolsize}")
     private int poolSize;
 
-    private final ConcurrentHashMap<String,KafkaConnection> connMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, KafkaConnection> connMap = new ConcurrentHashMap<>();
 
-    public synchronized KafkaConnection getKafkaConnection(Job job){
+    public synchronized KafkaConnection getKafkaConnection(Job job) {
         String key = toKey(job);
-        if(connMap.contains(key)){
-            if(key!=null){
-                return connMap.get(key);
-            } else{
-                KafkaConnection kafkaConnection = new KafkaConnection(poolSize,job.getKafkaTopic(),job.getKafkaUrl(),job.getKafkaClusterName(),job.getKafkaTopicTokens());
-                connMap.put(key,kafkaConnection);
-                return kafkaConnection;
+        if (connMap.contains(key)) {
+            KafkaConnection kafkaConnection = connMap.get(key);
+            if (kafkaConnection == null && kafkaConnection.isAborted()) {
+                kafkaConnection = new KafkaConnection(poolSize, job.getKafkaTopic(), job.getKafkaUrl(), job.getKafkaClusterName(), job.getKafkaTopicTokens());
             }
-        } else{
-            KafkaConnection kafkaConnection = new KafkaConnection(poolSize,job.getKafkaTopic(),job.getKafkaUrl(),job.getKafkaClusterName(),job.getKafkaTopicTokens());
-            connMap.put(key,kafkaConnection);
+            connMap.put(key, kafkaConnection);
+            return kafkaConnection;
+        } else {
+            KafkaConnection kafkaConnection = new KafkaConnection(poolSize, job.getKafkaTopic(), job.getKafkaUrl(), job.getKafkaClusterName(), job.getKafkaTopicTokens());
+            connMap.put(key, kafkaConnection);
             return kafkaConnection;
         }
     }
 
-    private String toKey(Job job){
+    private String toKey(Job job) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(job.getKafkaUrl()).append(job.getKafkaTopicTokens()).append(job.getKafkaClusterName());
         return stringBuilder.toString();

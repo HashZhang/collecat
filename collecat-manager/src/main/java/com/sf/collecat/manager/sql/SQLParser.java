@@ -30,7 +30,7 @@ import java.util.List;
 public class SQLParser {
     private static final XMLSchemaLoader xmlSchemaLoader = new XMLSchemaLoader();
     //// TODO: 2016/6/21 修改为可配置型 
-    private static final  int TIME_SHIFT = 60;//服务器之间最大时间差 
+    private static final  int TIME_SHIFT = 0;//服务器之间最大时间差
     public static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException {
@@ -102,15 +102,15 @@ public class SQLParser {
             sqlBinaryOpExpr.setOperator(SQLBinaryOperator.BooleanAnd);
             block2.setWhere(sqlBinaryOpExpr);
         }
-        if (block2.getOrderBy() == null) {
-            block2.setOrderBy(block1.getOrderBy());
-        } else {
-            List<SQLSelectOrderByItem> items = block2.getOrderBy().getItems();
-            if (items == null) {
-                items = new ArrayList<>();
-            }
-            items.addAll(block1.getOrderBy().getItems());
-        }
+//        if (block2.getOrderBy() == null) {
+//            block2.setOrderBy(block1.getOrderBy());
+//        } else {
+//            List<SQLSelectOrderByItem> items = block2.getOrderBy().getItems();
+//            if (items == null) {
+//                items = new ArrayList<>();
+//            }
+//            items.addAll(block1.getOrderBy().getItems());
+//        }
 
         job.setJobSql(SQLUtils.toMySqlString(statement));
     }

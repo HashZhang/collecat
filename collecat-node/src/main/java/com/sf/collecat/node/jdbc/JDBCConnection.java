@@ -25,8 +25,9 @@ public class JDBCConnection {
     }
 
     public String[] executeJob() throws SQLException {
+        Statement statement = null;
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(job.getJobSql());
             resultSet.last();
             int count = resultSet.getRow();
@@ -38,6 +39,9 @@ public class JDBCConnection {
             }
             return results;
         } finally {
+            if (statement != null) {
+                statement.close();
+            }
             returnConn();
         }
     }

@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws IOException, ParseException, InterruptedException {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring-config-service.xml");
-        WorkerPool workerPool = (WorkerPool) applicationContext.getBean("workerPool");
+//        WorkerPool workerPool = (WorkerPool) applicationContext.getBean("workerPool");
+        System.out.println("ColleCat-Node is running now! ");
         while (true) {
             TimeUnit.DAYS.sleep(1L);
         }

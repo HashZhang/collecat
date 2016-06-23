@@ -13,7 +13,7 @@
 
     <import resource="classpath*:META-INF/spring/*.xml" />
     <bean id="curatorClient" class="com.sf.collecat.manager.zk.CuratorClient">
-        <constructor-arg name="zkAddress" value="10.202.44.206:2181"></constructor-arg>
+        <constructor-arg name="zkAddress" value="10.116.52.46:2181,10.116.52.47:2181,10.116.52.48:2181"></constructor-arg>
         <property name="jobListener" ref="jobListener"/>
         <property name="nodeListener" ref="nodeListener"/>
     </bean>

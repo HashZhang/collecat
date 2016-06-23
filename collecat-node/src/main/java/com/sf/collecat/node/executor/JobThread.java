@@ -11,9 +11,6 @@ import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -35,11 +32,12 @@ public class JobThread implements Runnable {
 
     @Override
     public void run() {
+        KafkaConnection kafkaConnection = null;
         try {
             JDBCConnection jdbcConnection = jdbcConnectionPool.getConnection(job);
             String message[] = null;
-            message= jdbcConnection.executeJob();
-            KafkaConnection kafkaConnection = kafkaConnectionPool.getKafkaConnection(job);
+            message = jdbcConnection.executeJob();
+            kafkaConnection = kafkaConnectionPool.getKafkaConnection(job);
             if (kafkaConnection == null) {
                 throw new Exception("Can't get KafKa connection!");
             }
@@ -48,11 +46,14 @@ public class JobThread implements Runnable {
             }
             complete(job);
         } catch (SQLException e) {
-            LOGGER.error("Caught exception when execute SQL:",e);
+            LOGGER.error("Caught exception when execute SQL:", e);
             setException(job);
         } catch (Throwable e) {
             LOGGER.error("Caught exception when writing into KafKa:", e);
             setException(job);
+            if (kafkaConnection != null) {
+                kafkaConnection.setAborted(true);
+            }
         }
     }
 

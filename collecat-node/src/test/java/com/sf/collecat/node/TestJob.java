@@ -40,7 +40,7 @@ public class TestJob extends AbstractJUnit4SpringContextTests {
     }
 
     @Test
-    public void testWholeJob() throws SQLException {
+    public void testWholeJob() throws Exception {
         JDBCConnection jdbcConnection = jdbcConnectionPool.getConnection(job);
         String message[] = jdbcConnection.executeJob();
         KafkaConnection kafkaConnection = kafkaConnectionPool.getKafkaConnection(job);
@@ -64,7 +64,11 @@ public class TestJob extends AbstractJUnit4SpringContextTests {
                 }
                 KafkaConnection kafkaConnection = kafkaConnectionPool.getKafkaConnection(job);
 
-                kafkaConnection.send(message.toString());
+                try {
+                    kafkaConnection.send(message.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
         Thread threads[] = new Thread[10];
