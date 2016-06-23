@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) throws IOException, ParseException, InterruptedException {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(NodeConstants.ROOT_SPRING_CONFIG);
-        WorkerPool workerPool = applicationContext.getBean(WorkerPool.class);
+        WorkerPool workerPool = (WorkerPool) applicationContext.getBean("workerPool");
         System.out.println(NodeConstants.POOL_SIZE_MESSAGE + workerPool.getPoolSize());
         System.out.println(NodeConstants.WELCOME);
         while (true) {
