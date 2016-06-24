@@ -7,7 +7,7 @@
     <groupId>com.sf</groupId>
     <artifactId>collecat</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${collecat.version}</version>
     <modules>
         <module>collecat-manager</module>
         <module>collecat-node</module>
@@ -17,9 +17,10 @@
     <properties>
         <!-- projet -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <collecat.version>1.0.0-SNAPSHOT</collecat.version>
         <!-- dubbo and dubbox -->
         <org.springframework.version>3.2.9.RELEASE</org.springframework.version>
-        <dubbo_version>2.5.4</dubbo_version>
+        <dubbo_version>2.8.4</dubbo_version>
         <javassist_version>3.15.0-GA</javassist_version>
         <netty_version>5.0.0.Alpha2</netty_version>
         <mina_version>1.1.7</mina_version>
@@ -392,6 +393,76 @@
                 <groupId>com.sf.kafka</groupId>
                 <artifactId>sf-kafka-api-check-valid</artifactId>
                 <version>1.11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>0.8.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.101tec</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>1.1.1.6</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty</artifactId>
+                <version>3.7.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yammer.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>2.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.8.1</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jopt-simple</groupId>
+                <artifactId>jopt-simple</artifactId>
+                <version>3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>jline</groupId>
+                <artifactId>jline</artifactId>
+                <version>0.9.94</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.4.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.4.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>2.4.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>18.0</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>2.10.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

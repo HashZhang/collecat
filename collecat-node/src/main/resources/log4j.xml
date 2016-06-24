@@ -18,7 +18,7 @@
 	</appender>
 	
 	<root>
-		<priority value="INFo" />
+		<priority value="warn" />
 		<appender-ref ref="Console" />
 		<!--<appender-ref ref="sf-framework-dao" />-->
 	</root>

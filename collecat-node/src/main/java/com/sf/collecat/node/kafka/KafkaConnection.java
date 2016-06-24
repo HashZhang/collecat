@@ -1,6 +1,7 @@
 package com.sf.collecat.node.kafka;
 
 import com.sf.kafka.api.produce.IKafkaProducer;
+import com.sf.kafka.api.produce.KafkaProducer;
 import com.sf.kafka.api.produce.ProduceConfig;
 import com.sf.kafka.api.produce.ProducerPool;
 import com.sf.kafka.exception.KafkaException;

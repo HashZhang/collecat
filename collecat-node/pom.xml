@@ -5,7 +5,7 @@
     <parent>
         <artifactId>collecat</artifactId>
         <groupId>com.sf</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${collecat.version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -148,7 +148,7 @@
         <dependency>
             <groupId>com.sf</groupId>
             <artifactId>collecat-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${collecat.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
@@ -161,27 +161,22 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>0.8.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.sf.kafka</groupId>
             <artifactId>sf-kafka-api-core</artifactId>
-            <version>1.11</version>
         </dependency>
         <dependency>
             <groupId>com.sf.kafka</groupId>
             <artifactId>sf-kafka_2.10_1.6_1.0</artifactId>
-            <version>0.8.2.1</version>
         </dependency>
         <dependency>
             <groupId>com.sf.kafka</groupId>
             <artifactId>sf-kafka-api-check-valid</artifactId>
-            <version>1.11</version>
         </dependency>
         <dependency>
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
-            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
@@ -190,67 +185,54 @@
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>1.1.1.6</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty</artifactId>
-            <version>3.7.0.Final</version>
         </dependency>
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.8.1</version>
         </dependency>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
-            <version>3.2</version>
         </dependency>
         <dependency>
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>
-            <version>0.9.94</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.10.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.2.9.RELEASE</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

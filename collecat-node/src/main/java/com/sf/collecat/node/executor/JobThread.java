@@ -8,6 +8,7 @@ import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
 import com.sf.collecat.node.kafka.KafkaConnection;
 import com.sf.collecat.node.kafka.KafkaConnectionPool;
 import com.sf.collecat.node.zk.CuratorClient;
+import com.sf.kafka.check.KafkaCheckFailException;
 import com.sf.kafka.exception.KafkaException;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import org.slf4j.Logger;
@@ -54,6 +55,12 @@ public class JobThread implements Runnable {
             LOGGER.error("Caught exception when try to get JDBCConnection:", e);
             setException(job);
         } catch (KafkaException e) {
+            LOGGER.error("Caught exception when writing into KafKa:", e);
+            setException(job);
+            if (kafkaConnection != null) {
+                kafkaConnection.setAborted(true);
+            }
+        } catch (KafkaCheckFailException e) {
             LOGGER.error("Caught exception when writing into KafKa:", e);
             setException(job);
             if (kafkaConnection != null) {
