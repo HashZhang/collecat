@@ -31,7 +31,7 @@ public class SQLParser {
     private static final XMLSchemaLoader xmlSchemaLoader = new XMLSchemaLoader();
     //// TODO: 2016/6/21 修改为可配置型 
     private static final  int TIME_SHIFT = 0;//服务器之间最大时间差
-    public static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException {
         List<Job> jobList = new ArrayList<>();

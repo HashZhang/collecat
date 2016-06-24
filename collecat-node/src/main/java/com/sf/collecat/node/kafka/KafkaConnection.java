@@ -3,6 +3,7 @@ package com.sf.collecat.node.kafka;
 import com.sf.kafka.api.produce.IKafkaProducer;
 import com.sf.kafka.api.produce.ProduceConfig;
 import com.sf.kafka.api.produce.ProducerPool;
+import com.sf.kafka.exception.KafkaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,7 @@ public class KafkaConnection {
         this.topic = topic;
     }
 
-    public void send(String message) throws Exception {
+    public void send(String message) throws KafkaException {
         try {
             kafkaProducer.sendString(topic, message);
         } catch (Exception e) {
@@ -53,7 +54,7 @@ public class KafkaConnection {
                     reentrantLock.unlock();
                 }
             }
-            throw new Exception("Caught Exception while send kafka message, retried 3 times but still failed!");
+            throw new KafkaException("Caught Exception while send kafka message, retried 3 times but still failed!");
         }
     }
 

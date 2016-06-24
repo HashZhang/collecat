@@ -40,10 +40,12 @@ public class KafkaConsumer {
 //                e.printStackTrace();
 //            }
 //        }
-        int count = 0;
+        int timecount = 0;
+        int totalcount = 0;
 
         public void onMessage(List<String> list) throws KafkaConsumeRetryException {
-            System.out.println(++count+":"+list.size());
+            totalcount += list.size();
+            System.out.println(++timecount+":"+totalcount);
         }
     }
 }

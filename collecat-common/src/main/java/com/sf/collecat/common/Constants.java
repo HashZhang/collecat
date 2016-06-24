@@ -4,6 +4,8 @@ package com.sf.collecat.common;
  * Created by 862911 on 2016/6/16.
  */
 public interface Constants {
+    String SYSTEM_NAME = "ColleCat";
+
     String NODE_PATH = "/collecat/node";
     String TEM_NODE_PATH = "/collecat/node/node";
     String JOB_PATH = "/collecat/job";

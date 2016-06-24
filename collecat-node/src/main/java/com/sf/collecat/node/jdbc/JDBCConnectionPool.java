@@ -1,7 +1,9 @@
 package com.sf.collecat.node.jdbc;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.google.common.base.Optional;
 import com.sf.collecat.common.model.Job;
+import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -17,22 +20,23 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 public class JDBCConnectionPool {
     private final static Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
-    private final ConcurrentHashMap<String, DruidDataSource> connMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Optional<DruidDataSource>> connMap = new ConcurrentHashMap<>();
     private final ReentrantLock reentrantLock = new ReentrantLock();
     @Value("${jdbc.connection.poolsize}")
     private int maxPoolSize;
 
-    public ConcurrentHashMap<String, DruidDataSource> getConnMap() {
+    public ConcurrentHashMap<String, Optional<DruidDataSource>> getConnMap() {
         return this.connMap;
     }
 
-    public JDBCConnection getConnection(Job job) {
+    public JDBCConnection getConnection(Job job) throws GetJDBCCConnectionException {
         final String url = job.getMysqlUrl();
 
         try {
             JDBCConnection jdbcConnection = null;
             DruidDataSource druidDataSource = null;
             if (!connMap.containsKey(url) || (connMap.get(url) == null)) {
+                CountDownLatch countDownLatch = new CountDownLatch(1);
                 if (reentrantLock.tryLock()) {
                     try {
                         druidDataSource = new DruidDataSource();
@@ -45,22 +49,23 @@ public class JDBCConnectionPool {
                         druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
                         druidDataSource.setMinEvictableIdleTimeMillis(300000);
                         druidDataSource.init();
-                        connMap.put(job.getMysqlUrl(), druidDataSource);
+                        connMap.put(job.getMysqlUrl(), Optional.of(druidDataSource));
+                        countDownLatch.countDown();
                     } finally {
                         reentrantLock.unlock();
                     }
                 } else {
-                    while (!connMap.containsKey(url)) {
-                    }
+                    countDownLatch.await();
                 }
             }
-            druidDataSource = connMap.get(url);
+            druidDataSource = connMap.get(url).get();
             jdbcConnection = new JDBCConnection(druidDataSource, job);
             jdbcConnection.setJob(job);
             return jdbcConnection;
         } catch (SQLException e) {
-            LOGGER.error("Caught exception when creating new JDBC connection: [url:],exception:", url, e);
+            throw new GetJDBCCConnectionException(e);
+        } catch (InterruptedException e) {
+            throw new GetJDBCCConnectionException(e);
         }
-        return null;
     }
 }
