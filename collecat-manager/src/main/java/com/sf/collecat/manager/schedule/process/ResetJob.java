@@ -1,5 +1,6 @@
-package com.sf.collecat.manager.schedule;
+package com.sf.collecat.manager.schedule.process;
 
+import com.sf.collecat.manager.schedule.ScheduleCat;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

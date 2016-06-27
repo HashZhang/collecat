@@ -189,7 +189,7 @@
                 <configuration>
                     <excludes>
                         <exclude>**/tasks.properties</exclude>
-                        <exclude>**/jdbc.properties</exclude>
+                        <exclude>**/config.properties</exclude>
                         <exclude>**/log4j.xml</exclude>
                         <exclude>**/spring.xml</exclude>
                         <exclude>**/schema.xml</exclude>

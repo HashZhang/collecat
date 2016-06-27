@@ -13,6 +13,7 @@ import it.sauronsoftware.cron4j.Scheduler;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLSyntaxErrorException;
@@ -30,10 +31,14 @@ import java.util.List;
 @AllArgsConstructor
 public class Worker implements Runnable {
     private Task task;
+    @NonNull
     private CuratorClient curatorClient;
+    @NonNull
     private JobMapper jobMapper;
+    @NonNull
     private TaskMapper taskMapper;
     @Getter
+    @NonNull
     private Scheduler scheduler;
 
     /**

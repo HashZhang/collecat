@@ -17,19 +17,19 @@
         <property name="username" value="${mysql.jdbc.username}" />
         <property name="password" value="${mysql.jdbc.password}" />
         
-        <property name="maxActive" value="${maxActive}" />
-        <property name="initialSize" value="${initialSize}" /> 
-        <property name="maxWait" value="${maxWait}" />
-        <property name="minIdle" value="${minIdle}" />
+        <property name="maxActive" value="${mysql.jdbc.maxActive}" />
+        <property name="initialSize" value="${mysql.jdbc.initialSize}" />
+        <property name="maxWait" value="${mysql.jdbc.maxWait}" />
+        <property name="minIdle" value="${mysql.jdbc.minIdle}" />
         
-        <property name="validationQuery" value="${validationQuery}" />  
-        <property name="testWhileIdle" value="${testWhileIdle}" />  
-        <property name="testOnBorrow" value="${testOnBorrow}" />  
-        <property name="testOnReturn" value="${testOnReturn}" />
+        <property name="validationQuery" value="${mysql.jdbc.validationQuery}" />
+        <property name="testWhileIdle" value="${mysql.jdbc.testWhileIdle}" />
+        <property name="testOnBorrow" value="${mysql.jdbc.testOnBorrow}" />
+        <property name="testOnReturn" value="${mysql.jdbc.testOnReturn}" />
         <!-- 配置连接闲置时间，单位是毫秒  申请连接时检查连接是否闲置超时时用到该参数 -->
-        <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${mysql.jdbc.timeBetweenEvictionRunsMillis}" />
         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-        <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />    
+        <property name="minEvictableIdleTimeMillis" value="${mysql.jdbc.minEvictableIdleTimeMillis}" />
         
         <!-- 打开removeAbandoned功能 对于长时间不使用的连接强制关闭 -->
         <!--property name="removeAbandoned" value="${removeAbandoned}" /-->   

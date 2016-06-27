@@ -5,6 +5,8 @@ import com.sf.collecat.common.mapper.JobMapper;
 import com.sf.collecat.common.mapper.TaskMapper;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
+import com.sf.collecat.manager.schedule.process.CleanJob;
+import com.sf.collecat.manager.schedule.process.ResetJob;
 import com.sf.collecat.manager.zk.CuratorClient;
 import it.sauronsoftware.cron4j.Scheduler;
 
@@ -13,8 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 调度类

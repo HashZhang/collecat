@@ -1,4 +1,4 @@
-package com.sf.collecat.manager.schedule;
+package com.sf.collecat.manager.schedule.process;
 
 import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.mapper.JobMapper;
