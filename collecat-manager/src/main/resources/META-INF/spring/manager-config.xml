@@ -29,4 +29,10 @@
         <property name="resetJob" ref="resetJob"/>
         <property name="curatorClient" ref="curatorClient"/>
     </bean>
+
+    <bean id="curatorClient" class="com.sf.collecat.manager.zk.CuratorClient">
+        <constructor-arg name="zkAddress" value="10.202.44.206:2181"></constructor-arg>
+        <property name="jobListener" ref="jobListener"/>
+        <property name="nodeListener" ref="nodeListener"/>
+    </bean>
 </beans>

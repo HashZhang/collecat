@@ -18,4 +18,5 @@ public interface NodeMapper {
 
     int updateByPrimaryKey(Node record);
 
+    List<Node> selectAll();
 }

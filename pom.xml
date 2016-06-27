@@ -18,22 +18,22 @@
         <!-- projet -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <collecat.version>1.0.0-SNAPSHOT</collecat.version>
+        <!--java common libs-->
+        <guava_version>19.0</guava_version>
         <!-- dubbo and dubbox -->
         <org.springframework.version>3.2.9.RELEASE</org.springframework.version>
-        <dubbo_version>2.5.4</dubbo_version>
+        <dubbo_version>sf.2.0.2</dubbo_version>
         <javassist_version>3.15.0-GA</javassist_version>
-        <netty_version>5.0.0.Alpha2</netty_version>
+        <netty_version>3.7.0.Final</netty_version>
         <mina_version>1.1.7</mina_version>
         <grizzly_version>2.1.4</grizzly_version>
         <httpclient_version>4.2.1</httpclient_version>
         <hessian_lite_version>3.2.1-fixed-2</hessian_lite_version>
         <xstream_version>1.4.1</xstream_version>
-        <fastjson_version>1.1.39</fastjson_version>
+        <fastjson_version>1.2.12</fastjson_version>
         <bsf_version>3.1</bsf_version>
         <sorcerer_version>0.8</sorcerer_version>
-        <zookeeper_version>3.4.6</zookeeper_version>
-        <zkclient_version>0.1</zkclient_version>
-        <curator_version>2.5.0</curator_version>
+        <curator_version>2.10.0</curator_version>
         <jedis_version>2.1.0</jedis_version>
         <xmemcached_version>1.3.6</xmemcached_version>
         <cxf_version>2.6.1</cxf_version>
@@ -61,10 +61,6 @@
         <jcl_version>1.1</jcl_version>
         <log4j_version>1.2.16</log4j_version>
         <logback_version>1.0.6</logback_version>
-        <!-- Test libs -->
-        <junit_version>4.10</junit_version>
-        <easymock_version>3.0</easymock_version>
-        <jmockit_version>0.999.8</jmockit_version>
         <!-- mybatis -->
         <mybatis.version>3.2.1</mybatis.version>
         <mybatis-spring.version>1.2.0</mybatis-spring.version>
@@ -73,8 +69,31 @@
         <aspectjweaver.version>1.7.2</aspectjweaver.version>
         <!-- pic validation -->
         <patchca_version>0.5.0</patchca_version>
+        <!--task schedule-->
+        <cron4j_version>2.2.5</cron4j_version>
         <!-- encoding and decoding -->
         <protobuf_version>2.6.1</protobuf_version>
+        <!--sf-kafka-->
+        <sf-kafka_version>1.11</sf-kafka_version>
+        <kafka-clients_version>0.8.2.1</kafka-clients_version>
+        <snappy-java_version>1.1.1.6</snappy-java_version>
+        <commons-io_version>2.4</commons-io_version>
+        <scala_version>2.10.4</scala_version>
+        <metrics-core_version>2.2.0</metrics-core_version>
+        <jsoup_version>1.8.1</jsoup_version>
+        <jopt-simple_version>3.2</jopt-simple_version>
+        <jline_version>0.9.94</jline_version>
+        <jackson_version>2.4.2</jackson_version>
+        <!--zk-->
+        <zookeeper_version>3.4.6</zookeeper_version>
+        <zkclient_version>0.1</zkclient_version>
+        <tec_zkclient_version>0.3</tec_zkclient_version>
+        <!--lombok-->
+        <lombok_version>1.16.8</lombok_version>
+        <!-- Test libs -->
+        <junit_version>4.10</junit_version>
+        <easymock_version>3.0</easymock_version>
+        <jmockit_version>1.24</jmockit_version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -104,28 +123,23 @@
             <dependency>
                 <groupId>it.sauronsoftware.cron4j</groupId>
                 <artifactId>cron4j</artifactId>
-                <version>2.2.5</version>
+                <version>${cron4j_version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>1.2.12</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-recipes</artifactId>
-                <version>2.10.0</version>
+                <version>${curator_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-framework</artifactId>
-                <version>2.10.0</version>
+                <version>${curator_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-client</artifactId>
-                <version>2.10.0</version>
+                <version>${curator_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.javassist</groupId>
@@ -353,19 +367,6 @@
                 <version>${aspectjweaver.version}</version>
             </dependency>
 
-            <!-- test -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.9</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${org.springframework.version}</version>
-                <scope>test</scope>
-            </dependency>
             <!-- pic validation -->
             <dependency>
                 <groupId>net.pusuo</groupId>
@@ -382,87 +383,113 @@
             <dependency>
                 <groupId>com.sf.kafka</groupId>
                 <artifactId>sf-kafka-api-core</artifactId>
-                <version>1.11</version>
+                <version>${sf-kafka_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sf.kafka</groupId>
                 <artifactId>sf-kafka_2.10_1.6_1.0</artifactId>
-                <version>0.8.2.1</version>
+                <version>${kafka-clients_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sf.kafka</groupId>
                 <artifactId>sf-kafka-api-check-valid</artifactId>
-                <version>1.11</version>
+                <version>${sf-kafka_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
-                <version>0.8.2.1</version>
+                <version>${kafka-clients_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.101tec</groupId>
                 <artifactId>zkclient</artifactId>
-                <version>0.3</version>
+                <version>${jmockit_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.xerial.snappy</groupId>
                 <artifactId>snappy-java</artifactId>
-                <version>1.1.1.6</version>
+                <version>${snappy-java_version}</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty</artifactId>
-                <version>3.7.0.Final</version>
+                <version>${netty_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.yammer.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
-                <version>2.2.0</version>
+                <version>${metrics-core_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.8.1</version>
+                <version>${jsoup_version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.jopt-simple</groupId>
                 <artifactId>jopt-simple</artifactId>
-                <version>3.2</version>
+                <version>${jopt-simple_version}</version>
             </dependency>
             <dependency>
                 <groupId>jline</groupId>
                 <artifactId>jline</artifactId>
-                <version>0.9.94</version>
+                <version>${jline_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.4.2</version>
+                <version>${jackson_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.4.2</version>
+                <version>${jackson_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.4.2</version>
+                <version>${jackson_version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>18.0</version>
+                <version>${guava_version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.4</version>
+                <version>${commons-io_version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-library</artifactId>
-                <version>2.10.4</version>
+                <version>${scala_version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok_version}</version>
+            </dependency>
+
+            <!-- test -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit_version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${org.springframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jmockit</groupId>
+                <artifactId>jmockit</artifactId>
+                <version>${jmockit_version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

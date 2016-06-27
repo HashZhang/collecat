@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
     public static void main(String[] args) throws IOException, ParseException, InterruptedException {
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(NodeConstants.ROOT_SPRING_CONFIG);
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring.xml");
         WorkerPool workerPool = (WorkerPool) applicationContext.getBean("workerPool");
         System.out.println(NodeConstants.POOL_SIZE_MESSAGE + workerPool.getPoolSize());
         System.out.println(NodeConstants.WELCOME);

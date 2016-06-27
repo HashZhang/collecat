@@ -11,6 +11,7 @@ public interface Constants {
     String JOB_PATH = "/collecat/job";
     String JOB_DETAIL_PATH = "/collecat/job-detail";
     String COMMON_SEPARATOR = ":";
+    String ZK_SEPARATOR = "/";
     String STRING_ENCODING = "UTF-8";
 
     String JOB_INIT = "unallocated";

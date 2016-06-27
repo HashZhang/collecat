@@ -4,7 +4,6 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
-import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
@@ -30,22 +29,12 @@ import java.util.List;
 public class SQLParser {
     private static final XMLSchemaLoader xmlSchemaLoader = new XMLSchemaLoader();
     //// TODO: 2016/6/21 修改为可配置型 
-    private static final  int TIME_SHIFT = 0;//服务器之间最大时间差
+    private static final int TIME_SHIFT = 0;//服务器之间最大时间差
     public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException {
         List<Job> jobList = new ArrayList<>();
-        MySqlStatementParser parser = new MySqlStatementParser(task.getInitialSql());
-        SQLStatement statement = parser.parseStatement();
-        MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
-        statement.accept(visitor);
-        String table = null;
-        if (visitor.getTables().keySet().size() > 1) {
-            throw new SQLSyntaxErrorException("tables in select sql cannot be larger than 1!");
-        }
-        for (TableStat.Name tableStat : visitor.getTables().keySet()) {
-            table = tableStat.getName().toUpperCase();
-        }
+        String table = validate(task);
         List<String> datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
         Integer routineTime = task.getRoutineTime();
         long now = lastTT.getTime();
@@ -69,11 +58,29 @@ public class SQLParser {
                 lastDate = calendar.getTime();
                 calendar.add(Calendar.SECOND, routineTime);
             }
-            Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, lastTT);
-            jobList.add(job);
+            if (lastDate.getTime() != lastTT.getTime()) {
+                Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, lastTT);
+                jobList.add(job);
+            }
         }
         return jobList;
     }
+
+    private static String validate(Task task) throws SQLSyntaxErrorException {
+        MySqlStatementParser parser = new MySqlStatementParser(task.getInitialSql());
+        SQLStatement statement = parser.parseStatement();
+        MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
+        statement.accept(visitor);
+        String table = null;
+        if (visitor.getTables().keySet().size() > 1) {
+            throw new SQLSyntaxErrorException("tables in select sql cannot be larger than 1!");
+        }
+        for (TableStat.Name tableStat : visitor.getTables().keySet()) {
+            table = tableStat.getName().toUpperCase();
+        }
+        return table;
+    }
+
 
     private static Job getJob(String table, String sql, Task task, String url, String username, String password, Date start, Date end) {
         Job job = new Job();
@@ -133,38 +140,38 @@ public class SQLParser {
     }
 
 
-//    public static void main(String[] args) throws SQLSyntaxErrorException {
-////        StringBuilder stringBuilder = new StringBuilder();
-////        stringBuilder.append("select * from ").append("table1").append(" where ").append("timefield").append("<'")
-////                .append(new Date().toString()).append("' and ").append("timefield").append(">'").append(new Date().toString())
-////                .append("' order by ").append("timefield");
-////        MySqlStatementParser parser1 = new MySqlStatementParser(stringBuilder.toString());
-////        SQLSelectStatement statement1 = (SQLSelectStatement) parser1.parseStatement();
-////        MySqlStatementParser parser2 = new MySqlStatementParser("select * from table1 where is_deleted=1 and wall=1 order by id");
-////        SQLSelectStatement statement2 = (SQLSelectStatement) parser2.parseStatement();
-////        SQLBinaryOpExpr sqlBinaryOpExpr = new SQLBinaryOpExpr();
-////        sqlBinaryOpExpr.setLeft(((MySqlSelectQueryBlock)statement1.getSelect().getQuery()).getWhere());
-////        sqlBinaryOpExpr.setRight(((MySqlSelectQueryBlock)statement2.getSelect().getQuery()).getWhere());
-////        sqlBinaryOpExpr.setOperator(SQLBinaryOperator.BooleanAnd);
-////        ((MySqlSelectQueryBlock)statement1.getSelect().getQuery()).setWhere(sqlBinaryOpExpr);
-////        ((MySqlSelectQueryBlock)statement1.getSelect().getQuery()).getOrderBy().getItems().addAll(((MySqlSelectQueryBlock)statement2.getSelect().getQuery()).getOrderBy().getItems());
-////        System.out.println(SQLUtils.toMySqlString(statement1));
-//        Task task = new Task();
-//        task.setInitialSql("select * from employee where i>1 and k>1 order by ll");
-//        task.setIsActive(true);
-//        task.setKafkaClusterName("ab");
-//        task.setKafkaMessageSize(100);
-//        task.setKafkaTopic("topic1");
-//        task.setKafkaTopicTokens("topic:token");
-//        task.setKafkaUrl("url");
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.add(Calendar.SECOND, -10000);
-//        task.setLastTime(calendar.getTime());
-//        task.setMessageFormat("csv");
-//        task.setRoutineTime(100);
-//        task.setSchemaUsed("TESTDB");
-//        task.setTimeField("created_time");
-//        System.out.println(SQLParser.parse(task));
-//    }
+    public static void main(String[] args) throws SQLSyntaxErrorException {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("select * from ").append("table1").append(" where ").append("timefield").append("<'")
+                .append(new Date().toString()).append("' and ").append("timefield").append(">'").append(new Date().toString())
+                .append("' order by ").append("timefield");
+        MySqlStatementParser parser1 = new MySqlStatementParser(stringBuilder.toString());
+        SQLSelectStatement statement1 = (SQLSelectStatement) parser1.parseStatement();
+        MySqlStatementParser parser2 = new MySqlStatementParser("select * from table1 where is_deleted=1 and wall=1 order by id");
+        SQLSelectStatement statement2 = (SQLSelectStatement) parser2.parseStatement();
+        SQLBinaryOpExpr sqlBinaryOpExpr = new SQLBinaryOpExpr();
+        sqlBinaryOpExpr.setLeft(((MySqlSelectQueryBlock)statement1.getSelect().getQuery()).getWhere());
+        sqlBinaryOpExpr.setRight(((MySqlSelectQueryBlock)statement2.getSelect().getQuery()).getWhere());
+        sqlBinaryOpExpr.setOperator(SQLBinaryOperator.BooleanAnd);
+        ((MySqlSelectQueryBlock)statement1.getSelect().getQuery()).setWhere(sqlBinaryOpExpr);
+        ((MySqlSelectQueryBlock)statement1.getSelect().getQuery()).getOrderBy().getItems().addAll(((MySqlSelectQueryBlock)statement2.getSelect().getQuery()).getOrderBy().getItems());
+        System.out.println(SQLUtils.toMySqlString(statement1));
+        Task task = new Task();
+        task.setInitialSql("select * from employee where i>1 and k>1 order by ll");
+        task.setIsActive(true);
+        task.setKafkaClusterName("ab");
+        task.setKafkaMessageSize(100);
+        task.setKafkaTopic("topic1");
+        task.setKafkaTopicTokens("topic:token");
+        task.setKafkaUrl("url");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, -10000);
+        task.setLastTime(calendar.getTime());
+        task.setMessageFormat("csv");
+        task.setRoutineTime(100);
+        task.setSchemaUsed("TESTDB");
+        task.setTimeField("created_time");
+        System.out.println(SQLParser.parse(task,new Date()));
+    }
 }

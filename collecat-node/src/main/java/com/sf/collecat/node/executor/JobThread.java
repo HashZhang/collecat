@@ -66,6 +66,9 @@ public class JobThread implements Runnable {
             if (kafkaConnection != null) {
                 kafkaConnection.setAborted(true);
             }
+        } catch (Exception e){
+            LOGGER.error("Caught exception while executing Jobs:", e);
+            setException(job);
         }
     }
 

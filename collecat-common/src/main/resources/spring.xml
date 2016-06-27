@@ -11,10 +11,5 @@
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 	">
 
-    <import resource="classpath*:META-INF/spring/*.xml" />
-    <bean id="curatorClient" class="com.sf.collecat.manager.zk.CuratorClient">
-        <constructor-arg name="zkAddress" value="10.202.44.206:2181"></constructor-arg>
-        <property name="jobListener" ref="jobListener"/>
-        <property name="nodeListener" ref="nodeListener"/>
-    </bean>
+    <import resource="classpath*:/META-INF/spring/*.xml" />
 </beans>

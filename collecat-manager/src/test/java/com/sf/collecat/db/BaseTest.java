@@ -1,10 +1,7 @@
 package com.sf.collecat.db;
 
-import com.sf.collecat.common.mapper.JobMapper;
 import com.sf.collecat.common.mapper.NodeMapper;
 import com.sf.collecat.common.mapper.TaskMapper;
-import com.sf.collecat.common.model.Job;
-import com.sf.collecat.common.model.Node;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

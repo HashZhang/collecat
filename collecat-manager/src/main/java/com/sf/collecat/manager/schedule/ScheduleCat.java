@@ -17,15 +17,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by 862911 on 2016/6/17.
+ * 调度类
+ *
+ * @author 862911 Hash Zhang
+ * @version 1.0.0
+ * @time 2016/6/21
  */
 public class ScheduleCat {
     private TaskMapper taskMapper;
     private JobMapper jobMapper;
     private List<Task> tasks;
     private ExecutorService pool = Executors.newFixedThreadPool(10);
-    private ExecutorService businessPool1 = Executors.newFixedThreadPool(1);
-    private ExecutorService businessPool2 = Executors.newFixedThreadPool(1);
+    private ExecutorService businessPool1 = Executors.newSingleThreadExecutor();
+    private ExecutorService businessPool2 = Executors.newSingleThreadExecutor();
     private CuratorClient curatorClient;
     private CleanJob cleanJob;
     private ResetJob resetJob;

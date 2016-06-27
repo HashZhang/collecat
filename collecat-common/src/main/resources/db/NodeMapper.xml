@@ -15,6 +15,11 @@
     from node
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    *
+    from node
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from node
     where id = #{id,jdbcType=INTEGER}

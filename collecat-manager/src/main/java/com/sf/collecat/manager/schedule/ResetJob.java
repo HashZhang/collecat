@@ -1,11 +1,17 @@
 package com.sf.collecat.manager.schedule;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by 862911 on 2016/6/23.
+ * 重置异常工作类
+ *
+ * @author 862911 Hash Zhang
+ * @version 1.0.0
+ * @time 2016/6/21
  */
+@Slf4j
 @Component
 public class ResetJob implements Runnable {
     @Autowired
@@ -13,6 +19,10 @@ public class ResetJob implements Runnable {
 
     @Override
     public void run() {
-        scheduleCat.resetAllExceptionJob();
+        try {
+            scheduleCat.resetAllExceptionJob();
+        }catch(Exception e){
+            log.error("Caught exception while resetting exception jobs!",e);
+        }
     }
 }

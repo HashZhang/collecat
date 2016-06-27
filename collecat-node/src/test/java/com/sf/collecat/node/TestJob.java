@@ -1,6 +1,5 @@
 package com.sf.collecat.node;
 
-import com.alibaba.fastjson.JSON;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.node.jdbc.JDBCConnection;
 import com.sf.collecat.node.jdbc.JDBCConnectionPool;
@@ -19,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 862911 on 2016/6/16.
  */
-@ContextConfiguration(locations = {"/spring-config-service.xml"})
+@ContextConfiguration(locations = {"/META-INF.spring/node-config.xml"})
 public class TestJob extends AbstractJUnit4SpringContextTests {
     @Autowired
     JDBCConnectionPool jdbcConnectionPool;
