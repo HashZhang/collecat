@@ -1,4 +1,4 @@
-package com.sf.collecat.common;
+package com.sf.collecat.manager;
 
 import org.junit.After;
 import org.junit.Before;

@@ -85,7 +85,7 @@ public class CleanJob implements Runnable {
     }
 
     /**
-     * 遇到Job ZK状态为finished，将Jobn清除，为了保证逻辑严密还有容灾，需要先删除数据库，再删除ZK对应的Job
+     * 遇到Job ZK状态为finished，将Job清除，为了保证逻辑严密还有容灾，需要先删除数据库，再删除ZK对应的Job
      *
      * @param child job id
      * @param path1 job状态路径

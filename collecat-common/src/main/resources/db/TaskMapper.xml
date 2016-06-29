@@ -28,6 +28,14 @@
     from task
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByUniqueKey" resultMap="BaseResultMap" parameterType="com.sf.collecat.common.model.Task" >
+    select
+    *
+    from task
+    where initialSql = #{initialSql,jdbcType=VARCHAR}
+    and schemaUsed = #{schemaUsed,jdbcType=VARCHAR}
+    and timeField = #{timeField,jdbcType=VARCHAR}
+  </select>
   <select id="selectAll"  resultMap="BaseResultMap">
     select
    *

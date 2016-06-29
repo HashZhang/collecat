@@ -11,7 +11,6 @@ import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.collecat.manager.zk.CuratorClient;
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +39,8 @@ public class Worker implements Runnable {
     @Getter
     @NonNull
     private Scheduler scheduler;
+    @NonNull
+    private SQLParser sqlParser;
 
     /**
      * 运行过程：
@@ -54,7 +55,7 @@ public class Worker implements Runnable {
                 log.info("task start:{}", task.toString());
             }
             Date date = new Date();
-            List<Job> jobs = SQLParser.parse(task, date);
+            List<Job> jobs = sqlParser.parse(task, date);
             for (Job job : jobs) {
                 jobMapper.insert(job);
                 int id = job.getId();

@@ -1,13 +1,20 @@
 package com.sf.collecat.manager.util;
 
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
+import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
+import com.alibaba.druid.stat.TableStat;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.kafka.api.produce.ProduceConfig;
 import com.sf.kafka.api.produce.ProducerPool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,8 +24,33 @@ import java.util.Set;
 /**
  * Created by 862911 on 2016/6/25.
  */
+@Component
 public class Validator {
-    public static boolean validateKafKaConnection(List<Task> tasks) throws Exception {
+    @Autowired
+    private SQLParser sqlParser;
+
+    /**
+     * 验证SQL语句是否有问题
+     * @param task
+     * @return
+     * @throws SQLSyntaxErrorException
+     */
+    private String validate(Task task) throws SQLSyntaxErrorException {
+        MySqlStatementParser parser = new MySqlStatementParser(task.getInitialSql());
+        SQLStatement statement = parser.parseStatement();
+        MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
+        statement.accept(visitor);
+        String table = null;
+        if (visitor.getTables().keySet().size() > 1) {
+            throw new SQLSyntaxErrorException("tables in select sql cannot be larger than 1!");
+        }
+        for (TableStat.Name tableStat : visitor.getTables().keySet()) {
+            table = tableStat.getName().toUpperCase();
+        }
+        return table;
+    }
+
+    public boolean validateKafKaConnection(List<Task> tasks) throws Exception {
         for (Task task : tasks) {
             ProducerPool kafkaProducer = null;
             try {
@@ -35,11 +67,11 @@ public class Validator {
         return true;
     }
 
-    public static boolean validateJDBCConnections(List<Task> tasks) throws Exception {
+    public boolean validateJDBCConnections(List<Task> tasks) throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
         Set<String> stringSet = new HashSet<>();
         for (Task task : tasks) {
-            List<Job> jobs = SQLParser.parse(task, new Date(System.currentTimeMillis() - 1000));
+            List<Job> jobs = sqlParser.parse(task, new Date(System.currentTimeMillis() - 1000));
             for (Job job : jobs) {
                 Connection conn = null;
                 try {

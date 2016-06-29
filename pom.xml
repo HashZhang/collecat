@@ -66,7 +66,7 @@
         <mybatis-spring.version>1.2.0</mybatis-spring.version>
         <mysql-connector-java.version>5.1.38</mysql-connector-java.version>
         <druid.version>1.0.18</druid.version>
-        <aspectjweaver.version>1.7.2</aspectjweaver.version>
+        <aspectjweaver.version>1.8.8</aspectjweaver.version>
         <!-- pic validation -->
         <patchca_version>0.5.0</patchca_version>
         <!--task schedule-->
@@ -90,6 +90,8 @@
         <tec_zkclient_version>0.3</tec_zkclient_version>
         <!--lombok-->
         <lombok_version>1.16.8</lombok_version>
+        <!--缓存-->
+        <ehcache_version>2.6.11</ehcache_version>
         <!-- Test libs -->
         <junit_version>4.10</junit_version>
         <easymock_version>3.0</easymock_version>
@@ -342,6 +344,11 @@
                 <version>${org.springframework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
@@ -470,6 +477,12 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok_version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>${ehcache_version}</version>
             </dependency>
 
             <!-- test -->

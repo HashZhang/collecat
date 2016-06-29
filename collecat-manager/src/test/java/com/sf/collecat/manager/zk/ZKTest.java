@@ -1,6 +1,5 @@
-package com.sf.collecat.zk;
+package com.sf.collecat.manager.zk;
 
-import com.sf.collecat.manager.zk.CuratorClient;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

@@ -1,6 +1,6 @@
 package com.sf.collecat.manager.schedule.process;
 
-import com.sf.collecat.manager.schedule.ScheduleCat;
+import com.sf.collecat.manager.schedule.DefaultScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ResetJob implements Runnable {
     @Autowired
-    private ScheduleCat scheduleCat;
+    private DefaultScheduler defaultScheduler;
 
     @Override
     public void run() {
         try {
-            scheduleCat.resetAllExceptionJob();
+            defaultScheduler.resetAllExceptionJob();
         }catch(Exception e){
             log.error("Caught exception while resetting exception jobs!",e);
         }

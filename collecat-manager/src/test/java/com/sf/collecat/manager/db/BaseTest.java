@@ -1,4 +1,4 @@
-package com.sf.collecat.db;
+package com.sf.collecat.manager.db;
 
 import com.sf.collecat.common.mapper.NodeMapper;
 import com.sf.collecat.common.mapper.TaskMapper;

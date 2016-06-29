@@ -7,6 +7,7 @@ import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.schedule.process.CleanJob;
 import com.sf.collecat.manager.schedule.process.ResetJob;
+import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.collecat.manager.zk.CuratorClient;
 import it.sauronsoftware.cron4j.Scheduler;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.Executors;
  * @version 1.0.0
  * @time 2016/6/21
  */
-public class ScheduleCat {
+public class DefaultScheduler {
     private TaskMapper taskMapper;
     private JobMapper jobMapper;
     private List<Task> tasks;
@@ -33,13 +34,14 @@ public class ScheduleCat {
     private CuratorClient curatorClient;
     private CleanJob cleanJob;
     private ResetJob resetJob;
+    private SQLParser sqlParser;
 
     public void init() {
         tasks = new ArrayList<>();
         List<Task> ttasks = taskMapper.selectAll();
         //// TODO: 2016/6/20 启动task
         for (Task task : ttasks) {
-            scheduletask(task);
+            scheduleTask(task);
         }
     }
 
@@ -76,16 +78,16 @@ public class ScheduleCat {
         task.setRoutineTime(routineTime);
         task.setSchemaUsed(schemaUsed);
         task.setTimeField(field);
-        scheduletask(task);
+        scheduleTask(task);
     }
 
-    public void scheduletask(final Task task) {
+    public void scheduleTask(final Task task) {
         final Scheduler s = new Scheduler();
         task.setScheduler(s);
         tasks.add(task);
         s.schedule(task.getAllocateRoutine(), new Runnable() {
             public void run() {
-                Worker worker = new Worker(task, curatorClient, jobMapper, taskMapper, s);
+                Worker worker = new Worker(task, curatorClient, jobMapper, taskMapper, s,sqlParser);
                 pool.submit(worker);
             }
         });
@@ -109,11 +111,15 @@ public class ScheduleCat {
     }
 
     public void removeAllTask() {
-        for(Task task:tasks){
+        for (Task task : tasks) {
             task.getScheduler().stop();
             taskMapper.deleteByPrimaryKey(task.getId());
         }
         tasks = new ArrayList<>();
+    }
+
+    public void cancelTask(Task task) {
+        task.getScheduler().stop();
     }
 
     public void setCuratorClient(CuratorClient curatorClient) {

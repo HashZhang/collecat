@@ -13,6 +13,8 @@ public interface TaskMapper {
 
     Task selectByPrimaryKey(Integer id);
 
+    Task selectByUniqueKey(Task task);
+
     int updateByPrimaryKeySelective(Task record);
 
     int updateByPrimaryKey(Task record);

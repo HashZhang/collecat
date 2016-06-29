@@ -171,6 +171,10 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -191,7 +195,6 @@
                         <exclude>**/tasks.properties</exclude>
                         <exclude>**/config.properties</exclude>
                         <exclude>**/log4j.xml</exclude>
-                        <exclude>**/spring.xml</exclude>
                         <exclude>**/schema.xml</exclude>
                     </excludes>
                 </configuration>

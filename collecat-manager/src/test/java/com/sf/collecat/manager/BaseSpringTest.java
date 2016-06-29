@@ -1,5 +1,7 @@
-package com.sf.collecat.common;
+package com.sf.collecat.manager;
 
+import org.junit.After;
+import org.junit.Before;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
@@ -8,5 +10,10 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
  */
 @ContextConfiguration(locations = {"/spring.xml"})
 public class BaseSpringTest extends AbstractJUnit4SpringContextTests {
-
+    @Before
+    public void init() {
+    }
+    @After
+    public void drop() {
+    }
 }
