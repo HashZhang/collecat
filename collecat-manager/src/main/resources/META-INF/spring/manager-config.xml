@@ -39,12 +39,11 @@
     </bean>
 
 
-    <bean class="com.sf.collecat.manager.schedule.DefaultScheduler" id="defaultScheduler" init-method="init">
-        <property name="jobMapper" ref="jobMapper"/>
-        <property name="taskMapper" ref="taskMapper"/>
-        <property name="cleanJob" ref="cleanJob"/>
-        <property name="resetJob" ref="resetJob"/>
-        <property name="curatorClient" ref="curatorClient"/>
+    <bean class="com.sf.collecat.manager.schedule.DefaultScheduler" id="defaultScheduler">
+        <property name="checkNodeProcess" ref="checkNodeProcess"/>
+        <property name="checkJobProcess" ref="checkJobProcess"/>
+        <property name="jobManager" ref="jobManager"/>
+        <property name="taskManager" ref="taskManager"/>
     </bean>
 
     <bean id="curatorClient" class="com.sf.collecat.manager.zk.CuratorClient">
@@ -52,4 +51,15 @@
         <property name="jobListener" ref="jobListener"/>
         <property name="nodeListener" ref="nodeListener"/>
     </bean>
+
+    <bean class="com.sf.collecat.manager.manage.TaskManager" id="taskManager" init-method="init">
+    </bean>
+
+    <bean class="com.sf.collecat.manager.manage.JobManager" id="jobManager" >
+    </bean>
+
+    <bean class="com.sf.collecat.manager.manage.NodeManager" id="nodeManager">
+    </bean>
+
+
 </beans>

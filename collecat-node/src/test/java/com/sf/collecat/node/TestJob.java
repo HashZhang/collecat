@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 862911 on 2016/6/16.
  */
-@ContextConfiguration(locations = {"/META-INF.spring/node-config.xml"})
+@ContextConfiguration(locations = {"/META-INF/spring/node-config.xml"})
 public class TestJob extends AbstractJUnit4SpringContextTests {
     @Autowired
     JDBCConnectionPool jdbcConnectionPool;

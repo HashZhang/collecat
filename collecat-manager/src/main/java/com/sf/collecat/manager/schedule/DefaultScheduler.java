@@ -1,18 +1,19 @@
 package com.sf.collecat.manager.schedule;
 
-import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.mapper.JobMapper;
 import com.sf.collecat.common.mapper.TaskMapper;
-import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
-import com.sf.collecat.manager.schedule.process.CleanJob;
-import com.sf.collecat.manager.schedule.process.ResetJob;
+import com.sf.collecat.manager.manage.JobManager;
+import com.sf.collecat.manager.manage.NodeManager;
+import com.sf.collecat.manager.manage.TaskManager;
+import com.sf.collecat.manager.schedule.process.CheckJobProcess;
+import com.sf.collecat.manager.schedule.process.CheckNodeProcess;
 import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.collecat.manager.zk.CuratorClient;
 import it.sauronsoftware.cron4j.Scheduler;
+import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,61 +26,16 @@ import java.util.concurrent.Executors;
  * @time 2016/6/21
  */
 public class DefaultScheduler {
-    private TaskMapper taskMapper;
-    private JobMapper jobMapper;
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
     private ExecutorService pool = Executors.newFixedThreadPool(10);
     private ExecutorService businessPool1 = Executors.newSingleThreadExecutor();
     private ExecutorService businessPool2 = Executors.newSingleThreadExecutor();
-    private CuratorClient curatorClient;
-    private CleanJob cleanJob;
-    private ResetJob resetJob;
-    private SQLParser sqlParser;
-
-    public void init() {
-        tasks = new ArrayList<>();
-        List<Task> ttasks = taskMapper.selectAll();
-        //// TODO: 2016/6/20 启动task
-        for (Task task : ttasks) {
-            scheduleTask(task);
-        }
-    }
-
-    public TaskMapper getTaskMapper() {
-        return taskMapper;
-    }
-
-    public void setTaskMapper(TaskMapper taskMapper) {
-        this.taskMapper = taskMapper;
-    }
-
-    public JobMapper getJobMapper() {
-        return jobMapper;
-    }
-
-    public void setJobMapper(JobMapper jobMapper) {
-        this.jobMapper = jobMapper;
-    }
-
-    public void createTask(String allocateRoutine, String initialSQL, String kafkaClusterName, int kafkaMessageSize,
-                           String kafkaTopic, String kafkaTopicTokens, String kafkaUrl, Date lastTime, String messageFormat,
-                           int routineTime, String schemaUsed, String field, boolean isActive) {
-        Task task = new Task();
-        task.setAllocateRoutine(allocateRoutine);
-        task.setInitialSql(initialSQL);
-        task.setIsActive(isActive);
-        task.setKafkaClusterName(kafkaClusterName);
-        task.setKafkaMessageSize(kafkaMessageSize);
-        task.setKafkaTopic(kafkaTopic);
-        task.setKafkaTopicTokens(kafkaTopicTokens);
-        task.setKafkaUrl(kafkaUrl);
-        task.setLastTime(lastTime);
-        task.setMessageFormat(messageFormat);
-        task.setRoutineTime(routineTime);
-        task.setSchemaUsed(schemaUsed);
-        task.setTimeField(field);
-        scheduleTask(task);
-    }
+    private CheckNodeProcess checkNodeProcess;
+    private CheckJobProcess checkJobProcess;
+    @Setter
+    private JobManager jobManager;
+    @Setter
+    private TaskManager taskManager;
 
     public void scheduleTask(final Task task) {
         final Scheduler s = new Scheduler();
@@ -87,7 +43,7 @@ public class DefaultScheduler {
         tasks.add(task);
         s.schedule(task.getAllocateRoutine(), new Runnable() {
             public void run() {
-                Worker worker = new Worker(task, curatorClient, jobMapper, taskMapper, s,sqlParser);
+                Worker worker = new Worker(task, s ,jobManager, taskManager);
                 pool.submit(worker);
             }
         });
@@ -95,63 +51,28 @@ public class DefaultScheduler {
         s.start();
     }
 
-    public List<Job> getAllExceptionJob() {
-        return jobMapper.selectAllExceptionJob();
-    }
-
-    public void resetAllExceptionJob() {
-        List<Job> jobList = jobMapper.selectAllExceptionJob();
-        for (Job job : jobList) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(Constants.JOB_PATH).append("/").append(job.getId());
-            curatorClient.setData(stringBuilder.toString(), Constants.JOB_INIT);
-            job.setStatus(Constants.JOB_INIT_VALUE);
-            jobMapper.updateByPrimaryKey(job);
-        }
-    }
-
-    public void removeAllTask() {
-        for (Task task : tasks) {
-            task.getScheduler().stop();
-            taskMapper.deleteByPrimaryKey(task.getId());
-        }
-        tasks = new ArrayList<>();
-    }
-
     public void cancelTask(Task task) {
         task.getScheduler().stop();
     }
 
-    public void setCuratorClient(CuratorClient curatorClient) {
-        this.curatorClient = curatorClient;
-    }
-
-    public void setCleanJob(final CleanJob cleanJob) {
-        this.cleanJob = cleanJob;
+    public void setCheckNodeProcess(final CheckNodeProcess checkNodeProcess) {
+        this.checkNodeProcess = checkNodeProcess;
         final Scheduler s = new Scheduler();
         s.schedule("* * * * *", new Runnable() {
             public void run() {
-                businessPool1.submit(cleanJob);
+                businessPool1.submit(checkNodeProcess);
             }
         });
         // Starts the scheduler.
         s.start();
     }
 
-    public void insertTask(Task task) {
-        taskMapper.insert(task);
-    }
-
-    public ResetJob getResetJob() {
-        return resetJob;
-    }
-
-    public void setResetJob(final ResetJob resetJob) {
-        this.resetJob = resetJob;
+    public void setCheckJobProcess(final CheckJobProcess checkJobProcess) {
+        this.checkJobProcess = checkJobProcess;
         final Scheduler s = new Scheduler();
         s.schedule("* * * * *", new Runnable() {
             public void run() {
-                businessPool2.submit(resetJob);
+                businessPool2.submit(checkJobProcess);
             }
         });
         // Starts the scheduler.

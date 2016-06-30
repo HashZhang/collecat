@@ -7,6 +7,10 @@ import com.sf.collecat.common.mapper.TaskMapper;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;
+import com.sf.collecat.manager.exception.job.JobPulishException;
+import com.sf.collecat.manager.exception.task.TaskModifyException;
+import com.sf.collecat.manager.manage.JobManager;
+import com.sf.collecat.manager.manage.TaskManager;
 import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.collecat.manager.zk.CuratorClient;
 import it.sauronsoftware.cron4j.Scheduler;
@@ -29,19 +33,15 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class Worker implements Runnable {
+    @NonNull
     private Task task;
-    @NonNull
-    private CuratorClient curatorClient;
-    @NonNull
-    private JobMapper jobMapper;
-    @NonNull
-    private TaskMapper taskMapper;
     @Getter
     @NonNull
     private Scheduler scheduler;
     @NonNull
-    private SQLParser sqlParser;
-
+    private JobManager jobManager;
+    @NonNull
+    private TaskManager taskManager;
     /**
      * 运行过程：
      */
@@ -54,26 +54,17 @@ public class Worker implements Runnable {
             if (log.isInfoEnabled()) {
                 log.info("task start:{}", task.toString());
             }
-            Date date = new Date();
-            List<Job> jobs = sqlParser.parse(task, date);
-            for (Job job : jobs) {
-                jobMapper.insert(job);
-                int id = job.getId();
-                curatorClient.createPath(StrUtils.getZKJobDetailPath(id), JSON.toJSONString(job));
-                curatorClient.createPath(StrUtils.getZKJobPath(id), Constants.JOB_INIT);
-            }
-            if (!jobs.isEmpty()) {
-                task.setLastTime(date);
-                taskMapper.updateByPrimaryKey(task);
-            }
+            jobManager.publishJob(task);
         } catch (SQLSyntaxErrorException e) {
             log.error("SQL syntax error for collecat!", e);
             task.setIsActive(false);
-            taskMapper.updateByPrimaryKey(task);
-        } catch (Exception e) {
-            log.error("", e);
-            task.setIsActive(false);
-            taskMapper.updateByPrimaryKey(task);
+            try {
+                taskManager.modifyTask(task);
+            } catch (Exception e1) {
+                log.error("",e1);
+            }
+        } catch (JobPulishException e) {
+            log.error("",e);
         }
     }
 }

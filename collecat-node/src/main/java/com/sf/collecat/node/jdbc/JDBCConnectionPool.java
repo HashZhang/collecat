@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.base.Optional;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,12 +12,12 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by 862911 on 2016/6/15.
  */
+@Slf4j
 @Component
 public class JDBCConnectionPool {
     private final static Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
@@ -36,7 +37,6 @@ public class JDBCConnectionPool {
             JDBCConnection jdbcConnection = null;
             DruidDataSource druidDataSource = null;
             if (!connMap.containsKey(url) || (connMap.get(url) == null)) {
-                CountDownLatch countDownLatch = new CountDownLatch(1);
                 if (reentrantLock.tryLock()) {
                     try {
                         druidDataSource = new DruidDataSource();
@@ -50,12 +50,11 @@ public class JDBCConnectionPool {
                         druidDataSource.setMinEvictableIdleTimeMillis(300000);
                         druidDataSource.init();
                         connMap.put(job.getMysqlUrl(), Optional.of(druidDataSource));
-                        countDownLatch.countDown();
                     } finally {
                         reentrantLock.unlock();
                     }
                 } else {
-                    countDownLatch.await();
+                    while (!connMap.containsKey(url) || (connMap.get(url) == null)) ;
                 }
             }
             druidDataSource = connMap.get(url).get();
@@ -63,8 +62,6 @@ public class JDBCConnectionPool {
             jdbcConnection.setJob(job);
             return jdbcConnection;
         } catch (SQLException e) {
-            throw new GetJDBCCConnectionException(e);
-        } catch (InterruptedException e) {
             throw new GetJDBCCConnectionException(e);
         }
     }

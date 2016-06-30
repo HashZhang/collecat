@@ -37,9 +37,11 @@ public class JobThread implements Runnable {
     public void run() {
         KafkaConnection kafkaConnection = null;
         try {
+            LOGGER.warn(job.getId()+" init");
             JDBCConnection jdbcConnection = jdbcConnectionPool.getConnection(job);
             String message[] = null;
             message = jdbcConnection.executeJob();
+            LOGGER.warn(job.getId()+" after jdbc");
             kafkaConnection = kafkaConnectionPool.getKafkaConnection(job);
             if (kafkaConnection == null) {
                 throw new KafkaException("Can't get KafKa connection!");
@@ -47,6 +49,7 @@ public class JobThread implements Runnable {
             for (int i = 0; i < message.length; i++) {
                 kafkaConnection.send(message[i]);
             }
+            LOGGER.warn(job.getId()+" after kafka");
             complete(job);
         } catch (SQLException e) {
             LOGGER.error("Caught exception when execute SQL:", e);
@@ -73,6 +76,7 @@ public class JobThread implements Runnable {
     }
 
     private void complete(Job job) {
+        LOGGER.warn("complete:{}",job.getId());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constants.JOB_PATH).append("/").append(job.getId());
         InterProcessSemaphoreMutex interProcessSemaphoreMutex = new InterProcessSemaphoreMutex(curatorClient.getClient(), stringBuilder.toString());
