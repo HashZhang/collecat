@@ -26,7 +26,6 @@ import java.util.concurrent.Executors;
  * @time 2016/6/21
  */
 public class DefaultScheduler {
-    private List<Task> tasks = new ArrayList<>();
     private ExecutorService pool = Executors.newFixedThreadPool(10);
     private ExecutorService businessPool1 = Executors.newSingleThreadExecutor();
     private ExecutorService businessPool2 = Executors.newSingleThreadExecutor();
@@ -38,17 +37,16 @@ public class DefaultScheduler {
     private TaskManager taskManager;
 
     public void scheduleTask(final Task task) {
-        final Scheduler s = new Scheduler();
-        task.setScheduler(s);
-        tasks.add(task);
-        s.schedule(task.getAllocateRoutine(), new Runnable() {
+        final Scheduler scheduler = new Scheduler();
+        task.setScheduler(scheduler);
+        scheduler.schedule(task.getAllocateRoutine(), new Runnable() {
             public void run() {
-                Worker worker = new Worker(task, s ,jobManager, taskManager);
+                Worker worker = new Worker(task, scheduler ,jobManager, taskManager);
                 pool.submit(worker);
             }
         });
         // Starts the scheduler.
-        s.start();
+        scheduler.start();
     }
 
     public void cancelTask(Task task) {
