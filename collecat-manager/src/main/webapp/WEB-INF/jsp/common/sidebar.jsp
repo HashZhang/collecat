@@ -16,7 +16,7 @@
                 <%
                     }
                 %>
-                <a href="#">
+                <a href="index.do">
                     <i class="glyphicon glyphicon-dashboard"></i> <span>DashBoard</span>
                 </a>
                 <ul class="treeview-menu">
@@ -29,7 +29,7 @@
                     %>
                     <li>
                         <%}%>
-                        <a href="#"><i class="glyphicon glyphicon-list-alt"></i>Task监控管理
+                        <a href="task.do"><i class="glyphicon glyphicon-list-alt"></i>Task监控管理
                             <p>
                                 <small>查看与管理task状态</small>
                             </p>

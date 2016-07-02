@@ -58,6 +58,22 @@ public class TaskManager {
         }
     }
 
+    public Task getTask(int taskId) throws TaskSearchException {
+        try {
+            return taskMapper.selectByPrimaryKey(taskId);
+        } catch (Exception e) {
+            throw new TaskSearchException(e);
+        }
+    }
+
+    public List<Task> getAllTasks() throws TaskSearchException {
+        try {
+            return taskMapper.selectAll();
+        } catch (Exception e) {
+            throw new TaskSearchException(e);
+        }
+    }
+
     /**
      * 动态添加Task
      * 分为三步：在配置数据库中添加task，本地缓存记录task，调度task
