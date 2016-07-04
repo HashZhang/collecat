@@ -16,18 +16,32 @@ public class StrUtils {
     }
 
     public static String getZKJobPath(int id) {
-        return makeString(Constants.JOB_PATH,Constants.ZK_SEPARATOR,id);
+        return makeString(Constants.JOB_PATH, Constants.ZK_SEPARATOR, id);
     }
 
     public static String getZKJobDetailPath(int id) {
-        return makeString(Constants.JOB_DETAIL_PATH,Constants.ZK_SEPARATOR,id);
+        return makeString(Constants.JOB_DETAIL_PATH, Constants.ZK_SEPARATOR, id);
     }
 
     public static String getZKJobPath(String id) {
-        return makeString(Constants.JOB_PATH,Constants.ZK_SEPARATOR,id);
+        return makeString(Constants.JOB_PATH, Constants.ZK_SEPARATOR, id);
     }
 
     public static String getZKJobDetailPath(String id) {
-        return makeString(Constants.JOB_DETAIL_PATH,Constants.ZK_SEPARATOR,id);
+        return makeString(Constants.JOB_DETAIL_PATH, Constants.ZK_SEPARATOR, id);
+    }
+
+    public static String transferNull(String src) {
+        if (src == null || src.equals("null")) {
+            return "";
+        }
+        return src;
+    }
+
+    public static boolean isNull(String src) {
+        if (src == null || src.trim().equals("")) {
+            return true;
+        }
+        return false;
     }
 }

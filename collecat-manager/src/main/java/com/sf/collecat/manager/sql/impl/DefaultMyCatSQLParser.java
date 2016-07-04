@@ -60,7 +60,12 @@ public class DefaultMyCatSQLParser implements SQLParser {
     public List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException {
         List<Job> jobList = new ArrayList<>();
         String table = getTable(task);
-        List<String> datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
+        List<String> datanodes = null;
+        try {
+            datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
+        }catch(Exception e){
+            throw new SQLSyntaxErrorException("Schema is not provided!");
+        }
         Integer routineTime = task.getRoutineTime();
         long now = lastTT.getTime();
         for (String datanode : datanodes) {

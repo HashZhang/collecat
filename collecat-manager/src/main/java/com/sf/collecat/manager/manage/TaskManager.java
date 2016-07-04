@@ -13,7 +13,6 @@ import com.sf.collecat.manager.schedule.DefaultScheduler;
 import com.sf.collecat.manager.util.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class TaskManager {
-    private final static Map<Integer, Task> taskMap = new ConcurrentHashMap<>();
+    private final Map<Integer, Task> taskMap = new ConcurrentHashMap<>();
     @Autowired
     private TaskMapper taskMapper;
     @Autowired
@@ -40,6 +39,7 @@ public class TaskManager {
 
     /**
      * 初始化方法，从数据库载入所有的task
+     *
      * @throws TaskSearchException
      * @throws TaskAddException
      */
@@ -50,7 +50,7 @@ public class TaskManager {
         } catch (Exception e) {
             throw new TaskSearchException(e);
         }
-        if (taskList != null) {
+        if (taskList == null) {
             return;
         }
         for (Task task : taskList) {
@@ -86,7 +86,9 @@ public class TaskManager {
         validator.validateJDBCConnections(task);
         validator.validateKafKaConnection(task);
         try {
-            taskMapper.insert(task);
+            if (task.getId() == null || task.getId() <= 0) {
+                taskMapper.insert(task);
+            }
         } catch (Exception e) {
             throw new TaskAddException(e);
         }
@@ -108,6 +110,7 @@ public class TaskManager {
         } catch (Exception e) {
             throw new TaskModifyException(e);
         }
+        task.setScheduler(taskMap.get(task.getId()).getScheduler());
         defaultScheduler.cancelTask(task);
         taskMap.put(task.getId(), task);
         defaultScheduler.scheduleTask(task);
@@ -126,6 +129,7 @@ public class TaskManager {
         } catch (Exception e) {
             throw new TaskDeleteException(e);
         }
+        task.setScheduler(taskMap.get(task.getId()).getScheduler());
         defaultScheduler.cancelTask(task);
         taskMap.remove(task.getId());
     }

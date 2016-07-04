@@ -38,9 +38,14 @@ public class Validator {
      */
     public String validateSQL(Task task) throws ValidateSQLException {
         MySqlStatementParser parser = new MySqlStatementParser(task.getInitialSql());
-        SQLStatement statement = parser.parseStatement();
-        MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
-        statement.accept(visitor);
+        MySqlSchemaStatVisitor visitor = null;
+        try {
+            SQLStatement statement = parser.parseStatement();
+            visitor = new MySqlSchemaStatVisitor();
+            statement.accept(visitor);
+        } catch (Exception e) {
+            throw new ValidateSQLException("SQLSyntaxException!");
+        }
         String table = null;
         if (visitor.getTables().keySet().size() > 1) {
             throw new ValidateSQLException("tables in select sql cannot be larger than 1!");
@@ -52,21 +57,21 @@ public class Validator {
     }
 
     public boolean validateKafKaConnection(Task task) throws ValidateKafkaException {
-            ProducerPool kafkaProducer = null;
-            try {
-                ProduceConfig produceConfig = new ProduceConfig(10, task.getKafkaUrl(), task.getKafkaClusterName(), task.getKafkaTopicTokens());
-                kafkaProducer = new ProducerPool(produceConfig);
-            } catch (Exception e) {
-                throw new ValidateKafkaException(e);
-            } finally {
-                if (kafkaProducer != null) {
-                    kafkaProducer.close();
-                }
+        ProducerPool kafkaProducer = null;
+        try {
+            ProduceConfig produceConfig = new ProduceConfig(10, task.getKafkaUrl(), task.getKafkaClusterName(), task.getKafkaTopicTokens());
+            kafkaProducer = new ProducerPool(produceConfig);
+        } catch (Exception e) {
+            throw new ValidateKafkaException(e);
+        } finally {
+            if (kafkaProducer != null) {
+                kafkaProducer.close();
             }
+        }
         return true;
     }
 
-    public boolean validateJDBCConnections(Task task) throws ValidateJDBCException, SQLException, ClassNotFoundException {
+    public boolean validateJDBCConnections(Task task) throws SQLException, ClassNotFoundException, ValidateJDBCException {
         Class.forName("com.mysql.jdbc.Driver");
         Set<String> stringSet = new HashSet<>();
         List<Job> jobs = sqlParser.parse(task, new Date(System.currentTimeMillis() - 1000));

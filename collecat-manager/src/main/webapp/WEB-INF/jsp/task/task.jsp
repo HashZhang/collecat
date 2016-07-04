@@ -1,4 +1,5 @@
 <%@ page import="com.sf.collecat.common.model.Task" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.List" %><%--
   Author： HashZhang
   Date: 2016/7/1
@@ -33,29 +34,11 @@
 
         <!-- Main content -->
         <section class="content" style="overflow:scroll;height:inherit">
-            <div class="box box-primary">
-                <div class="box-header">
-                    <h3 class="box-title">#注释：</h3>
-                </div>
-                <div class="box-body">
-                    <ol>
-                        <li>Initial SQL: 抽取表的初始SQL，决定如何筛选出需要的数据的SQL语句</li>
-                        <li>Schema Used: 位于MyCat的哪个逻辑库schema上</li>
-                        <li>Time Field: 抽取表根据的时间字段</li>
-                        <li>Last Time: 上次生成job的截止时间</li>
-                        <li>Routine Time: 每个job抽取时间长度</li>
-                        <li>Allocate Routine: 调度cron表达式，决定多久让task生成一次job</li>
-                        <li>Is Active:这个task是否处于活跃状态，如果非活跃状态，不会生成job</li>
-                        <li>Kafka Topic:抽取到的kafka topic</li>
-                        <li>Kafka Url:抽取到的kafka url</li>
-                        <li>Kafka Cluster Name:抽取到的kafka Cluster Name</li>
-                        <li>Kafka Topic Tokens:抽取到的kafka token</li>
-                        <li>Kafka Message Size:抽取到的kafka每条message最多包含多少条记录</li>
-                        <li>Message Format:数据格式，目前支持csv和json</li>
-                    </ol>
-                </div>
+            <div class="row col-lg-4 col-sm-4">
+                <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
             </div>
             <%
+                SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy HH:mm");
                 List<Task> tasks = (List<Task>) request.getAttribute("alltasks");
                 out.print("<table id=\"allTasks\" class=\"table table-bordered table-striped\" cellspacing=\"0\" width=\"100%\">\n" +
                         "        <thead>\n" +
@@ -88,7 +71,7 @@
                             "<td>" + task.getInitialSql() + "</td>" +
                             "<td>" + task.getSchemaUsed() + "</td>" +
                             "<td>" + task.getTimeField() + "</td>" +
-                            "<td>" + task.getLastTime() + "</td>" +
+                            "<td>" + formatter1.format(task.getLastTime()) + "</td>" +
                             "<td>" + task.getRoutineTime() + "</td>" +
                             "<td>" + task.getAllocateRoutine() + "</td>" +
                             "<td>" + task.getIsActive() + "</td>" +
@@ -103,6 +86,28 @@
                 out.print("        </tbody>\n" +
                         "    </table>");
             %>
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">#注释：</h3>
+                </div>
+                <div class="box-body">
+                    <ol>
+                        <li>Initial SQL: 抽取表的初始SQL，决定如何筛选出需要的数据的SQL语句</li>
+                        <li>Schema Used: 位于MyCat的哪个逻辑库schema上</li>
+                        <li>Time Field: 抽取表根据的时间字段</li>
+                        <li>Last Time: 上次生成job的截止时间</li>
+                        <li>Routine Time: 每个job抽取时间长度</li>
+                        <li>Allocate Routine: 调度cron表达式，决定多久让task生成一次job</li>
+                        <li>Is Active:这个task是否处于活跃状态，如果非活跃状态，不会生成job</li>
+                        <li>Kafka Topic:抽取到的kafka topic</li>
+                        <li>Kafka Url:抽取到的kafka url</li>
+                        <li>Kafka Cluster Name:抽取到的kafka Cluster Name</li>
+                        <li>Kafka Topic Tokens:抽取到的kafka token</li>
+                        <li>Kafka Message Size:抽取到的kafka每条message最多包含多少条记录</li>
+                        <li>Message Format:数据格式，目前支持csv和json</li>
+                    </ol>
+                </div>
+            </div>
         </section>
         <jsp:include page="../common/footer.jsp"></jsp:include>
     </div>
@@ -146,7 +151,7 @@
         }
     }
     function addTask() {
-        window.location.href = "/task/add.do"
+        window.location.href = "/task/publish.do"
     }
 </script>
 </body>

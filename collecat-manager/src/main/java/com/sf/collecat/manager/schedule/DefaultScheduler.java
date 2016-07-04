@@ -50,6 +50,7 @@ public class DefaultScheduler {
     }
 
     public void cancelTask(Task task) {
+
         task.getScheduler().stop();
     }
 
