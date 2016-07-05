@@ -16,7 +16,7 @@
                 <%
                     }
                 %>
-                <a href="index.do">
+                <a href="/collecat-manager/index.do">
                     <i class="glyphicon glyphicon-dashboard"></i> <span>DashBoard</span>
                 </a>
                 <ul class="treeview-menu">
@@ -29,7 +29,7 @@
                     %>
                     <li>
                         <%}%>
-                        <a href="task.do"><i class="glyphicon glyphicon-list-alt"></i>Task监控管理
+                        <a href="/collecat-manager/task.do"><i class="glyphicon glyphicon-list-alt"></i>Task监控管理
                             <p>
                                 <small>查看与管理task状态</small>
                             </p>
@@ -43,7 +43,7 @@
                         } else {
                     %>
                     <li>
-                        <%}%><a href="#"><i class="glyphicon glyphicon-list-alt"></i>Job监控与管理
+                        <%}%><a href="/collecat-manager/job.do"><i class="glyphicon glyphicon-list-alt"></i>Job监控与管理
                         <p>
                             <small>查看与管理job状态</small>
                         </p>
@@ -57,7 +57,7 @@
                     %>
                     <li>
                         <%}%>
-                        <a href="#"><i class="glyphicon glyphicon-th"></i> Node监控
+                        <a href="/collecat-manager/node.do"><i class="glyphicon glyphicon-th"></i> Node监控
                             <p>
                                 <small>查看node状态</small>
                             </p>

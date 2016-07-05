@@ -10,6 +10,7 @@ import com.sf.collecat.manager.exception.validate.ValidateJDBCException;
 import com.sf.collecat.manager.exception.validate.ValidateKafkaException;
 import com.sf.collecat.manager.exception.validate.ValidateSQLException;
 import com.sf.collecat.manager.manage.TaskManager;
+import com.sf.collecat.manager.util.PropertyLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,11 +21,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Hash Zhang
@@ -42,24 +46,30 @@ public class TaskController {
     @RequestMapping("/task")
     public ModelAndView task(HttpServletRequest request, ModelMap model) {
         List<Task> tasks = null;
+        String message = null;
         try {
             tasks = taskManager.getAllTasks();
         } catch (TaskSearchException e) {
             log.error("", e);
+            message = e.getMessage();
         }
         model.addAttribute("alltasks", tasks);
+        model.addAttribute("message",message);
         return new ModelAndView("task/task");
     }
 
     @RequestMapping("/task/modify")
     public ModelAndView modifyTask(HttpServletRequest request, ModelMap model) {
         Task task = null;
+        String message = null;
         try {
             task = taskManager.getTask(Integer.parseInt(request.getParameter("taskId")));
         } catch (TaskSearchException e) {
             log.error("", e);
+            message = e.getMessage();
         }
         model.addAttribute("task", task);
+        model.addAttribute("message",message);
         return new ModelAndView("task/modifyTask");
     }
 
@@ -86,11 +96,22 @@ public class TaskController {
                 taskManager.modifyTask(task);
             }
         } catch (TaskSearchException e) {
-            log.error("", e);
+            model.addAttribute("message", "Something wrong in KafKa configuration");
+            model.addAttribute("task", task);
+            return new ModelAndView("/task/modifyTask");
         } catch (TaskModifyException e) {
-            log.error("", e);
+            model.addAttribute("message", "Something wrong in KafKa configuration");
+            model.addAttribute("task", task);
+            return new ModelAndView("/task/modifyTask");
         } catch (ParseException e) {
+            model.addAttribute("message", "Something wrong in KafKa configuration");
+            model.addAttribute("task", task);
+            return new ModelAndView("/task/modifyTask");
+        } catch (Exception e){
             log.error("", e);
+            model.addAttribute("message", "Something wrong in KafKa configuration");
+            model.addAttribute("task", task);
+            return new ModelAndView("/task/modifyTask");
         }
         String content = StrUtils.makeString(2, ";URL=", "/task.do");
         response.setHeader("REFRESH", content);
@@ -118,7 +139,7 @@ public class TaskController {
     }
 
     @RequestMapping(value = "/task/add")
-    public ModelAndView addTask(HttpServletRequest request, ModelMap model) {
+    public ModelAndView addTask(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         Task task = new Task();
         try {
             task.setAllocateRoutine(request.getParameter("allocateRoutine"));
@@ -135,24 +156,24 @@ public class TaskController {
             task.setRoutineTime(Integer.parseInt(request.getParameter("routineTime")));
             task.setSchemaUsed(request.getParameter("schemaUsed"));
             task.setTimeField(request.getParameter("timeField"));
-            if(StrUtils.isNull(task.getAllocateRoutine())){
+            if (StrUtils.isNull(task.getAllocateRoutine())) {
                 throw new Exception("AllocateRoutine can't be null");
-            } else if(StrUtils.isNull(task.getInitialSql())){
+            } else if (StrUtils.isNull(task.getInitialSql())) {
                 throw new Exception("InitialSql can't be null");
-            } else if(StrUtils.isNull(task.getKafkaClusterName())){
+            } else if (StrUtils.isNull(task.getKafkaClusterName())) {
                 throw new Exception("KafkaClusterName can't be null");
-            } else if(StrUtils.isNull(task.getKafkaTopic())){
+            } else if (StrUtils.isNull(task.getKafkaTopic())) {
                 throw new Exception("KafkaTopic can't be null");
-            } else if(StrUtils.isNull(task.getKafkaTopicTokens())){
+            } else if (StrUtils.isNull(task.getKafkaTopicTokens())) {
                 throw new Exception("KafkaTopicTokens can't be null");
-            } else if(StrUtils.isNull(task.getKafkaUrl())){
+            } else if (StrUtils.isNull(task.getKafkaUrl())) {
                 throw new Exception("KafkaUrl can't be null");
-            } else if(StrUtils.isNull(task.getMessageFormat())){
+            } else if (StrUtils.isNull(task.getMessageFormat())) {
                 throw new Exception("MessageFormat can't be null and can only be csv or json");
-            } else if(StrUtils.isNull(task.getSchemaUsed())){
+            } else if (StrUtils.isNull(task.getSchemaUsed())) {
                 throw new Exception("SchemaUsed can't be null");
-            } else if(StrUtils.isNull(task.getTimeField())){
-                throw new Exception("TimeField can't be");
+            } else if (StrUtils.isNull(task.getTimeField())) {
+                throw new Exception("TimeField can't be null");
             }
             taskManager.addTask(task);
         } catch (ValidateKafkaException e) {
@@ -172,14 +193,75 @@ public class TaskController {
             model.addAttribute("task", task);
             return new ModelAndView("/task/addTask");
         } catch (ValidateJDBCException e) {
-            model.addAttribute("message", "Something wrong in MySQL configuration");
+            model.addAttribute("message", "Something wrong in MySQL configuration or SQL statement has some wrong elements");
             model.addAttribute("task", task);
             return new ModelAndView("/task/addTask");
-        } catch(Exception e){
+        } catch (Exception e) {
+            log.error("",e);
             model.addAttribute("message", e.getMessage());
             model.addAttribute("task", task);
             return new ModelAndView("/task/addTask");
         }
+        String content = StrUtils.makeString(2, ";URL=", "/task.do");
+        response.setHeader("REFRESH", content);
+        model.addAttribute("item", "task");
+        return new ModelAndView("/common/modifiedSuccessfully");
+    }
+
+    @RequestMapping(value = "/task/batchPublish")
+    public ModelAndView batchPublishTask(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        return new ModelAndView("/task/batchAddTasks");
+    }
+
+    @RequestMapping(value = "/task/batchAdd")
+    public ModelAndView batchAddTask(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        String props = "";
+        try {
+            props = request.getParameter("tasksProperties");
+            Properties pt = new Properties();
+            pt.load(new StringBufferInputStream(props));
+            List<Task> tasks = PropertyLoader.getTasks(pt);
+            taskManager.batchAddTask(tasks);
+        } catch (IOException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (TaskAddException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (ValidateKafkaException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (SQLException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (ValidateSQLException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (ParseException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (ValidateJDBCException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch (ClassNotFoundException e) {
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        } catch(Exception e){
+            model.addAttribute("message", e.getMessage());
+            model.addAttribute("tasksProperties", props);
+            return new ModelAndView("/task/batchAddTasks");
+        }
+        String content = StrUtils.makeString(2, ";URL=", "/task.do");
+        response.setHeader("REFRESH", content);
+        model.addAttribute("item", "task");
         return new ModelAndView("/common/modifiedSuccessfully");
     }
 }

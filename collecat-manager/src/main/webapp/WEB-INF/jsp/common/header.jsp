@@ -1,7 +1,7 @@
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <header class="main-header">
     <!-- Logo -->
-    <a href="index" class="logo">
+    <a href="/index.do" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>CC-M</b></span>
         <!-- logo for regular state and mobile devices -->

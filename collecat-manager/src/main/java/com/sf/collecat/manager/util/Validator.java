@@ -6,6 +6,7 @@ import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
 import com.alibaba.druid.stat.TableStat;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
+import com.sf.collecat.common.utils.StrUtils;
 import com.sf.collecat.manager.exception.validate.ValidateJDBCException;
 import com.sf.collecat.manager.exception.validate.ValidateKafkaException;
 import com.sf.collecat.manager.exception.validate.ValidateSQLException;
@@ -85,7 +86,8 @@ public class Validator {
                 System.out.println("Validating:" + job.getMysqlUrl());
                 conn = DriverManager.getConnection(job.getMysqlUrl(), job.getMysqlUsername(), job.getMysqlPassword());
                 Statement stmt = conn.createStatement();
-                String sql = "select 1";
+                String table = validateSQL(task);
+                String sql = StrUtils.makeString("select * from ",table," limit 1");
                 stmt.execute(sql);
             } catch (Exception e) {
                 throw new ValidateJDBCException(e);

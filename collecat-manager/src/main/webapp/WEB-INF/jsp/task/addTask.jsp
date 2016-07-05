@@ -3,7 +3,7 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%--
   Author： HashZhang
-  Date: 2016/7/2
+  Date: 2016/7/4
   Time: 11:41
 --%>
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
@@ -28,8 +28,8 @@
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="/index.do"><i class="glyphicon glyphicon-home"></i>Home</a></li>
-                <li><a href="/task.do">Task</a></li>
+                <li><a href="/collecat-manager/index.do"><i class="glyphicon glyphicon-home"></i>Home</a></li>
+                <li><a href="/collecat-manager/task.do">Task</a></li>
             </ol>
         </section>
 
@@ -44,7 +44,7 @@
                 }
                 String message = (String) request.getAttribute("message");
                 out.print("<h2 class=\"text-red\">"+ StrUtils.transferNull(message)+"</h2>");
-                out.print("<form role=\"form\" method=\"post\" action=\"\\task\\add.do\">");
+                out.print("<form role=\"form\" method=\"post\" action=\"\\collecat-manager\\task\\add.do\">");
                 out.print(" <div class=\"form-group\">\n" +
                         "       <label>Initial SQL:(抽取表的初始SQL，决定如何筛选出需要的数据的SQL语句)</label>\n" +
                         "       <input id=\"initialSql\" name=\"initialSql\" type=\"text\" class=\"form-control\" value=\"" + StrUtils.transferNull(task.getInitialSql()) + "\">\n" +
@@ -126,34 +126,34 @@
     </div>
 </div>
 <!-- jQuery 2.2.0 -->
-<script src="/static/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/collecat-manager/static/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/collecat-manager/static/bootstrap/js/bootstrap.min.js"></script>
 <!-- Select2 -->
-<script src="/static/plugins/select2/select2.full.min.js"></script>
+<script src="/collecat-manager/static/plugins/select2/select2.full.min.js"></script>
 <!-- InputMask -->
-<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
-<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="/collecat-manager/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/collecat-manager/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/collecat-manager/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
 <!-- date-range-picker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="/collecat-manager/static/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- bootstrap datepicker -->
-<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="/collecat-manager/static/plugins/datepicker/bootstrap-datepicker.js"></script>
 <!-- bootstrap color picker -->
-<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<script src="/collecat-manager/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
 <!-- bootstrap time picker -->
-<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/collecat-manager/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <!-- SlimScroll 1.3.0 -->
-<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/collecat-manager/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- iCheck 1.0.1 -->
-<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<script src="/collecat-manager/static/plugins/iCheck/icheck.min.js"></script>
 <!-- FastClick -->
-<script src="/static/plugins/fastclick/fastclick.js"></script>
+<script src="/collecat-manager/static/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="/static/dist/js/app.min.js"></script>
+<script src="/collecat-manager/static/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="/static/dist/js/demo.js"></script>
+<script src="/collecat-manager/static/dist/js/demo.js"></script>
 <script>
     $(document).ready(function () {
         //Initialize Select2 Elements

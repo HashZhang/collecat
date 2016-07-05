@@ -44,28 +44,28 @@
 <!-- Select2 -->
 <script src="/static/plugins/select2/select2.full.min.js"></script>
 <!-- InputMask -->
-<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
-<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="/collecat-manager/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/collecat-manager/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/collecat-manager/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
 <!-- date-range-picker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- bootstrap datepicker -->
-<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="/collecat-manager/static/plugins/datepicker/bootstrap-datepicker.js"></script>
 <!-- bootstrap color picker -->
-<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<script src="/collecat-manager/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
 <!-- bootstrap time picker -->
-<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/collecat-manager/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <!-- SlimScroll 1.3.0 -->
-<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/collecat-manager/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- iCheck 1.0.1 -->
-<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<script src="/collecat-manager/static/plugins/iCheck/icheck.min.js"></script>
 <!-- FastClick -->
-<script src="/static/plugins/fastclick/fastclick.js"></script>
+<script src="/collecat-manager/static/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="/static/dist/js/app.min.js"></script>
+<script src="/collecat-manager/static/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="/static/dist/js/demo.js"></script>
+<script src="/collecat-manager/static/dist/js/demo.js"></script>
 </body>
 
 </html>

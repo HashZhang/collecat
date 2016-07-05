@@ -1,6 +1,7 @@
 <%@ page import="com.sf.collecat.common.model.Task" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.sf.collecat.common.utils.StrUtils" %><%--
   Author： HashZhang
   Date: 2016/7/1
   Time: 10:07
@@ -27,15 +28,20 @@
                 <small></small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="/index.do"><i class="glyphicon glyphicon-home"></i>Home</a></li>
-                <li><a href="/task.do">Task</a></li>
+                <li><a href="/collecat-manager/index.do"><i class="glyphicon glyphicon-home"></i>Home</a></li>
+                <li><a href="/collecat-manager/task.do">Task</a></li>
             </ol>
         </section>
 
         <!-- Main content -->
         <section class="content" style="overflow:scroll;height:inherit">
-            <div class="row col-lg-4 col-sm-4">
-                <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <button onclick="batchAddTask()" type="button" class="btn btn-block btn-primary">批量添加Task</button>
+                </div>
             </div>
             <%
                 SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -45,19 +51,19 @@
                         "            <tr>\n" +
                         "                <th>  </th>\n" +
                         "                <th>ID</th>\n" +
-                        "                <th>Initial SQL</th>\n" +
-                        "                <th>Schema Used</th>\n" +
-                        "                <th>Time Field</th>\n" +
-                        "                <th>Last Time</th>\n" +
-                        "                <th>Routine Time</th>\n" +
-                        "                <th>Allocate Routine</th>\n" +
-                        "                <th>Is Active</th>\n" +
-                        "                <th>Kafka Topic</th>\n" +
-                        "                <th>Kafka Url</th>\n" +
-                        "                <th>Kafka Cluster Name</th>\n" +
-                        "                <th>Kafka Topic Tokens</th>\n" +
-                        "                <th>Kafka Message Size</th>\n" +
-                        "                <th>Message Format</th>\n" +
+                        "                <th>INITIAL SQL</th>\n" +
+                        "                <th>SCHEMA USED</th>\n" +
+                        "                <th>TIME FIELD</th>\n" +
+                        "                <th>LAST TIME</th>\n" +
+                        "                <th>ROUTINE TIME</th>\n" +
+                        "                <th>ALLOCATE ROUTINE</th>\n" +
+                        "                <th>IS ACTIVE</th>\n" +
+                        "                <th>KAFKA TOPIC</th>\n" +
+                        "                <th>KAFKA URL</th>\n" +
+                        "                <th>KAFKA CLUSTER NAME</th>\n" +
+                        "                <th>KAFKA TOPIC TOKENS</th>\n" +
+                        "                <th>KAFKA MESSAGE SIZE</th>\n" +
+                        "                <th>MESSAGE FORMAT</th>\n" +
                         "            </tr>\n" +
                         "        </thead>\n" +
                         "        <tfoot>\n" +
@@ -113,46 +119,38 @@
     </div>
 </div>
 <!-- jQuery 2.2.0 -->
-<script src="/static/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="/collecat-manager/static/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <!-- Bootstrap 3.3.6 -->
-<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-<!-- Select2 -->
-<script src="/static/plugins/select2/select2.full.min.js"></script>
-<!-- InputMask -->
-<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
-<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-<!-- date-range-picker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- bootstrap datepicker -->
-<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
-<!-- bootstrap color picker -->
-<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
-<!-- bootstrap time picker -->
-<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
-<!-- SlimScroll 1.3.0 -->
-<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<!-- iCheck 1.0.1 -->
-<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<script src="/collecat-manager/static/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="/collecat-manager/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/collecat-manager/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/collecat-manager/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
-<script src="/static/plugins/fastclick/fastclick.js"></script>
+<script src="/collecat-manager/static/plugins/fastclick/fastclick.js"></script>
 <!-- AdminLTE App -->
-<script src="/static/dist/js/app.min.js"></script>
+<script src="/collecat-manager/static/dist/js/app.min.js"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="/static/dist/js/demo.js"></script>
+<script src="/collecat-manager/static/dist/js/demo.js"></script>
 <script>
     function modifyTask(id) {
-        window.location.href = "/task/modify.do?taskId=" + id
+        window.location.href = "./task/modify.do?taskId=" + id
     }
     function removeTask(id) {
         if (confirm("你确定要删除task-" + id + "吗？")) {
-            window.location.href = "/task/remove.do?taskId=" + id
+            window.location.href = "./task/remove.do?taskId=" + id
         }
     }
     function addTask() {
-        window.location.href = "/task/publish.do"
+        window.location.href = "./task/publish.do"
     }
+    function batchAddTask() {
+        window.location.href = "./task/batchPublish.do"
+    }
+    $(function () {
+        $("#allTasks").DataTable();
+    });
 </script>
 </body>
 </html>

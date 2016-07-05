@@ -65,7 +65,6 @@
     </profiles>
 
     <artifactId>collecat-manager</artifactId>
-    <packaging>war</packaging>
 
     <dependencies>
         <dependency>

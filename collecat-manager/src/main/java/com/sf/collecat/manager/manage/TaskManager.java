@@ -76,7 +76,6 @@ public class TaskManager {
 
     /**
      * 动态添加Task
-     * 分为三步：在配置数据库中添加task，本地缓存记录task，调度task
      *
      * @param task 要添加的task
      * @throws TaskAddException
@@ -94,6 +93,31 @@ public class TaskManager {
         }
         taskMap.put(task.getId(), task);
         defaultScheduler.scheduleTask(task);
+    }
+
+    /**
+     * 批量动态添加Task，若任一验证失败，都不添加
+     *
+     * @param tasks 要添加的tasks
+     * @throws TaskAddException
+     */
+    public void batchAddTask(List<Task> tasks) throws TaskAddException, ClassNotFoundException, ValidateJDBCException, SQLException, ValidateSQLException, ValidateKafkaException {
+        for (Task task : tasks) {
+            validator.validateSQL(task);
+            validator.validateJDBCConnections(task);
+            validator.validateKafKaConnection(task);
+        }
+        for (Task task : tasks) {
+            try {
+                if (task.getId() == null || task.getId() <= 0) {
+                    taskMapper.insert(task);
+                }
+            } catch (Exception e) {
+                throw new TaskAddException(e);
+            }
+            taskMap.put(task.getId(), task);
+            defaultScheduler.scheduleTask(task);
+        }
     }
 
     /**
