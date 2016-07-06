@@ -30,7 +30,7 @@
     values (#{id,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{currentNodeId,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Node" >
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Node" >
     insert into node
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
