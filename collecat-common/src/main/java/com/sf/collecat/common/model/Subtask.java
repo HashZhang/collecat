@@ -1,18 +1,23 @@
 package com.sf.collecat.common.model;
 
+import it.sauronsoftware.cron4j.Scheduler;
+
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
-public class Task implements Serializable {
+public class Subtask implements Serializable {
     private Integer id;
+    private Scheduler scheduler;
 
-    private List<Subtask> subtaskList = new LinkedList<Subtask>();
-
-    public List<Subtask> getSubtaskList() {
-        return subtaskList;
+    public Scheduler getScheduler() {
+        return scheduler;
     }
+
+    public void setScheduler(Scheduler scheduler) {
+        this.scheduler = scheduler;
+    }
+
+    private Integer taskId;
 
     private String initialSql;
 
@@ -20,9 +25,7 @@ public class Task implements Serializable {
 
     private String timeField;
 
-    private Date startTime;
-
-    private Date endTime;
+    private Date lastTime;
 
     private Integer routineTime;
 
@@ -40,6 +43,12 @@ public class Task implements Serializable {
 
     private Integer kafkaMessageSize;
 
+    private String mysqlUrl;
+
+    private String mysqlUsername;
+
+    private String mysqlPassword;
+
     private String messageFormat;
 
     private static final long serialVersionUID = 1L;
@@ -50,6 +59,14 @@ public class Task implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     public String getInitialSql() {
@@ -76,20 +93,12 @@ public class Task implements Serializable {
         this.timeField = timeField == null ? null : timeField.trim();
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getLastTime() {
+        return lastTime;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setLastTime(Date lastTime) {
+        this.lastTime = lastTime;
     }
 
     public Integer getRoutineTime() {
@@ -156,6 +165,30 @@ public class Task implements Serializable {
         this.kafkaMessageSize = kafkaMessageSize;
     }
 
+    public String getMysqlUrl() {
+        return mysqlUrl;
+    }
+
+    public void setMysqlUrl(String mysqlUrl) {
+        this.mysqlUrl = mysqlUrl == null ? null : mysqlUrl.trim();
+    }
+
+    public String getMysqlUsername() {
+        return mysqlUsername;
+    }
+
+    public void setMysqlUsername(String mysqlUsername) {
+        this.mysqlUsername = mysqlUsername == null ? null : mysqlUsername.trim();
+    }
+
+    public String getMysqlPassword() {
+        return mysqlPassword;
+    }
+
+    public void setMysqlPassword(String mysqlPassword) {
+        this.mysqlPassword = mysqlPassword == null ? null : mysqlPassword.trim();
+    }
+
     public String getMessageFormat() {
         return messageFormat;
     }
@@ -171,11 +204,11 @@ public class Task implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", taskId=").append(taskId);
         sb.append(", initialSql=").append(initialSql);
         sb.append(", schemaUsed=").append(schemaUsed);
         sb.append(", timeField=").append(timeField);
-        sb.append(", startTime=").append(startTime);
-        sb.append(", endTime=").append(endTime);
+        sb.append(", lastTime=").append(lastTime);
         sb.append(", routineTime=").append(routineTime);
         sb.append(", allocateRoutine=").append(allocateRoutine);
         sb.append(", isActive=").append(isActive);
@@ -184,6 +217,9 @@ public class Task implements Serializable {
         sb.append(", kafkaClusterName=").append(kafkaClusterName);
         sb.append(", kafkaTopicTokens=").append(kafkaTopicTokens);
         sb.append(", kafkaMessageSize=").append(kafkaMessageSize);
+        sb.append(", mysqlUrl=").append(mysqlUrl);
+        sb.append(", mysqlUsername=").append(mysqlUsername);
+        sb.append(", mysqlPassword=").append(mysqlPassword);
         sb.append(", messageFormat=").append(messageFormat);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

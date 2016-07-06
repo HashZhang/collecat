@@ -12,6 +12,7 @@ import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.stat.TableStat;
 import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.model.Job;
+import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.config.mycat.XMLSchemaLoader;
 import com.sf.collecat.manager.config.mycat.model.DBHostConfig;
@@ -42,6 +43,25 @@ public class DefaultMyCatSQLParser implements SQLParser {
     @Value("${job.time.shift}")
     private int TIME_SHIFT = 2;//服务器之间最大时间差
     public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public List<Subtask> parse(Task task) throws SQLSyntaxErrorException {
+        List<Job> jobList = new ArrayList<>();
+        String table = getTable(task);
+        List<String> datanodes = null;
+        try {
+            datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
+        } catch (Exception e) {
+            throw new SQLSyntaxErrorException("Schema is not provided or schema does not exist!");
+        }
+        for (String datanode : datanodes) {
+            String database = xmlSchemaLoader.getDataNodes().get(datanode).getDatabase();
+            DBHostConfig dbHostConfig = xmlSchemaLoader.getDataHosts().get(xmlSchemaLoader.getDataNodes().get(datanode).getDataHost()).getWriteHosts()[0];
+            String url = dbHostConfig.getUrl();
+            String username = dbHostConfig.getUser();
+            String password = dbHostConfig.getPassword();
+
+        }
+    }
 
     /**
      * 将task拆分成job,分为四步

@@ -9,28 +9,28 @@
   <sql id="Base_Column_List" >
     id, ip, current_node_id
   </sql>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    *
+    from node
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from node
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectAll"  resultMap="BaseResultMap">
-    select
-    *
-    from node
-  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from node
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Node" >
+  <insert id="insert" parameterType="com.sf.collecat.common.model.Node" >
     insert into node (id, ip, current_node_id
       )
     values (#{id,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{currentNodeId,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Node" >
+  <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Node" >
     insert into node
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

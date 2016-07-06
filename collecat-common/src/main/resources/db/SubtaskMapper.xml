@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sf.collecat.common.mapper.TaskMapper" >
-  <resultMap id="BaseResultMap" type="com.sf.collecat.common.model.Task" >
+<mapper namespace="com.sf.collecat.common.mapper.SubtaskMapper" >
+  <resultMap id="BaseResultMap" type="com.sf.collecat.common.model.Subtask" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="task_id" property="taskId" jdbcType="INTEGER" />
     <result column="initial_sql" property="initialSql" jdbcType="VARCHAR" />
     <result column="schema_used" property="schemaUsed" jdbcType="VARCHAR" />
     <result column="time_field" property="timeField" jdbcType="VARCHAR" />
-    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
-    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
     <result column="routine_time" property="routineTime" jdbcType="INTEGER" />
     <result column="allocate_routine" property="allocateRoutine" jdbcType="VARCHAR" />
     <result column="is_active" property="isActive" jdbcType="BIT" />
@@ -16,57 +16,57 @@
     <result column="kafka_cluster_name" property="kafkaClusterName" jdbcType="VARCHAR" />
     <result column="kafka_topic_tokens" property="kafkaTopicTokens" jdbcType="VARCHAR" />
     <result column="kafka_message_size" property="kafkaMessageSize" jdbcType="INTEGER" />
+    <result column="mysql_url" property="mysqlUrl" jdbcType="VARCHAR" />
+    <result column="mysql_username" property="mysqlUsername" jdbcType="VARCHAR" />
+    <result column="mysql_password" property="mysqlPassword" jdbcType="VARCHAR" />
     <result column="message_format" property="messageFormat" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, initial_sql, schema_used, time_field, start_time, end_time, routine_time, allocate_routine, 
+    id, task_id, initial_sql, schema_used, time_field, last_time, routine_time, allocate_routine, 
     is_active, kafka_topic, kafka_url, kafka_cluster_name, kafka_topic_tokens, kafka_message_size, 
-    message_format
+    mysql_url, mysql_username, mysql_password, message_format
   </sql>
-
-  <select id="selectByUniqueKey" resultMap="BaseResultMap" parameterType="com.sf.collecat.common.model.Task" >
+  <select id="selectByTaskIDAndDbUrl" resultMap="BaseResultMap" parameterType="com.sf.collecat.common.model.Subtask" >
     select
-    *
-    from task
-    where initialSql = #{initialSql,jdbcType=VARCHAR}
-    and schemaUsed = #{schemaUsed,jdbcType=VARCHAR}
-    and timeField = #{timeField,jdbcType=VARCHAR}
+    <include refid="Base_Column_List" />
+    from subtask
+    where task_id = #{task_id,jdbcType=INTEGER}
+    and mysql_url = #{mysql_url,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll"  resultMap="BaseResultMap">
-    select
-    *
-    from task
-  </select>
-
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from task
+    from subtask
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from task
+    delete from subtask
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Task" >
-    insert into task (id, initial_sql, schema_used, 
-      time_field, start_time, end_time, 
+  <insert id="insert" parameterType="com.sf.collecat.common.model.Subtask" >
+    insert into subtask (id, task_id, initial_sql, 
+      schema_used, time_field, last_time, 
       routine_time, allocate_routine, is_active, 
       kafka_topic, kafka_url, kafka_cluster_name, 
-      kafka_topic_tokens, kafka_message_size, message_format
+      kafka_topic_tokens, kafka_message_size, mysql_url, 
+      mysql_username, mysql_password, message_format
       )
-    values (#{id,jdbcType=INTEGER}, #{initialSql,jdbcType=VARCHAR}, #{schemaUsed,jdbcType=VARCHAR}, 
-      #{timeField,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, #{initialSql,jdbcType=VARCHAR}, 
+      #{schemaUsed,jdbcType=VARCHAR}, #{timeField,jdbcType=VARCHAR}, #{lastTime,jdbcType=TIMESTAMP}, 
       #{routineTime,jdbcType=INTEGER}, #{allocateRoutine,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT}, 
       #{kafkaTopic,jdbcType=VARCHAR}, #{kafkaUrl,jdbcType=VARCHAR}, #{kafkaClusterName,jdbcType=VARCHAR}, 
-      #{kafkaTopicTokens,jdbcType=VARCHAR}, #{kafkaMessageSize,jdbcType=INTEGER}, #{messageFormat,jdbcType=VARCHAR}
+      #{kafkaTopicTokens,jdbcType=VARCHAR}, #{kafkaMessageSize,jdbcType=INTEGER}, #{mysqlUrl,jdbcType=VARCHAR}, 
+      #{mysqlUsername,jdbcType=VARCHAR}, #{mysqlPassword,jdbcType=VARCHAR}, #{messageFormat,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Task" >
-    insert into task
+  <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Subtask" >
+    insert into subtask
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
       </if>
       <if test="initialSql != null" >
         initial_sql,
@@ -77,11 +77,8 @@
       <if test="timeField != null" >
         time_field,
       </if>
-      <if test="startTime != null" >
-        start_time,
-      </if>
-      <if test="endTime != null" >
-        end_time,
+      <if test="lastTime != null" >
+        last_time,
       </if>
       <if test="routineTime != null" >
         routine_time,
@@ -107,6 +104,15 @@
       <if test="kafkaMessageSize != null" >
         kafka_message_size,
       </if>
+      <if test="mysqlUrl != null" >
+        mysql_url,
+      </if>
+      <if test="mysqlUsername != null" >
+        mysql_username,
+      </if>
+      <if test="mysqlPassword != null" >
+        mysql_password,
+      </if>
       <if test="messageFormat != null" >
         message_format,
       </if>
@@ -114,6 +120,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=INTEGER},
       </if>
       <if test="initialSql != null" >
         #{initialSql,jdbcType=VARCHAR},
@@ -124,11 +133,8 @@
       <if test="timeField != null" >
         #{timeField,jdbcType=VARCHAR},
       </if>
-      <if test="startTime != null" >
-        #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null" >
-        #{endTime,jdbcType=TIMESTAMP},
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=TIMESTAMP},
       </if>
       <if test="routineTime != null" >
         #{routineTime,jdbcType=INTEGER},
@@ -154,14 +160,26 @@
       <if test="kafkaMessageSize != null" >
         #{kafkaMessageSize,jdbcType=INTEGER},
       </if>
+      <if test="mysqlUrl != null" >
+        #{mysqlUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlUsername != null" >
+        #{mysqlUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlPassword != null" >
+        #{mysqlPassword,jdbcType=VARCHAR},
+      </if>
       <if test="messageFormat != null" >
         #{messageFormat,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sf.collecat.common.model.Task" >
-    update task
+  <update id="updateByPrimaryKeySelective" parameterType="com.sf.collecat.common.model.Subtask" >
+    update subtask
     <set >
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=INTEGER},
+      </if>
       <if test="initialSql != null" >
         initial_sql = #{initialSql,jdbcType=VARCHAR},
       </if>
@@ -171,11 +189,8 @@
       <if test="timeField != null" >
         time_field = #{timeField,jdbcType=VARCHAR},
       </if>
-      <if test="startTime != null" >
-        start_time = #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null" >
-        end_time = #{endTime,jdbcType=TIMESTAMP},
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
       </if>
       <if test="routineTime != null" >
         routine_time = #{routineTime,jdbcType=INTEGER},
@@ -201,19 +216,28 @@
       <if test="kafkaMessageSize != null" >
         kafka_message_size = #{kafkaMessageSize,jdbcType=INTEGER},
       </if>
+      <if test="mysqlUrl != null" >
+        mysql_url = #{mysqlUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlUsername != null" >
+        mysql_username = #{mysqlUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlPassword != null" >
+        mysql_password = #{mysqlPassword,jdbcType=VARCHAR},
+      </if>
       <if test="messageFormat != null" >
         message_format = #{messageFormat,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sf.collecat.common.model.Task" >
-    update task
-    set initial_sql = #{initialSql,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.sf.collecat.common.model.Subtask" >
+    update subtask
+    set task_id = #{taskId,jdbcType=INTEGER},
+      initial_sql = #{initialSql,jdbcType=VARCHAR},
       schema_used = #{schemaUsed,jdbcType=VARCHAR},
       time_field = #{timeField,jdbcType=VARCHAR},
-      start_time = #{startTime,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
       routine_time = #{routineTime,jdbcType=INTEGER},
       allocate_routine = #{allocateRoutine,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=BIT},
@@ -222,6 +246,9 @@
       kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR},
       kafka_topic_tokens = #{kafkaTopicTokens,jdbcType=VARCHAR},
       kafka_message_size = #{kafkaMessageSize,jdbcType=INTEGER},
+      mysql_url = #{mysqlUrl,jdbcType=VARCHAR},
+      mysql_username = #{mysqlUsername,jdbcType=VARCHAR},
+      mysql_password = #{mysqlPassword,jdbcType=VARCHAR},
       message_format = #{messageFormat,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

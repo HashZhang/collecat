@@ -6,6 +6,8 @@ import java.util.Date;
 public class Job implements Serializable {
     private Integer id;
 
+    private Integer subtaskId;
+
     private String timeField;
 
     private Date timeFieldStart;
@@ -48,6 +50,14 @@ public class Job implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getSubtaskId() {
+        return subtaskId;
+    }
+
+    public void setSubtaskId(Integer subtaskId) {
+        this.subtaskId = subtaskId;
     }
 
     public String getTimeField() {
@@ -193,6 +203,7 @@ public class Job implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", subtaskId=").append(subtaskId);
         sb.append(", timeField=").append(timeField);
         sb.append(", timeFieldStart=").append(timeFieldStart);
         sb.append(", timeFieldEnd=").append(timeFieldEnd);

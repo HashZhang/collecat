@@ -17,8 +17,6 @@ public interface JobMapper {
 
     int updateByPrimaryKey(Job record);
 
-    List<Job> selectAllUncompletedByNodeID(int id);
-
     List<Job> selectAllExceptionJob();
 
     List<Job> selectAllJob();
