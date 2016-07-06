@@ -9,6 +9,7 @@ import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.BaseSpringTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -27,8 +28,11 @@ public class SQLParserTest extends BaseSpringTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Test
-    public void testParse() throws SQLSyntaxErrorException {
+    private Task task = new Task();
+
+    @Before
+    @Override
+    public void init(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("select * from ").append("tt_delivery_order").append(" where ").append("timefield").append("<'")
                 .append(new Date().toString()).append("' and ").append("timefield").append(">'").append(new Date().toString())
@@ -44,8 +48,7 @@ public class SQLParserTest extends BaseSpringTest {
         ((MySqlSelectQueryBlock) statement1.getSelect().getQuery()).setWhere(sqlBinaryOpExpr);
         ((MySqlSelectQueryBlock) statement1.getSelect().getQuery()).getOrderBy().getItems().addAll(((MySqlSelectQueryBlock) statement2.getSelect().getQuery()).getOrderBy().getItems());
         System.out.println(SQLUtils.toMySqlString(statement1));
-        Task task = new Task();
-        task.setInitialSql("select * from tt_delivery_order where i>1 and k>1 order by ll");
+        task.setInitialSql("select * from goods where i>1 and k>1 order by ll");
         task.setIsActive(true);
         task.setKafkaClusterName("ab");
         task.setKafkaMessageSize(100);
@@ -54,15 +57,25 @@ public class SQLParserTest extends BaseSpringTest {
         task.setKafkaUrl("url");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, -10000);
+        calendar.add(Calendar.SECOND, -1401);
         task.setLastTime(calendar.getTime());
         task.setMessageFormat("csv");
-        task.setRoutineTime(100);
-        task.setSchemaUsed("exp");
+        task.setRoutineTime(600);
+        task.setSchemaUsed("TESTDB");
         task.setTimeField("created_time");
+    }
+
+    @Test
+    public void testCache() throws SQLSyntaxErrorException {
         Date date = new Date();
         List<Job> parse = sqlParser.parse(task, date);
         List<Job> parse2 = sqlParser.parse(task, date);
         System.out.println(parse.equals(parse2));
+    }
+    @Test
+    public void testParse() throws SQLSyntaxErrorException {
+        Date date = new Date();
+        List<Job> parse = sqlParser.parse(task, date);
+        System.out.println(parse);
     }
 }

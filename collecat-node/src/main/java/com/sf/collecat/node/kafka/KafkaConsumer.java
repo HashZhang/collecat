@@ -1,12 +1,18 @@
 package com.sf.collecat.node.kafka;
 
+import com.alibaba.dubbo.common.utils.ConcurrentHashSet;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sf.kafka.api.consume.ConsumeConfig;
 import com.sf.kafka.api.consume.IStringMessageConsumeListener;
 import com.sf.kafka.api.consume.KafkaConsumeRetryException;
 import com.sf.kafka.api.consume.KafkaConsumerRegister;
 import com.sf.kafka.exception.KafkaException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by 862911 on 2016/6/16.
@@ -70,6 +76,7 @@ public class KafkaConsumer {
 //        }
         int timecount = 0;
         int totalcount = 0;
+        Set<String> stringSet = new ConcurrentHashSet<>();
 
         private String topic;
 
@@ -80,10 +87,14 @@ public class KafkaConsumer {
 
         public void onMessage(List<String> list) throws KafkaConsumeRetryException {
             totalcount += list.size();
-            System.out.println(topic+"[" + ++timecount + ":" + totalcount+"]");
-            for(String string:list){
-                System.out.println(string);
+            System.out.println(topic + "[" + ++timecount + ":" + totalcount + "]");
+            for (String string : list) {
+                JSONArray jsonArray = JSON.parseArray(string);
+                for (Object object : jsonArray) {
+                    stringSet.add((String) ((JSONObject) object).get("id"));
+                }
             }
+            System.out.println(stringSet.size());
         }
     }
 }

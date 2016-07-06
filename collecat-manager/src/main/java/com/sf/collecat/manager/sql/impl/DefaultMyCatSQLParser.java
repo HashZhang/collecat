@@ -40,7 +40,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
     @Autowired
     private XMLSchemaLoader xmlSchemaLoader;
     @Value("${job.time.shift}")
-    private int TIME_SHIFT = 0;//服务器之间最大时间差
+    private int TIME_SHIFT = 2;//服务器之间最大时间差
     public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
@@ -63,8 +63,8 @@ public class DefaultMyCatSQLParser implements SQLParser {
         List<String> datanodes = null;
         try {
             datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
-        }catch(Exception e){
-            throw new SQLSyntaxErrorException("Schema is not provided!");
+        } catch (Exception e) {
+            throw new SQLSyntaxErrorException("Schema is not provided or schema does not exist!");
         }
         Integer routineTime = task.getRoutineTime();
         long now = lastTT.getTime();
@@ -82,13 +82,14 @@ public class DefaultMyCatSQLParser implements SQLParser {
             calendar.add(Calendar.SECOND, -TIME_SHIFT);
             lastDate = calendar.getTime();
             calendar.add(Calendar.SECOND, TIME_SHIFT);
-            while (calendar.getTime().getTime() < now && (now - calendar.getTime().getTime())>1000L) {
+            calendar.add(Calendar.SECOND, routineTime);
+            while (calendar.getTime().getTime() < now && (now - calendar.getTime().getTime()) >= 1000L) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, calendar.getTime());
                 jobList.add(job);
                 lastDate = calendar.getTime();
                 calendar.add(Calendar.SECOND, routineTime);
             }
-            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) > 1000L) {
+            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) >= 1000L) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, lastTT);
                 jobList.add(job);
             }
