@@ -33,13 +33,13 @@
     where status = 0
     and node_assigned_to = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectAllExceptionJob" resultType="com.sf.collecat.common.model.Job">
+  <select id="selectAllExceptionJob" resultMap="BaseResultMap">
     select
     *
     from job
     where status = 2
   </select>
-  <select id="selectAllJob" resultType="com.sf.collecat.common.model.Job">
+  <select id="selectAllJob" resultMap="BaseResultMap">
     select
     *
     from job

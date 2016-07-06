@@ -1,7 +1,8 @@
 package com.sf.collecat.node.jdbc.handler.impl;
 
-import com.alibaba.dubbo.common.json.JSONArray;
-import com.alibaba.dubbo.common.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sf.collecat.node.jdbc.handler.ResultHandler;
 
 import java.sql.ResultSet;
@@ -15,15 +16,13 @@ public class ToJsonHandler implements ResultHandler {
     public String handle(ResultSet rs, int size) throws SQLException {
         // json数组
         JSONArray array = new JSONArray();
-
         // 获取列数
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
         int j = 0;
         // 遍历ResultSet中的每条数据
-        while (rs.next() && j < size) {
+        while (j < size && rs.next()) {
             JSONObject jsonObj = new JSONObject();
-
             // 遍历每一列
             for (int i = 1; i <= columnCount; i++) {
                 String columnName = metaData.getColumnLabel(i);
@@ -34,6 +33,6 @@ public class ToJsonHandler implements ResultHandler {
             j++;
         }
 
-        return array.toString();
+        return JSON.toJSONString(array);
     }
 }

@@ -81,7 +81,9 @@ public class KafkaConsumer {
         public void onMessage(List<String> list) throws KafkaConsumeRetryException {
             totalcount += list.size();
             System.out.println(topic+"[" + ++timecount + ":" + totalcount+"]");
-            System.out.println(list);
+            for(String string:list){
+                System.out.println(string);
+            }
         }
     }
 }

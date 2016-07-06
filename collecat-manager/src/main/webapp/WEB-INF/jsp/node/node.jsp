@@ -35,7 +35,7 @@
         </section>
 
         <!-- Main content -->
-        <section class="content" style="overflow:scroll;height:inherit">
+        <section class="content">
             <div class="row">
                 <label class="text-red"><b>
                     <%
@@ -44,30 +44,37 @@
                     %>
                 </b></label>
             </div>
-            <%
-                SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-                List<Node> nodes = (List<Node>) request.getAttribute("allNodes");
-                out.print("<table id=\"allJobs\" class=\"table table-bordered table-striped\" cellspacing=\"0\" width=\"100%\">\n" +
-                        "        <thead>\n" +
-                        "            <tr>\n" +
-                        "                <th>ID</th>\n" +
-                        "                <th>IP</th>\n" +
-                        "                <th>CURRENT NODE ID</th>\n" +
-                        "            </tr>\n" +
-                        "        </thead>\n" +
-                        "        <tfoot>\n" +
-                        "        </tfoot>\n" +
-                        "        <tbody>\n");
-                for (Node node : nodes) {
-                    out.print("<tr>" +
-                            "<td>" + node.getId() + "</td>" +
-                            "<td>" + node.getIp() + "</td>" +
-                            "<td>" + node.getCurrentNodeId() + "</td>" +
-                            "</tr>");
-                }
-                out.print("        </tbody>\n" +
-                        "    </table>");
-            %>
+            <div class="box box-primary" style="overflow:scroll;height:inherit">
+                <div class="box-header">
+                    <h3 class="box-title"><b>所有Jobs：</b></h3>
+                </div>
+                <div class="box-body">
+                    <%
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                        List<Node> nodes = (List<Node>) request.getAttribute("allNodes");
+                        out.print("<table id=\"allJobs\" class=\"table table-bordered table-striped\" cellspacing=\"0\" width=\"100%\">\n" +
+                                "        <thead>\n" +
+                                "            <tr>\n" +
+                                "                <th>ID</th>\n" +
+                                "                <th>IP</th>\n" +
+                                "                <th>CURRENT NODE ID</th>\n" +
+                                "            </tr>\n" +
+                                "        </thead>\n" +
+                                "        <tfoot>\n" +
+                                "        </tfoot>\n" +
+                                "        <tbody>\n");
+                        for (Node node : nodes) {
+                            out.print("<tr>" +
+                                    "<td>" + node.getId() + "</td>" +
+                                    "<td>" + node.getIp() + "</td>" +
+                                    "<td>" + node.getCurrentNodeId() + "</td>" +
+                                    "</tr>");
+                        }
+                        out.print("        </tbody>\n" +
+                                "    </table>");
+                    %>
+                </div>
+            </div>
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title">#注释：</h3>

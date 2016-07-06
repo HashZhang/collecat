@@ -82,7 +82,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
             calendar.add(Calendar.SECOND, -TIME_SHIFT);
             lastDate = calendar.getTime();
             calendar.add(Calendar.SECOND, TIME_SHIFT);
-            while (calendar.getTime().getTime() < now) {
+            while (calendar.getTime().getTime() < now && (now - calendar.getTime().getTime())>1000L) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, calendar.getTime());
                 jobList.add(job);
                 lastDate = calendar.getTime();

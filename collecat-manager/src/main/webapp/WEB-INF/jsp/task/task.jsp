@@ -1,7 +1,7 @@
 <%@ page import="com.sf.collecat.common.model.Task" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.sf.collecat.common.utils.StrUtils" %><%--
+<%--
   Author： HashZhang
   Date: 2016/7/1
   Time: 10:07
@@ -35,63 +35,69 @@
 
         <!-- Main content -->
         <section class="content" style="overflow:scroll;height:inherit">
-            <div class="row">
-                <div class="col-lg-4 col-sm-4">
-                    <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
+            <div class="col-lg-2 col-sm-2">
+                <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
+            </div>
+            <div class="col-lg-2 col-sm-2">
+                <button onclick="batchAddTask()" type="button" class="btn btn-block btn-primary">批量添加Task</button>
+            </div>
+            <hr>
+            <div class="box box-primary" style="overflow:scroll;height:inherit">
+                <div class="box-header">
+                    <h3 class="box-title"><b>所有Tasks：</b></h3>
                 </div>
-                <div class="col-lg-4 col-sm-4">
-                    <button onclick="batchAddTask()" type="button" class="btn btn-block btn-primary">批量添加Task</button>
+                <div class="box-body">
+                    <%
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                        List<Task> tasks = (List<Task>) request.getAttribute("alltasks");
+                        out.print("<table id=\"allTasks\" class=\"table table-bordered table-striped\" cellspacing=\"1\" width=\"100%\">\n" +
+                                "        <thead>\n" +
+                                "            <tr>\n" +
+                                "                <th>  </th>\n" +
+                                "                <th>ID</th>\n" +
+                                "                <th>INITIAL SQL</th>\n" +
+                                "                <th>SCHEMA USED</th>\n" +
+                                "                <th>TIME FIELD</th>\n" +
+                                "                <th>LAST TIME</th>\n" +
+                                "                <th>ROUTINE TIME</th>\n" +
+                                "                <th>ALLOCATE ROUTINE</th>\n" +
+                                "                <th>IS ACTIVE</th>\n" +
+                                "                <th>KAFKA TOPIC</th>\n" +
+                                "                <th>KAFKA URL</th>\n" +
+                                "                <th>KAFKA CLUSTER NAME</th>\n" +
+                                "                <th>KAFKA TOPIC TOKENS</th>\n" +
+                                "                <th>KAFKA MESSAGE SIZE</th>\n" +
+                                "                <th>MESSAGE FORMAT</th>\n" +
+                                "            </tr>\n" +
+                                "        </thead>\n" +
+                                "        <tfoot>\n" +
+                                "        </tfoot>\n" +
+                                "        <tbody>\n");
+                        for (Task task : tasks) {
+                            out.print("<tr>" +
+                                    "<td><button onclick=\"modifyTask(" + task.getId() + ")\" type=\"button\" class=\"btn btn-block btn-primary\">修改</button>" +
+                                    "<button onclick=\"removeTask(" + task.getId() + ")\" type=\"button\" class=\"btn btn-block btn-danger\">删除</button></td>" +
+                                    "<td>" + task.getId() + "</td>" +
+                                    "<td>" + task.getInitialSql() + "</td>" +
+                                    "<td>" + task.getSchemaUsed() + "</td>" +
+                                    "<td>" + task.getTimeField() + "</td>" +
+                                    "<td>" + formatter1.format(task.getLastTime()) + "</td>" +
+                                    "<td>" + task.getRoutineTime() + "</td>" +
+                                    "<td>" + task.getAllocateRoutine() + "</td>" +
+                                    "<td>" + task.getIsActive() + "</td>" +
+                                    "<td>" + task.getKafkaTopic() + "</td>" +
+                                    "<td>" + task.getKafkaUrl() + "</td>" +
+                                    "<td>" + task.getKafkaClusterName() + "</td>" +
+                                    "<td>" + task.getKafkaTopicTokens() + "</td>" +
+                                    "<td>" + task.getKafkaMessageSize() + "</td>" +
+                                    "<td>" + task.getMessageFormat() + "</td>" +
+                                    "</tr>");
+                        }
+                        out.print("        </tbody>\n" +
+                                "    </table>");
+                    %>
                 </div>
             </div>
-            <%
-                SimpleDateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-                List<Task> tasks = (List<Task>) request.getAttribute("alltasks");
-                out.print("<table id=\"allTasks\" class=\"table table-bordered table-striped\" cellspacing=\"0\" width=\"100%\">\n" +
-                        "        <thead>\n" +
-                        "            <tr>\n" +
-                        "                <th>  </th>\n" +
-                        "                <th>ID</th>\n" +
-                        "                <th>INITIAL SQL</th>\n" +
-                        "                <th>SCHEMA USED</th>\n" +
-                        "                <th>TIME FIELD</th>\n" +
-                        "                <th>LAST TIME</th>\n" +
-                        "                <th>ROUTINE TIME</th>\n" +
-                        "                <th>ALLOCATE ROUTINE</th>\n" +
-                        "                <th>IS ACTIVE</th>\n" +
-                        "                <th>KAFKA TOPIC</th>\n" +
-                        "                <th>KAFKA URL</th>\n" +
-                        "                <th>KAFKA CLUSTER NAME</th>\n" +
-                        "                <th>KAFKA TOPIC TOKENS</th>\n" +
-                        "                <th>KAFKA MESSAGE SIZE</th>\n" +
-                        "                <th>MESSAGE FORMAT</th>\n" +
-                        "            </tr>\n" +
-                        "        </thead>\n" +
-                        "        <tfoot>\n" +
-                        "        </tfoot>\n" +
-                        "        <tbody>\n");
-                for (Task task : tasks) {
-                    out.print("<tr>" +
-                            "<td><button onclick=\"modifyTask(" + task.getId() + ")\" type=\"button\" class=\"btn btn-block btn-primary\">修改</button>" +
-                            "<button onclick=\"removeTask(" + task.getId() + ")\" type=\"button\" class=\"btn btn-block btn-danger\">删除</button></td>" +
-                            "<td>" + task.getId() + "</td>" +
-                            "<td>" + task.getInitialSql() + "</td>" +
-                            "<td>" + task.getSchemaUsed() + "</td>" +
-                            "<td>" + task.getTimeField() + "</td>" +
-                            "<td>" + formatter1.format(task.getLastTime()) + "</td>" +
-                            "<td>" + task.getRoutineTime() + "</td>" +
-                            "<td>" + task.getAllocateRoutine() + "</td>" +
-                            "<td>" + task.getIsActive() + "</td>" +
-                            "<td>" + task.getKafkaTopic() + "</td>" +
-                            "<td>" + task.getKafkaUrl() + "</td>" +
-                            "<td>" + task.getKafkaClusterName() + "</td>" +
-                            "<td>" + task.getKafkaTopicTokens() + "</td>" +
-                            "<td>" + task.getKafkaMessageSize() + "</td>" +
-                            "<td>" + task.getMessageFormat() + "</td>" +
-                            "</tr>");
-                }
-                out.print("        </tbody>\n" +
-                        "    </table>");
-            %>
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title">#注释：</h3>
