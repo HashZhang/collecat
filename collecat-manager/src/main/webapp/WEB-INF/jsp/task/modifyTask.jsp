@@ -61,22 +61,40 @@
                         "       <label>Time Field0:(抽取表根据的时间字段)</label>\n" +
                         "       <input id=\"timeField\" name=\"timeField\" type=\"text\" class=\"form-control\" value=\"" + task.getTimeField() + "\">\n" +
                         "   </div>");
+
                 out.print("<div class=\"form-group\">\n" +
-                        "                <label>Last Time(上次生成job的截止日期):</label>\n" +
+                        "                <label>Last Time(抽取的开始日期):</label>\n" +
                         "\n" +
                         "                <div class=\"input-group date\">\n" +
                         "                  <div class=\"input-group-addon\">\n" +
                         "                    <i class=\"fa fa-calendar\"></i>\n" +
                         "                  </div>\n" +
-                        "                  <input type=\"text\" class=\"form-control pull-right\" id=\"lastdate\" name=\"lastdate\" value=\"" +
-                        formatter1.format(task.getLastTime()) +
+                        "                  <input type=\"text\" class=\"form-control pull-right\" id=\"startDate\" name=\"startDate\" value=\"" +
+                        (task.getStartTime() == null ? "" : formatter1.format(task.getStartTime())) +
                         "                   \">\n" +
                         "                </div>\n" +
                         "                <!-- /.input group -->\n" +
                         "              </div>");
                 out.print(" <div class=\"form-group\">\n" +
-                        "       <label>Last Time(上次生成job的截止时间):<</label>\n" +
-                        "       <input id=\"lasttime\" name=\"lasttime\" type=\"text\" class=\"form-control\" value=\"" + formatter2.format(task.getLastTime()) + "\">\n" +
+                        "       <label>Last Time(抽取的开始时间):<</label>\n" +
+                        "       <input id=\"startTime\" name=\"startTime\" type=\"text\" class=\"form-control\" value=\"" + (task.getStartTime() == null ? "" : formatter2.format(task.getStartTime())) + "\">\n" +
+                        "   </div>");
+                out.print("<div class=\"form-group\">\n" +
+                        "                <label>Last Time(抽取的结束日期，留空则为无限期):</label>\n" +
+                        "\n" +
+                        "                <div class=\"input-group date\">\n" +
+                        "                  <div class=\"input-group-addon\">\n" +
+                        "                    <i class=\"fa fa-calendar\"></i>\n" +
+                        "                  </div>\n" +
+                        "                  <input type=\"text\" class=\"form-control pull-right\" id=\"endDate\" name=\"endDate\" value=\"" +
+                        (task.getEndTime() == null ? "" : formatter1.format(task.getEndTime())) +
+                        "                   \">\n" +
+                        "                </div>\n" +
+                        "                <!-- /.input group -->\n" +
+                        "              </div>");
+                out.print(" <div class=\"form-group\">\n" +
+                        "       <label>Last Time(抽取的结束时间):<</label>\n" +
+                        "       <input id=\"endTime\" name=\"endTime\" type=\"text\" class=\"form-control\" value=\"" + (task.getEndTime() == null ? "" : formatter2.format(task.getEndTime())) + "\">\n" +
                         "   </div>");
 
                 out.print(" <div class=\"form-group\">\n" +

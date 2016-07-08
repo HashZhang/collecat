@@ -96,6 +96,8 @@ public class NodeManager {
                 String data = curatorClient.getData(StrUtils.makeString(Constants.NODE_PATH, Constants.ZK_SEPARATOR, child));
                 if (data.contains(Constants.COMMON_SEPARATOR)) {
                     nodes.add(Integer.parseInt(data.substring(data.lastIndexOf(Constants.COMMON_SEPARATOR) + 1)));
+                }else{
+                    addNode(StrUtils.makeString(Constants.NODE_PATH, Constants.ZK_SEPARATOR, child), data);
                 }
             }
             return nodes;

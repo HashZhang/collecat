@@ -1,6 +1,7 @@
 package com.sf.collecat.node.jdbc;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidPooledConnection;
 import com.google.common.base.Optional;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
@@ -10,8 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -22,7 +26,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class JDBCConnectionPool {
     private final static Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
     private final ConcurrentHashMap<String, Optional<DruidDataSource>> connMap = new ConcurrentHashMap<>();
-    private final ReentrantLock reentrantLock = new ReentrantLock();
     @Value("${jdbc.connection.poolsize}")
     private int maxPoolSize;
 
@@ -37,8 +40,6 @@ public class JDBCConnectionPool {
             JDBCConnection jdbcConnection = null;
             DruidDataSource druidDataSource = null;
             if (!connMap.containsKey(url) || (connMap.get(url) == null)) {
-                if (reentrantLock.tryLock()) {
-                    try {
                         druidDataSource = new DruidDataSource();
                         druidDataSource.setUrl(job.getMysqlUrl());
                         druidDataSource.setUsername(job.getMysqlUsername());
@@ -49,12 +50,15 @@ public class JDBCConnectionPool {
                         druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
                         druidDataSource.setMinEvictableIdleTimeMillis(300000);
                         druidDataSource.init();
-                        connMap.put(job.getMysqlUrl(), Optional.of(druidDataSource));
-                    } finally {
-                        reentrantLock.unlock();
-                    }
-                } else {
-                    while (!connMap.containsKey(url) || (connMap.get(url) == null)) ;
+                        connMap.put(url, Optional.of(druidDataSource));
+                        log.warn("Do not panic,new data source generated");
+            }
+            while (connMap.get(url) == null) {
+                System.out.println(Thread.currentThread() + url);
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             druidDataSource = connMap.get(url).get();
@@ -64,5 +68,24 @@ public class JDBCConnectionPool {
         } catch (SQLException e) {
             throw new GetJDBCCConnectionException(e);
         }
+    }
+
+    public static void main(String[] args) throws SQLException {
+        JDBCConnection jdbcConnection = null;
+        DruidDataSource druidDataSource = null;
+        druidDataSource = new DruidDataSource();
+        druidDataSource.setUrl("jdbc:mysql://10.202.44.206:8066/TESTDB");
+        druidDataSource.setUsername("root");
+        druidDataSource.setPassword("digdeep");
+        druidDataSource.setInitialSize(1);
+        druidDataSource.setMinIdle(1);
+        druidDataSource.setMaxActive(1);
+        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+        druidDataSource.setMinEvictableIdleTimeMillis(300000);
+        druidDataSource.init();
+        DruidPooledConnection connection = druidDataSource.getConnection();
+        Statement statement = null;
+        statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("/*select * from hotnews where container_no = 1*/select * from hotnews");
     }
 }

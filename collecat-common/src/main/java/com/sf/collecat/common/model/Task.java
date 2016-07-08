@@ -1,18 +1,15 @@
 package com.sf.collecat.common.model;
 
+import lombok.Getter;
+
 import java.io.Serializable;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Task implements Serializable {
     private Integer id;
-
-    private List<Subtask> subtaskList = new LinkedList<Subtask>();
-
-    public List<Subtask> getSubtaskList() {
-        return subtaskList;
-    }
+    @Getter
+    private Map<Integer,Subtask> subtaskHashMap = new ConcurrentHashMap<Integer, Subtask>();
 
     private String initialSql;
 

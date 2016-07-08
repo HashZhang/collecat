@@ -24,7 +24,7 @@
     delete from node
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Node" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Node" >
     insert into node (id, ip, current_node_id
       )
     values (#{id,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{currentNodeId,jdbcType=VARCHAR}

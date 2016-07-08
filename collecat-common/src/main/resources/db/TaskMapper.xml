@@ -48,7 +48,7 @@
     delete from task
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Task" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Task" >
     insert into task (id, initial_sql, schema_used, 
       time_field, start_time, end_time, 
       routine_time, allocate_routine, is_active, 

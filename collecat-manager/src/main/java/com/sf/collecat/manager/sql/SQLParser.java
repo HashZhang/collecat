@@ -2,6 +2,7 @@ package com.sf.collecat.manager.sql;
 
 import com.alibaba.druid.sql.parser.ParserException;
 import com.sf.collecat.common.model.Job;
+import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 
 import java.sql.SQLSyntaxErrorException;
@@ -17,11 +18,14 @@ import java.util.List;
 public interface SQLParser {
     /**
      * 将task拆分成job
-     * @param task 传入task
-     * @param lastTT task截止时间
+     * @param subtask 传入task
      * @return
      * @throws SQLSyntaxErrorException
      * @throws ParserException
      */
-    public List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException;
+    public Job parse(Subtask subtask) throws SQLSyntaxErrorException, ParserException;
+
+    public List<Subtask> parse(Task task) throws SQLSyntaxErrorException;
+
+    public List<Job> parse(Task task, Date date) throws SQLSyntaxErrorException;
 }

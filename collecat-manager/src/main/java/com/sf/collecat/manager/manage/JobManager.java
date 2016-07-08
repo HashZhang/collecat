@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.mapper.JobMapper;
 import com.sf.collecat.common.mapper.NodeMapper;
-import com.sf.collecat.common.mapper.TaskMapper;
+import com.sf.collecat.common.mapper.SubtaskMapper;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Node;
-import com.sf.collecat.common.model.Task;
+import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.utils.StrUtils;
 import com.sf.collecat.manager.exception.job.*;
 import com.sf.collecat.manager.exception.node.NodeSearchException;
@@ -16,11 +16,11 @@ import com.sf.collecat.manager.zk.CuratorClient;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.sql.SQLSyntaxErrorException;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Job管理类，管理所有关于Job的操作
@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class JobManager {
     @Autowired
-    private TaskMapper taskMapper;
+    private SubtaskMapper subtaskMapper;
     @Autowired
     private JobMapper jobMapper;
     @Autowired
@@ -43,17 +43,16 @@ public class JobManager {
     @Autowired
     private SQLParser sqlParser;
 
+    @Value("${job.pool.size}")
+    private int jobPoolSize;
+    private AtomicBoolean poolLock = new AtomicBoolean(false);
 
-    //当前job池大小
-    private AtomicInteger currentSize = new AtomicInteger(0);
-//    @Getter
-//    @Value("${job.pool.size}")
-//    private int poolSize;
-//    private ConcurrentHashMap<Integer, Job> jobPool = new ConcurrentHashMap<>();
-//    private AtomicBoolean atomicLock = new AtomicBoolean(false);
-
-    public int getCurrentSize() {
-        return currentSize.get();
+    public boolean hasException(Subtask subtask) {
+        if (jobMapper.countExceptionJobsWithSubtaskId(subtask.getId()) > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void clearJobs() throws JobRemoveException {
@@ -65,8 +64,8 @@ public class JobManager {
 
     public void checkJobs() throws JobCompleteException, JobSearchException, JobResetException, JobAssignException, NodeSearchException {
         List<String> children = getALLJobsFromZK();
-        if(log.isInfoEnabled()){
-            log.info("Checking Jobs:{}",children);
+        if (log.isInfoEnabled()) {
+            log.info("Checking Jobs:{}", children);
         }
         for (String child : children) {
             String data = curatorClient.getData(StrUtils.getZKJobPath(child));
@@ -75,11 +74,12 @@ public class JobManager {
                     completeJob(child);
                     break;
                 case Constants.JOB_EXCEPTION:
-                    resetJob(child);
+                    setJobException(child);
                     break;
                 case Constants.JOB_INIT:
                     break;
                 default:
+                    assignJob(child, data);
                     checkJobAssigned(child);
                     break;
             }
@@ -123,102 +123,50 @@ public class JobManager {
         return curatorClient.getChildren(Constants.JOB_PATH);
     }
 
-    /**
-     * 尝试发布task（一段时间的Job）,如果没获取锁发布失败
-     * 则返回false
-     *
-     * @param task
-     * @throws SQLSyntaxErrorException,JobPulishException
-     */
-    public boolean tryPublishJob(@NonNull Task task) throws SQLSyntaxErrorException, JobPulishException {
-        Date date = new Date();
-        List<Job> jobList = sqlParser.parse(task, new Date());
-//        if (tryGetCap(jobList.size())) {
+    public void publishJob(@NonNull Subtask subtask) throws SQLSyntaxErrorException, JobPulishException {
+        Job job = sqlParser.parse(subtask);
         try {
-            for (Job job : jobList) {
-                persistJob(job);
+            if (job == null) {
+                return;
             }
-            task.setLastTime(date);
-            taskMapper.updateByPrimaryKey(task);
-        } catch (Exception e) {
-//            returnCap(jobList.size());
-            throw new JobPulishException(e);
-        }
-        return true;
-//        } else {
-//            return false;
-//        }
-    }
-
-    /**
-     * 尝试发布单个job
-     * 发布顺序：先写入数据库，之后写入ZK Job Detail，最后写入ZK job
-     *
-     * @param job
-     * @throws JobPulishException
-     */
-    public boolean tryPublishJob(@NonNull Job job) throws JobPulishException {
-//        if (tryGetCap(1)) {
-        try {
-            persistJob(job);
-        } catch (Exception e) {
-//                returnCap(1);
-            throw new JobPulishException(e);
-        }
-        return true;
-//        } else {
-//            return false;
-//        }
-    }
-
-    /**
-     * 重试获取锁，直到获取到并发布成功
-     *
-     * @param task
-     * @throws SQLSyntaxErrorException,JobPulishException
-     */
-    public void publishJob(@NonNull Task task) throws SQLSyntaxErrorException, JobPulishException {
-        Date date = new Date();
-        List<Job> jobList = sqlParser.parse(task, new Date());
-//        while (tryGetCap(jobList.size())) ;
-        try {
-            for (Job job : jobList) {
-                persistJob(job);
+            if (persistJob(job)) {
+                subtask.setLastTime(job.getTimeFieldEnd());
+                subtaskMapper.updateByPrimaryKey(subtask);
+            } else {
+                log.info("Subtask-{}'s pool is full!", subtask.getId());
             }
-            task.setLastTime(date);
-            taskMapper.updateByPrimaryKey(task);
         } catch (Exception e) {
-//            returnCap(jobList.size());
             throw new JobPulishException(e);
         }
     }
 
-    /**
-     * 重试获取锁，直到获取到并发布成功
-     *
-     * @param job
-     * @throws SQLSyntaxErrorException,JobPulishException
-     */
     public void publishJob(@NonNull Job job) throws SQLSyntaxErrorException, JobPulishException {
-//        while (tryGetCap(1)) ;
         try {
             persistJob(job);
         } catch (Exception e) {
-//            returnCap(1);
             throw new JobPulishException(e);
         }
     }
 
-    /**
-     * 内部持久化job方法
-     *
-     * @param job
-     */
-    private void persistJob(Job job) {
-        jobMapper.insert(job);
-        int id = job.getId();
-        curatorClient.createPath(StrUtils.getZKJobDetailPath(id), JSON.toJSONString(job));
-        curatorClient.createPath(StrUtils.getZKJobPath(id), Constants.JOB_INIT);
+    private boolean persistJob(Job job) {
+        try {
+            while (poolLock.compareAndSet(false, true)) {
+                Thread.currentThread().yield();
+            }
+            if (job.getSubtaskId() != null) {
+                int countOfJobs = jobMapper.countJobsWithSubtaskId(job.getSubtaskId());
+                if (countOfJobs >= jobPoolSize) {
+                    return false;
+                }
+            }
+            jobMapper.insert(job);
+            int id = job.getId();
+            curatorClient.createPath(StrUtils.getZKJobDetailPath(id), JSON.toJSONString(job));
+            curatorClient.createPath(StrUtils.getZKJobPath(id), Constants.JOB_INIT);
+            return true;
+        } finally {
+            poolLock.set(false);
+        }
     }
 
     public void assignJob(@NonNull String jobId, String nodeId) throws JobSearchException, JobAssignException {

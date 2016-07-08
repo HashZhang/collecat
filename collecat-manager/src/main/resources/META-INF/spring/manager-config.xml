@@ -35,14 +35,13 @@
     <bean class="com.sf.collecat.manager.schedule.DefaultScheduler" id="defaultScheduler">
         <property name="checkNodeProcess" ref="checkNodeProcess"/>
         <property name="checkJobProcess" ref="checkJobProcess"/>
-        <property name="jobManager" ref="jobManager"/>
-        <property name="taskManager" ref="taskManager"/>
+        <property name="roundRobinTaskProcess" ref="roundRobinTaskProcess"/>
+        <property name="subtaskManager" ref="subtaskManager"/>
     </bean>
+
 
     <bean id="curatorClient" class="com.sf.collecat.manager.zk.CuratorClient">
         <constructor-arg name="zkAddress" value="${zk.address}"></constructor-arg>
-        <property name="jobListener" ref="jobListener"/>
-        <property name="nodeListener" ref="nodeListener"/>
     </bean>
 
     <bean class="com.sf.collecat.manager.manage.TaskManager" id="taskManager" init-method="init">
@@ -54,5 +53,7 @@
     <bean class="com.sf.collecat.manager.manage.NodeManager" id="nodeManager">
     </bean>
 
+    <bean class="com.sf.collecat.manager.manage.SubtaskManager" id="subtaskManager">
+    </bean>
 
 </beans>

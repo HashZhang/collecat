@@ -3,6 +3,7 @@ package com.sf.collecat.manager;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.config.mycat.util.ConfigUtil;
 import com.sf.collecat.manager.exception.job.JobRemoveException;
+import com.sf.collecat.manager.exception.subtask.SubtaskAddOrUpdateException;
 import com.sf.collecat.manager.exception.task.TaskAddException;
 import com.sf.collecat.manager.exception.task.TaskDeleteException;
 import com.sf.collecat.manager.exception.task.TaskSearchException;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * Created by 862911 on 2016/6/21.
  */
 public class Main {
-    public static void main(String[] args) throws IOException, ParseException, InterruptedException, TaskSearchException, TaskDeleteException, JobRemoveException, TaskAddException, ClassNotFoundException, SQLException, ValidateJDBCException, ValidateSQLException, ValidateKafkaException {
+    public static void main(String[] args) throws IOException, ParseException, InterruptedException, TaskSearchException, TaskDeleteException, JobRemoveException, TaskAddException, ClassNotFoundException, SQLException, ValidateJDBCException, ValidateSQLException, ValidateKafkaException, SubtaskAddOrUpdateException {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath*:spring.xml");
         JobManager jobManager = (JobManager) applicationContext.getBean("jobManager");
         TaskManager taskManager = (TaskManager) applicationContext.getBean("taskManager");

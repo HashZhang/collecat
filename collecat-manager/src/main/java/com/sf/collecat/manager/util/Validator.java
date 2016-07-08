@@ -75,7 +75,7 @@ public class Validator {
     public boolean validateJDBCConnections(Task task) throws SQLException, ClassNotFoundException, ValidateJDBCException {
         Class.forName("com.mysql.jdbc.Driver");
         Set<String> stringSet = new HashSet<>();
-        List<Job> jobs = sqlParser.parse(task, new Date(System.currentTimeMillis() - 1000));
+        List<Job> jobs = sqlParser.parse(task, new Date(task.getStartTime().getTime() + 1000));
         for (Job job : jobs) {
             Connection conn = null;
             try {

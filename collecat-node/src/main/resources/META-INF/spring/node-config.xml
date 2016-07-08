@@ -27,7 +27,7 @@
 	</bean>
 
 	<bean  class="com.sf.collecat.node.zk.CuratorClient">
-		<constructor-arg name="zkAddress" value="10.202.44.206:2181" />
+		<constructor-arg name="zkAddress" value="10.202.44.205:2181" />
 		<property name="jobListener" ref="jobListener"/>
 		<property name="workerPool" ref="workerPool"/>
 	</bean>

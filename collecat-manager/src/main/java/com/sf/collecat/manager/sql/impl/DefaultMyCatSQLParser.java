@@ -14,6 +14,7 @@ import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
+import com.sf.collecat.common.utils.StrUtils;
 import com.sf.collecat.manager.config.mycat.XMLSchemaLoader;
 import com.sf.collecat.manager.config.mycat.model.DBHostConfig;
 import com.sf.collecat.manager.sql.SQLParser;
@@ -44,38 +45,13 @@ public class DefaultMyCatSQLParser implements SQLParser {
     private int TIME_SHIFT = 2;//服务器之间最大时间差
     public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public List<Subtask> parse(Task task) throws SQLSyntaxErrorException {
-        List<Job> jobList = new ArrayList<>();
-        String table = getTable(task);
-        List<String> datanodes = null;
-        try {
-            datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
-        } catch (Exception e) {
-            throw new SQLSyntaxErrorException("Schema is not provided or schema does not exist!");
-        }
-        for (String datanode : datanodes) {
-            String database = xmlSchemaLoader.getDataNodes().get(datanode).getDatabase();
-            DBHostConfig dbHostConfig = xmlSchemaLoader.getDataHosts().get(xmlSchemaLoader.getDataNodes().get(datanode).getDataHost()).getWriteHosts()[0];
-            String url = dbHostConfig.getUrl();
-            String username = dbHostConfig.getUser();
-            String password = dbHostConfig.getPassword();
-
+    private boolean intervalLT1S(Date date1, Date date2) {
+        if (formatter.format(date1).equals(formatter.format(date2))) {
+            return false;
+        } else {
+            return true;
         }
     }
-
-    /**
-     * 将task拆分成job,分为四步
-     * 提取table
-     * 获取分片信息
-     * 将task按照上次时间到截止时间拆成一个个时间长度为周期时间的job
-     * 同时改写SQL，根据MyCat配置组装不同分片连接串的job
-     *
-     * @param task   传入task
-     * @param lastTT task截止时间
-     * @return
-     * @throws SQLSyntaxErrorException
-     * @throws ParserException
-     */
     @Cacheable("JobCache")
     public List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException {
         List<Job> jobList = new ArrayList<>();
@@ -84,7 +60,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
         try {
             datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
         } catch (Exception e) {
-            throw new SQLSyntaxErrorException("Schema is not provided or schema does not exist!");
+            throw new SQLSyntaxErrorException("Schema is not provided!");
         }
         Integer routineTime = task.getRoutineTime();
         long now = lastTT.getTime();
@@ -96,26 +72,166 @@ public class DefaultMyCatSQLParser implements SQLParser {
             String password = dbHostConfig.getPassword();
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("jdbc:mysql://").append(url).append("/").append(database).append("?zeroDateTimeBehavior=convertToNull");
-            Date lastDate = new Date(task.getLastTime().getTime());
+            Date lastDate = new Date(task.getStartTime().getTime());
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(lastDate);
             calendar.add(Calendar.SECOND, -TIME_SHIFT);
             lastDate = calendar.getTime();
             calendar.add(Calendar.SECOND, TIME_SHIFT);
-            calendar.add(Calendar.SECOND, routineTime);
-            while (calendar.getTime().getTime() < now && (now - calendar.getTime().getTime()) >= 1000L) {
+            while (calendar.getTime().getTime() < now) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, calendar.getTime());
                 jobList.add(job);
                 lastDate = calendar.getTime();
                 calendar.add(Calendar.SECOND, routineTime);
             }
-            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) >= 1000L) {
+            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) > 1000L) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, lastTT);
                 jobList.add(job);
             }
         }
         return jobList;
     }
+
+    @Override
+    public Job parse(Subtask subtask) throws SQLSyntaxErrorException, ParserException {
+        Date lastTime = subtask.getLastTime();
+        Date currTime = subtask.getCurrTime();
+        Date endTime = subtask.getEndTime();
+        long routineTime = subtask.getRoutineTime();
+        long scheduleTime = lastTime.getTime() + 1000 * routineTime;
+        Job job = null;
+        if (endTime != null && scheduleTime > endTime.getTime()) {
+            if (currTime.getTime() < endTime.getTime()) {
+                if (intervalLT1S(currTime, lastTime)) {
+                    job = getJob(subtask, currTime);
+                }
+            } else {
+                if (intervalLT1S(endTime, lastTime)) {
+                    job = getJob(subtask, endTime);
+                }
+            }
+
+        } else if (scheduleTime > currTime.getTime()) {
+            if (intervalLT1S(lastTime, currTime)) {
+                job = getJob(subtask, currTime);
+            }
+        } else {
+            Date schedule = new Date(scheduleTime);
+            if (intervalLT1S(lastTime, schedule)) {
+                job = getJob(subtask, schedule);
+            }
+        }
+        return job;
+    }
+
+    private Job getJob(Subtask subtask, Date endTime) {
+        Job job = new Job();
+        job.setKafkaClusterName(subtask.getKafkaClusterName());
+        job.setKafkaMessageSize(subtask.getKafkaMessageSize());
+        job.setKafkaTopic(subtask.getKafkaTopic());
+        job.setKafkaTopicTokens(subtask.getKafkaTopicTokens());
+        job.setKafkaUrl(subtask.getKafkaUrl());
+        job.setMessageFormat(subtask.getMessageFormat());
+        job.setMysqlPassword(subtask.getMysqlPassword());
+        job.setMysqlUrl(subtask.getMysqlUrl());
+        job.setMysqlUsername(subtask.getMysqlUsername());
+        job.setStatus(Constants.JOB_INIT_VALUE);
+        job.setSubtaskId(subtask.getId());
+        job.setTimeField(subtask.getTimeField());
+        job.setTimeFieldStart(new Date(subtask.getLastTime().getTime() - TIME_SHIFT * 1000));
+        job.setTimeFieldEnd(endTime);
+        modifySQL(job, subtask.getInitialSql(), getTable(subtask), subtask, job.getTimeFieldStart(), job.getTimeFieldEnd());
+        return job;
+    }
+
+    private String getTable(Subtask subtask) {
+        MySqlStatementParser parser = new MySqlStatementParser(subtask.getInitialSql());
+        SQLStatement statement = parser.parseStatement();
+        MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
+        statement.accept(visitor);
+        String table = null;
+        for (TableStat.Name tableStat : visitor.getTables().keySet()) {
+            table = tableStat.getName().toUpperCase();
+        }
+        return table;
+    }
+
+    private void modifySQL(Job job, String sql, String table, Subtask subtask, Date start, Date end) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("select * from ").append(table).append(" where ").append(subtask.getTimeField()).append("<'")
+                .append(formatter.format(end)).append("' and ").append(subtask.getTimeField()).append(">='").append(formatter.format(start))
+                .append("' order by ").append(subtask.getTimeField());
+        MySqlStatementParser parser1 = new MySqlStatementParser(stringBuilder.toString());
+        SQLSelectStatement statement1 = (SQLSelectStatement) parser1.parseStatement();
+        MySqlSelectQueryBlock block1 = (MySqlSelectQueryBlock) statement1.getSelect().getQuery();
+        MySqlStatementParser parser = new MySqlStatementParser(sql);
+        SQLSelectStatement statement = (SQLSelectStatement) parser.parseStatement();
+        MySqlSelectQueryBlock block2 = (MySqlSelectQueryBlock) statement.getSelect().getQuery();
+        if (block2.getWhere() == null) {
+            block2.setWhere(block1.getWhere());
+        } else {
+            SQLBinaryOpExpr sqlBinaryOpExpr = new SQLBinaryOpExpr();
+            sqlBinaryOpExpr.setLeft(block1.getWhere());
+            sqlBinaryOpExpr.setRight(block2.getWhere());
+            sqlBinaryOpExpr.setOperator(SQLBinaryOperator.BooleanAnd);
+            block2.setWhere(sqlBinaryOpExpr);
+        }
+//        if (block2.getOrderBy() == null) {
+//            block2.setOrderBy(block1.getOrderBy());
+//        } else {
+//            List<SQLSelectOrderByItem> items = block2.getOrderBy().getItems();
+//            if (items == null) {
+//                items = new ArrayList<>();
+//            }
+//            items.addAll(block1.getOrderBy().getItems());
+//        }
+
+        job.setJobSql(SQLUtils.toMySqlString(statement));
+    }
+    public List<Subtask> parse(Task task) throws SQLSyntaxErrorException {
+        List<Subtask> subtasks = new ArrayList<>();
+        String table = getTable(task);
+        List<String> datanodes = null;
+        try {
+            datanodes = xmlSchemaLoader.getSchemas().get(task.getSchemaUsed()).getTables().get(table).getDataNodes();
+        } catch (Exception e) {
+            throw new SQLSyntaxErrorException("Schema is not provided or schema does not exist!");
+        }
+        for (String datanode : datanodes) {
+            DBHostConfig dbHostConfig = xmlSchemaLoader.getDataHosts().get(xmlSchemaLoader.getDataNodes().get(datanode).getDataHost()).getWriteHosts()[0];
+            String database = xmlSchemaLoader.getDataNodes().get(datanode).getDatabase();
+            String url = StrUtils.makeString("jdbc:mysql://", dbHostConfig.getUrl(), "/", database, "?zeroDateTimeBehavior=convertToNull");
+            String username = dbHostConfig.getUser();
+            String password = dbHostConfig.getPassword();
+            Subtask subtask = getSubtask(task, url, username, password);
+            subtasks.add(subtask);
+        }
+        return subtasks;
+    }
+
+    private Subtask getSubtask(Task task, String url, String username, String password) {
+        Subtask subtask = new Subtask();
+        subtask.setAllocateRoutine(task.getAllocateRoutine());
+        subtask.setInitialSql(task.getInitialSql());
+        subtask.setIsActive(task.getIsActive());
+        subtask.setKafkaClusterName(task.getKafkaClusterName());
+        subtask.setKafkaMessageSize(task.getKafkaMessageSize());
+        subtask.setKafkaTopic(task.getKafkaTopic());
+        subtask.setKafkaTopicTokens(task.getKafkaTopicTokens());
+        subtask.setKafkaUrl(task.getKafkaUrl());
+        subtask.setLastTime(task.getStartTime());
+        subtask.setEndTime(task.getEndTime());
+        subtask.setMessageFormat(task.getMessageFormat());
+        subtask.setMysqlPassword(password);
+        subtask.setMysqlUrl(url);
+        subtask.setMysqlUsername(username);
+        subtask.setRoutineTime(task.getRoutineTime());
+        subtask.setSchemaUsed(task.getSchemaUsed());
+        subtask.setTaskId(task.getId());
+        subtask.setTimeField(task.getTimeField());
+        return subtask;
+    }
+
 
     /**
      * 获取表名

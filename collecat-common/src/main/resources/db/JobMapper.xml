@@ -39,6 +39,18 @@
     *
     from job
   </select>
+  <select id="countJobsWithSubtaskId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(*)
+    from job
+    where subtask_id = #{subtaskId,jdbcType=INTEGER}
+  </select>
+
+  <select id="countExceptionJobsWithSubtaskId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(*)
+    from job
+    where subtask_id = #{subtaskId,jdbcType=INTEGER}
+    and status = 2
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -49,7 +61,7 @@
     delete from job
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Job" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Job" >
     insert into job (id, subtask_id, time_field, 
       time_field_start, time_field_end, job_sql, 
       mysql_url, mysql_username, mysql_password, 

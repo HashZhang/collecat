@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 清理工作类
  *
@@ -22,12 +24,17 @@ public class CheckNodeProcess implements Runnable {
 
     @Override
     public void run() {
-        try {
-            nodeManager.checkNodes();
-        } catch (NodeSearchException e) {
-            log.error("",e);
-        } catch (NodeRemoveException e) {
-            log.error("",e);
+        while (true) {
+            try {
+                nodeManager.checkNodes();
+                TimeUnit.SECONDS.sleep(1);
+            } catch (NodeSearchException e) {
+                log.error("", e);
+            } catch (NodeRemoveException e) {
+                log.error("", e);
+            } catch (Throwable e) {
+                log.error("", e);
+            }
         }
     }
 

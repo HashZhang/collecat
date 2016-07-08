@@ -20,4 +20,8 @@ public interface JobMapper {
     List<Job> selectAllExceptionJob();
 
     List<Job> selectAllJob();
+
+    int countJobsWithSubtaskId(int subtaskId);
+
+    int countExceptionJobsWithSubtaskId(int subtaskId);
 }

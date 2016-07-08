@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class Subtask implements Serializable {
     private Integer id;
+
     private Scheduler scheduler;
 
     public Scheduler getScheduler() {
@@ -26,6 +27,10 @@ public class Subtask implements Serializable {
     private String timeField;
 
     private Date lastTime;
+
+    private Date currTime;
+
+    private Date endTime;
 
     private Integer routineTime;
 
@@ -99,6 +104,22 @@ public class Subtask implements Serializable {
 
     public void setLastTime(Date lastTime) {
         this.lastTime = lastTime;
+    }
+
+    public Date getCurrTime() {
+        return currTime;
+    }
+
+    public void setCurrTime(Date currTime) {
+        this.currTime = currTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public Integer getRoutineTime() {
@@ -209,6 +230,8 @@ public class Subtask implements Serializable {
         sb.append(", schemaUsed=").append(schemaUsed);
         sb.append(", timeField=").append(timeField);
         sb.append(", lastTime=").append(lastTime);
+        sb.append(", currTime=").append(currTime);
+        sb.append(", endTime=").append(endTime);
         sb.append(", routineTime=").append(routineTime);
         sb.append(", allocateRoutine=").append(allocateRoutine);
         sb.append(", isActive=").append(isActive);

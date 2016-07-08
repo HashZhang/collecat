@@ -17,5 +17,9 @@ public interface SubtaskMapper {
 
     int updateByPrimaryKey(Subtask record);
 
-    Subtask selectByTaskIDAndDbUrl(Subtask record);
+    Subtask selectByTaskIDAndDbUrl(Subtask subtask);
+
+    List<Subtask> selectByTaskId(Integer taskId);
+
+
 }

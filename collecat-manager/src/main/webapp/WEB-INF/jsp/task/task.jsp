@@ -58,7 +58,8 @@
                                 "                <th>INITIAL SQL</th>\n" +
                                 "                <th>SCHEMA USED</th>\n" +
                                 "                <th>TIME FIELD</th>\n" +
-                                "                <th>LAST TIME</th>\n" +
+                                "                <th>START TIME</th>\n" +
+                                "                <th>END TIME</th>\n" +
                                 "                <th>ROUTINE TIME</th>\n" +
                                 "                <th>ALLOCATE ROUTINE</th>\n" +
                                 "                <th>IS ACTIVE</th>\n" +
@@ -81,7 +82,8 @@
                                     "<td>" + task.getInitialSql() + "</td>" +
                                     "<td>" + task.getSchemaUsed() + "</td>" +
                                     "<td>" + task.getTimeField() + "</td>" +
-                                    "<td>" + formatter1.format(task.getLastTime()) + "</td>" +
+                                    "<td>" + formatter1.format(task.getStartTime()) + "</td>" +
+                                    "<td>" + formatter1.format(task.getEndTime()) + "</td>" +
                                     "<td>" + task.getRoutineTime() + "</td>" +
                                     "<td>" + task.getAllocateRoutine() + "</td>" +
                                     "<td>" + task.getIsActive() + "</td>" +

@@ -8,6 +8,8 @@
     <result column="schema_used" property="schemaUsed" jdbcType="VARCHAR" />
     <result column="time_field" property="timeField" jdbcType="VARCHAR" />
     <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+    <result column="curr_time" property="currTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="routine_time" property="routineTime" jdbcType="INTEGER" />
     <result column="allocate_routine" property="allocateRoutine" jdbcType="VARCHAR" />
     <result column="is_active" property="isActive" jdbcType="BIT" />
@@ -22,16 +24,23 @@
     <result column="message_format" property="messageFormat" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, task_id, initial_sql, schema_used, time_field, last_time, routine_time, allocate_routine, 
-    is_active, kafka_topic, kafka_url, kafka_cluster_name, kafka_topic_tokens, kafka_message_size, 
-    mysql_url, mysql_username, mysql_password, message_format
+    id, task_id, initial_sql, schema_used, time_field, last_time, curr_time, end_time, 
+    routine_time, allocate_routine, is_active, kafka_topic, kafka_url, kafka_cluster_name, 
+    kafka_topic_tokens, kafka_message_size, mysql_url, mysql_username, mysql_password, 
+    message_format
   </sql>
+  <select id="selectByTaskId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from subtask
+    where task_id = #{taskId,jdbcType=INTEGER}
+  </select>
   <select id="selectByTaskIDAndDbUrl" resultMap="BaseResultMap" parameterType="com.sf.collecat.common.model.Subtask" >
     select
     <include refid="Base_Column_List" />
     from subtask
-    where task_id = #{task_id,jdbcType=INTEGER}
-    and mysql_url = #{mysql_url,jdbcType=VARCHAR}
+    where task_id = #{taskId,jdbcType=INTEGER}
+    and mysql_url = #{mysqlUrl,jdbcType=VARCHAR}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -43,21 +52,21 @@
     delete from subtask
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Subtask" >
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Subtask" >
     insert into subtask (id, task_id, initial_sql, 
       schema_used, time_field, last_time, 
-      routine_time, allocate_routine, is_active, 
-      kafka_topic, kafka_url, kafka_cluster_name, 
-      kafka_topic_tokens, kafka_message_size, mysql_url, 
-      mysql_username, mysql_password, message_format
-      )
+      curr_time, end_time, routine_time, 
+      allocate_routine, is_active, kafka_topic, 
+      kafka_url, kafka_cluster_name, kafka_topic_tokens, 
+      kafka_message_size, mysql_url, mysql_username, 
+      mysql_password, message_format)
     values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=INTEGER}, #{initialSql,jdbcType=VARCHAR}, 
       #{schemaUsed,jdbcType=VARCHAR}, #{timeField,jdbcType=VARCHAR}, #{lastTime,jdbcType=TIMESTAMP}, 
-      #{routineTime,jdbcType=INTEGER}, #{allocateRoutine,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT}, 
-      #{kafkaTopic,jdbcType=VARCHAR}, #{kafkaUrl,jdbcType=VARCHAR}, #{kafkaClusterName,jdbcType=VARCHAR}, 
-      #{kafkaTopicTokens,jdbcType=VARCHAR}, #{kafkaMessageSize,jdbcType=INTEGER}, #{mysqlUrl,jdbcType=VARCHAR}, 
-      #{mysqlUsername,jdbcType=VARCHAR}, #{mysqlPassword,jdbcType=VARCHAR}, #{messageFormat,jdbcType=VARCHAR}
-      )
+      #{currTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{routineTime,jdbcType=INTEGER}, 
+      #{allocateRoutine,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT}, #{kafkaTopic,jdbcType=VARCHAR}, 
+      #{kafkaUrl,jdbcType=VARCHAR}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaTopicTokens,jdbcType=VARCHAR}, 
+      #{kafkaMessageSize,jdbcType=INTEGER}, #{mysqlUrl,jdbcType=VARCHAR}, #{mysqlUsername,jdbcType=VARCHAR}, 
+      #{mysqlPassword,jdbcType=VARCHAR}, #{messageFormat,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Subtask" >
     insert into subtask
@@ -79,6 +88,12 @@
       </if>
       <if test="lastTime != null" >
         last_time,
+      </if>
+      <if test="currTime != null" >
+        curr_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
       </if>
       <if test="routineTime != null" >
         routine_time,
@@ -136,6 +151,12 @@
       <if test="lastTime != null" >
         #{lastTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="currTime != null" >
+        #{currTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="routineTime != null" >
         #{routineTime,jdbcType=INTEGER},
       </if>
@@ -192,6 +213,12 @@
       <if test="lastTime != null" >
         last_time = #{lastTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="currTime != null" >
+        curr_time = #{currTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="routineTime != null" >
         routine_time = #{routineTime,jdbcType=INTEGER},
       </if>
@@ -238,6 +265,8 @@
       schema_used = #{schemaUsed,jdbcType=VARCHAR},
       time_field = #{timeField,jdbcType=VARCHAR},
       last_time = #{lastTime,jdbcType=TIMESTAMP},
+      curr_time = #{currTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
       routine_time = #{routineTime,jdbcType=INTEGER},
       allocate_routine = #{allocateRoutine,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=BIT},

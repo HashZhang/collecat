@@ -1,5 +1,6 @@
 package com.sf.collecat.manager.webapp;
 
+import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;
 import com.sf.collecat.manager.exception.task.TaskAddException;
@@ -9,8 +10,11 @@ import com.sf.collecat.manager.exception.task.TaskSearchException;
 import com.sf.collecat.manager.exception.validate.ValidateJDBCException;
 import com.sf.collecat.manager.exception.validate.ValidateKafkaException;
 import com.sf.collecat.manager.exception.validate.ValidateSQLException;
+import com.sf.collecat.manager.manage.JobManager;
 import com.sf.collecat.manager.manage.TaskManager;
+import com.sf.collecat.manager.util.CytoscapeHelper;
 import com.sf.collecat.manager.util.PropertyLoader;
+import com.sf.collecat.manager.webapp.common.CytoscapeElements;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -40,10 +45,12 @@ import java.util.Properties;
 public class TaskController {
     @Autowired
     private TaskManager taskManager;
+    @Autowired
+    private JobManager jobManager;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
-    @RequestMapping("/task")
+    @RequestMapping("/task/all")
     public ModelAndView task(HttpServletRequest request, ModelMap model) {
         List<Task> tasks = null;
         String message = null;
@@ -54,7 +61,7 @@ public class TaskController {
             message = e.getMessage();
         }
         model.addAttribute("alltasks", tasks);
-        model.addAttribute("message",message);
+        model.addAttribute("message", message);
         return new ModelAndView("task/task");
     }
 
@@ -69,7 +76,7 @@ public class TaskController {
             message = e.getMessage();
         }
         model.addAttribute("task", task);
-        model.addAttribute("message",message);
+        model.addAttribute("message", message);
         return new ModelAndView("task/modifyTask");
     }
 
@@ -87,27 +94,26 @@ public class TaskController {
                 task.setKafkaTopic(request.getParameter("kafkaTopic"));
                 task.setKafkaTopicTokens(request.getParameter("kafkaTopicTokens"));
                 task.setKafkaUrl(request.getParameter("kafkaUrl"));
-                Date date = sdf.parse(StrUtils.makeString(request.getParameter("lastdate"), " ", request.getParameter("lasttime")));
-                task.setLastTime(date);
+                Date startDate = sdf.parse(StrUtils.makeString(request.getParameter("startDate"), " ", request.getParameter("startTime")));
+                String endD = request.getParameter("endDate").trim();
+                task.setStartTime(startDate);
+                if (endD != null && !endD.equals("")) {
+                    Date endDate = sdf.parse(StrUtils.makeString(request.getParameter("endDate"), " ", request.getParameter("endTime")));
+                    task.setEndTime(endDate);
+                } else {
+                    task.setEndTime(null);
+                }
                 task.setMessageFormat(request.getParameter("messageFormat"));
                 task.setRoutineTime(Integer.parseInt(request.getParameter("routineTime")));
                 task.setSchemaUsed(request.getParameter("schemaUsed"));
                 task.setTimeField(request.getParameter("timeField"));
                 taskManager.modifyTask(task);
             }
-        } catch (TaskSearchException e) {
+        } catch (TaskSearchException | TaskModifyException | ParseException e) {
             model.addAttribute("message", "Something wrong in KafKa configuration");
             model.addAttribute("task", task);
             return new ModelAndView("/task/modifyTask");
-        } catch (TaskModifyException e) {
-            model.addAttribute("message", "Something wrong in KafKa configuration");
-            model.addAttribute("task", task);
-            return new ModelAndView("/task/modifyTask");
-        } catch (ParseException e) {
-            model.addAttribute("message", "Something wrong in KafKa configuration");
-            model.addAttribute("task", task);
-            return new ModelAndView("/task/modifyTask");
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("", e);
             model.addAttribute("message", "Something wrong in KafKa configuration");
             model.addAttribute("task", task);
@@ -150,8 +156,15 @@ public class TaskController {
             task.setKafkaTopic(request.getParameter("kafkaTopic"));
             task.setKafkaTopicTokens(request.getParameter("kafkaTopicTokens"));
             task.setKafkaUrl(request.getParameter("kafkaUrl"));
-            Date date = sdf.parse(StrUtils.makeString(request.getParameter("lastdate"), " ", request.getParameter("lasttime")));
-            task.setLastTime(date);
+            Date startDate = sdf.parse(StrUtils.makeString(request.getParameter("startDate"), " ", request.getParameter("startTime")));
+            String endD = request.getParameter("endDate").trim();
+            task.setStartTime(startDate);
+            if (endD != null && !endD.equals("")) {
+                Date endDate = sdf.parse(StrUtils.makeString(request.getParameter("endDate"), " ", request.getParameter("endTime")));
+                task.setEndTime(endDate);
+            } else {
+                task.setEndTime(null);
+            }
             task.setMessageFormat(request.getParameter("messageFormat"));
             task.setRoutineTime(Integer.parseInt(request.getParameter("routineTime")));
             task.setSchemaUsed(request.getParameter("schemaUsed"));
@@ -176,28 +189,12 @@ public class TaskController {
                 throw new Exception("TimeField can't be null");
             }
             taskManager.addTask(task);
-        } catch (ValidateKafkaException e) {
+        } catch (ValidateKafkaException | SQLException | ValidateSQLException | ParseException | ValidateJDBCException e) {
             model.addAttribute("message", "Something wrong in KafKa configuration");
             model.addAttribute("task", task);
             return new ModelAndView("/task/addTask");
-        } catch (SQLException e) {
-            model.addAttribute("message", "Something wrong in Schema Used");
-            model.addAttribute("task", task);
-            return new ModelAndView("/task/addTask");
-        } catch (ValidateSQLException e) {
-            model.addAttribute("message", "Something wrong in provided SQL statement");
-            model.addAttribute("task", task);
-            return new ModelAndView("/task/addTask");
-        } catch (ParseException e) {
-            model.addAttribute("message", "Something wrong in LastTime");
-            model.addAttribute("task", task);
-            return new ModelAndView("/task/addTask");
-        } catch (ValidateJDBCException e) {
-            model.addAttribute("message", "Something wrong in MySQL configuration or SQL statement has some wrong elements");
-            model.addAttribute("task", task);
-            return new ModelAndView("/task/addTask");
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
             model.addAttribute("message", e.getMessage());
             model.addAttribute("task", task);
             return new ModelAndView("/task/addTask");
@@ -222,39 +219,11 @@ public class TaskController {
             pt.load(new StringBufferInputStream(props));
             List<Task> tasks = PropertyLoader.getTasks(pt);
             taskManager.batchAddTask(tasks);
-        } catch (IOException e) {
+        } catch (IOException | TaskAddException | ValidateKafkaException | SQLException | ValidateSQLException | ParseException | ValidateJDBCException | ClassNotFoundException e) {
             model.addAttribute("message", e.getMessage());
             model.addAttribute("tasksProperties", props);
             return new ModelAndView("/task/batchAddTasks");
-        } catch (TaskAddException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch (ValidateKafkaException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch (SQLException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch (ValidateSQLException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch (ParseException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch (ValidateJDBCException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch (ClassNotFoundException e) {
-            model.addAttribute("message", e.getMessage());
-            model.addAttribute("tasksProperties", props);
-            return new ModelAndView("/task/batchAddTasks");
-        } catch(Exception e){
+        } catch (Exception e) {
             model.addAttribute("message", e.getMessage());
             model.addAttribute("tasksProperties", props);
             return new ModelAndView("/task/batchAddTasks");
@@ -263,5 +232,23 @@ public class TaskController {
         response.setHeader("REFRESH", content);
         model.addAttribute("item", "task");
         return new ModelAndView("/common/modifiedSuccessfully");
+    }
+
+    @RequestMapping("/task")
+    public ModelAndView taskDashBoard(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        CytoscapeElements cytoscapeElements = new CytoscapeElements();
+        Map<Integer, Task> taskMap = taskManager.getTaskMap();
+        for (Task task : taskMap.values()) {
+            cytoscapeElements.getNodes().add(CytoscapeHelper.getNode(task));
+            Map<Integer, Subtask> subtaskHashMap = task.getSubtaskHashMap();
+            for (Subtask subtask : subtaskHashMap.values()) {
+                cytoscapeElements.getNodes().add(CytoscapeHelper.getNode(subtask));
+                cytoscapeElements.getEdges().add(CytoscapeHelper.getEdge(task, subtask));
+                cytoscapeElements.getNodes().add(CytoscapeHelper.getNode(subtask.getMysqlUrl()));
+                cytoscapeElements.getEdges().add(CytoscapeHelper.getEdge(subtask, subtask.getMysqlUrl(), jobManager.hasException(subtask)));
+            }
+        }
+        model.addAttribute("elements",cytoscapeElements);
+        return new ModelAndView("/task/taskDashBoard");
     }
 }

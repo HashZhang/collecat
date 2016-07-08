@@ -58,7 +58,7 @@ public class SQLParserTest extends BaseSpringTest {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.SECOND, -1401);
-        task.setLastTime(calendar.getTime());
+        task.setStartTime(calendar.getTime());
         task.setMessageFormat("csv");
         task.setRoutineTime(600);
         task.setSchemaUsed("TESTDB");

@@ -71,7 +71,7 @@
 		  delimitIdentifiers CDATA #IMPLIED
 		  delimitAllColumns CDATA #IMPLIED
          -->
-        <table schema="" tableName="task" domainObjectName="Task" modelType="flat"
+        <table schema="" tableName="subtask" domainObjectName="Subtask" modelType="flat"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">

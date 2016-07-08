@@ -2,6 +2,7 @@ package com.sf.collecat.manager.manage;
 
 import com.sf.collecat.common.mapper.TaskMapper;
 import com.sf.collecat.common.model.Task;
+import com.sf.collecat.manager.exception.subtask.SubtaskAddOrUpdateException;
 import com.sf.collecat.manager.exception.task.TaskAddException;
 import com.sf.collecat.manager.exception.task.TaskDeleteException;
 import com.sf.collecat.manager.exception.task.TaskModifyException;
@@ -11,6 +12,7 @@ import com.sf.collecat.manager.exception.validate.ValidateKafkaException;
 import com.sf.collecat.manager.exception.validate.ValidateSQLException;
 import com.sf.collecat.manager.schedule.DefaultScheduler;
 import com.sf.collecat.manager.util.Validator;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,9 +31,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class TaskManager {
+    @Getter
     private final Map<Integer, Task> taskMap = new ConcurrentHashMap<>();
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private SubtaskManager subtaskManager;
     @Autowired
     private DefaultScheduler defaultScheduler;
     @Autowired
@@ -43,7 +48,7 @@ public class TaskManager {
      * @throws TaskSearchException
      * @throws TaskAddException
      */
-    public void init() throws TaskSearchException, TaskAddException, SQLException, ValidateJDBCException, ClassNotFoundException, ValidateKafkaException, ValidateSQLException {
+    public void init() throws TaskSearchException, TaskAddException, SQLException, ValidateJDBCException, ClassNotFoundException, ValidateKafkaException, ValidateSQLException, SubtaskAddOrUpdateException {
         List<Task> taskList = null;
         try {
             taskList = taskMapper.selectAll();
@@ -80,7 +85,7 @@ public class TaskManager {
      * @param task 要添加的task
      * @throws TaskAddException
      */
-    public void addTask(Task task) throws TaskAddException, ClassNotFoundException, ValidateJDBCException, SQLException, ValidateSQLException, ValidateKafkaException {
+    public void addTask(Task task) throws TaskAddException, ClassNotFoundException, ValidateJDBCException, SQLException, ValidateSQLException, ValidateKafkaException, SubtaskAddOrUpdateException {
         validator.validateSQL(task);
         validator.validateJDBCConnections(task);
         validator.validateKafKaConnection(task);
@@ -92,7 +97,7 @@ public class TaskManager {
             throw new TaskAddException(e);
         }
         taskMap.put(task.getId(), task);
-        defaultScheduler.scheduleTask(task);
+        subtaskManager.addOrUpdateSubTask(task);
     }
 
     /**
@@ -101,7 +106,7 @@ public class TaskManager {
      * @param tasks 要添加的tasks
      * @throws TaskAddException
      */
-    public void batchAddTask(List<Task> tasks) throws TaskAddException, ClassNotFoundException, ValidateJDBCException, SQLException, ValidateSQLException, ValidateKafkaException {
+    public void batchAddTask(List<Task> tasks) throws TaskAddException, ClassNotFoundException, ValidateJDBCException, SQLException, ValidateSQLException, ValidateKafkaException, SubtaskAddOrUpdateException {
         for (Task task : tasks) {
             validator.validateSQL(task);
             validator.validateJDBCConnections(task);
@@ -116,7 +121,7 @@ public class TaskManager {
                 throw new TaskAddException(e);
             }
             taskMap.put(task.getId(), task);
-            defaultScheduler.scheduleTask(task);
+            subtaskManager.addOrUpdateSubTask(task);
         }
     }
 
@@ -128,16 +133,14 @@ public class TaskManager {
      * @param task 要修改的task
      * @throws TaskModifyException
      */
-    public void modifyTask(Task task) throws TaskModifyException {
+    public void modifyTask(Task task) throws TaskModifyException, SubtaskAddOrUpdateException {
         try {
             taskMapper.updateByPrimaryKey(task);
         } catch (Exception e) {
             throw new TaskModifyException(e);
         }
-        task.setScheduler(taskMap.get(task.getId()).getScheduler());
-        defaultScheduler.cancelTask(task);
+        subtaskManager.addOrUpdateSubTask(task);
         taskMap.put(task.getId(), task);
-        defaultScheduler.scheduleTask(task);
     }
 
     /**
@@ -153,8 +156,7 @@ public class TaskManager {
         } catch (Exception e) {
             throw new TaskDeleteException(e);
         }
-        task.setScheduler(taskMap.get(task.getId()).getScheduler());
-        defaultScheduler.cancelTask(task);
+        subtaskManager.removeSubTasksFromTask(task);
         taskMap.remove(task.getId());
     }
 

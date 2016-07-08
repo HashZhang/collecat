@@ -5,11 +5,14 @@ import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.mapper.JobMapper;
 import com.sf.collecat.common.mapper.TaskMapper;
 import com.sf.collecat.common.model.Job;
+import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;
 import com.sf.collecat.manager.exception.job.JobPulishException;
+import com.sf.collecat.manager.exception.subtask.SubtaskModifyException;
 import com.sf.collecat.manager.exception.task.TaskModifyException;
 import com.sf.collecat.manager.manage.JobManager;
+import com.sf.collecat.manager.manage.SubtaskManager;
 import com.sf.collecat.manager.manage.TaskManager;
 import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.collecat.manager.zk.CuratorClient;
@@ -34,36 +37,26 @@ import java.util.List;
 @AllArgsConstructor
 public class Worker implements Runnable {
     @NonNull
-    private Task task;
+    private Subtask subtask;
     @Getter
     @NonNull
     private Scheduler scheduler;
     @NonNull
-    private JobManager jobManager;
-    @NonNull
-    private TaskManager taskManager;
+    private SubtaskManager subtaskManager;
     /**
      * 运行过程：
      */
     @Override
     public void run() {
-        if (!task.getIsActive()) {
+        if (!subtask.getIsActive()) {
             return;
         }
         try {
             if (log.isInfoEnabled()) {
-                log.info("task start:{}", task.toString());
+                log.info("task start:{}", subtask.toString());
             }
-            jobManager.publishJob(task);
-        } catch (SQLSyntaxErrorException e) {
-            log.error("SQL syntax error for collecat!", e);
-            task.setIsActive(false);
-            try {
-                taskManager.modifyTask(task);
-            } catch (Exception e1) {
-                log.error("",e1);
-            }
-        } catch (JobPulishException e) {
+            subtaskManager.scheduleNow(subtask);
+        } catch (SubtaskModifyException e) {
             log.error("",e);
         }
     }

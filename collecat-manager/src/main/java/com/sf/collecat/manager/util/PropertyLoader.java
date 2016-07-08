@@ -18,7 +18,7 @@ public class PropertyLoader {
         String taskString = properties.getProperty("tasks");
         String taskStrings[] = taskString.split(",");
         List<Task> tasks = new LinkedList<>();
-        for (int i = 0; i < taskStrings.length ; i++) {
+        for (int i = 0; i < taskStrings.length; i++) {
             Task task = new Task();
             task.setSchemaUsed(properties.getProperty(taskStrings[i].concat(".schema.used")));
             task.setInitialSql(properties.getProperty(taskStrings[i].concat(".initial.sql")));
@@ -29,7 +29,11 @@ public class PropertyLoader {
             task.setKafkaMessageSize(Integer.parseInt(properties.getProperty(taskStrings[i].concat(".kafka.message.size"))));
             task.setKafkaClusterName(properties.getProperty(taskStrings[i].concat(".kafka.cluster.name")));
             task.setTimeField(properties.getProperty(taskStrings[i].concat(".time.field")));
-            task.setLastTime(sdf.parse(properties.getProperty(taskStrings[i].concat(".last.time"))));
+            task.setStartTime(sdf.parse(properties.getProperty(taskStrings[i].concat(".start.time"))));
+            String endTime = properties.getProperty(taskStrings[i].concat(".end.time"));
+            if (endTime != null) {
+                task.setEndTime(sdf.parse(endTime));
+            }
             task.setRoutineTime(Integer.parseInt(properties.getProperty(taskStrings[i].concat(".routine.time"))));
             task.setAllocateRoutine(properties.getProperty(taskStrings[i].concat(".allocate.routine")));
             task.setMessageFormat(properties.getProperty(taskStrings[i].concat(".message.format")));

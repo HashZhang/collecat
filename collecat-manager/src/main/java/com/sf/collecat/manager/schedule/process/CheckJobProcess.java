@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 重置异常工作类
  *
@@ -25,20 +27,23 @@ public class CheckJobProcess implements Runnable {
 
     @Override
     public void run() {
-        try {
-            jobManager.checkJobs();
-        } catch (JobCompleteException e) {
-            log.error("",e);
-        } catch (JobSearchException e) {
-            log.error("",e);
-        } catch (JobResetException e) {
-            log.error("",e);
-        } catch (JobAssignException e) {
-            log.error("",e);
-        } catch (NodeSearchException e) {
-            log.error("",e);
-        } catch (Exception e){
-            log.error("",e);
+        while (true) {
+            try {
+                jobManager.checkJobs();
+                TimeUnit.SECONDS.sleep(1);
+            } catch (JobCompleteException e) {
+                log.error("", e);
+            } catch (JobSearchException e) {
+                log.error("", e);
+            } catch (JobResetException e) {
+                log.error("", e);
+            } catch (JobAssignException e) {
+                log.error("", e);
+            } catch (NodeSearchException e) {
+                log.error("", e);
+            } catch (Throwable e) {
+                log.error("", e);
+            }
         }
     }
 }
