@@ -3,13 +3,15 @@ package com.sf.collecat.common.model;
 import lombok.Getter;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Task implements Serializable {
     private Integer id;
     @Getter
-    private Map<Integer,Subtask> subtaskHashMap = new ConcurrentHashMap<Integer, Subtask>();
+    private Map<Integer, Subtask> subtaskHashMap = new ConcurrentHashMap<Integer, Subtask>();
 
     private String initialSql;
 
@@ -40,6 +42,36 @@ public class Task implements Serializable {
     private String messageFormat;
 
     private static final long serialVersionUID = 1L;
+
+    public int getCurrentCompPer() {
+        return currentCompPer;
+    }
+
+    public void setCurrentCompPer(List<Subtask> subtasks) {
+        int count = 0;
+        for (Subtask subtask : subtasks) {
+            count += subtask.getCurrentCompletePercent(this.startTime);
+        }
+        currentCompPer = count / subtasks.size();
+    }
+
+    private int currentCompPer;
+
+    public int getTotalCompPer() {
+        return totalCompPer;
+    }
+
+    public void setTotalCompPer(List<Subtask> subtasks) {
+        int count = 0;
+        if (this.endTime != null) {
+            for (Subtask subtask : subtasks) {
+                count += subtask.getTotalCompletePercent(this.startTime);
+            }
+        }
+        totalCompPer = count / subtasks.size();
+    }
+
+    private int totalCompPer;
 
     public Integer getId() {
         return id;

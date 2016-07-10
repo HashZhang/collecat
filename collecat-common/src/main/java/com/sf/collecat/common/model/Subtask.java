@@ -218,6 +218,20 @@ public class Subtask implements Serializable {
         this.messageFormat = messageFormat == null ? null : messageFormat.trim();
     }
 
+    public int getCurrentCompletePercent(Date startTime) {
+        double ratio = (double) (lastTime.getTime() - startTime.getTime()) / (double) (currTime.getTime() - startTime.getTime());
+        return (int) (ratio * 100.0);
+    }
+
+    public int getTotalCompletePercent(Date startTime) {
+        if (endTime != null) {
+            double ratio = (double) (lastTime.getTime() - startTime.getTime()) / (double) (endTime.getTime() - startTime.getTime());
+            return (int) (ratio * 100.0);
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

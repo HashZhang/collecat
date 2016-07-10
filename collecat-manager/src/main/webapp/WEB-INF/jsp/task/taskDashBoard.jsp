@@ -1,5 +1,6 @@
 <%@ page import="com.alibaba.fastjson.JSON" %>
 <%@ page import="com.sf.collecat.manager.webapp.common.CytoscapeElements" %>
+<%@ page import="com.sf.collecat.common.utils.StrUtils" %>
 <%--
   Author： HashZhang
   Date: 2016/7/1
@@ -34,6 +35,14 @@
 
         <!-- Main content -->
         <section class="content" id="cy" style="width: 100%;height: 100%; overflow:scroll;height:inherit">
+            <div class="row">
+                <label class="text-red"><b>
+                    <%
+                        String message = (String) request.getAttribute("message");
+                        out.print(StrUtils.transferNull(message));
+                    %>
+                </b></label>
+            </div>
         </section>
 
         <jsp:include page="../common/footer.jsp"></jsp:include>
@@ -122,10 +131,8 @@
             "\t\t\t\tcy.on('tap', 'node', {\n" +
             "\t\t\t\t\tfoo: 'bar'\n" +
             "\t\t\t\t}, function(evt) {\n" +
-            "\t\t\t\t\talert(evt.data.foo); // 'bar'\n" +
-            "\n" +
             "\t\t\t\t\tvar node = evt.cyTarget;\n" +
-            "\t\t\t\t\talert('tapped ' + node.id());\n" +
+            "\t\t\t\t\twindow.location.href = \"./task/route.do?req=\" + node.id();\n" +
             "\t\t\t\t});\n" +
             "\n" +
             "\t\t\t});");

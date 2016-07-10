@@ -5,6 +5,7 @@ import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.exception.subtask.SubtaskAddOrUpdateException;
 import com.sf.collecat.manager.exception.subtask.SubtaskModifyException;
+import com.sf.collecat.manager.exception.subtask.SubtaskSearchException;
 import com.sf.collecat.manager.schedule.DefaultScheduler;
 import com.sf.collecat.manager.sql.SQLParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,22 @@ public class SubtaskManager {
     private DefaultScheduler defaultScheduler;
     @Autowired
     private SQLParser sqlParser;
+
+    public Subtask getSubtask(int subtaskId) throws SubtaskSearchException {
+        try {
+            return subtaskMapper.selectByPrimaryKey(subtaskId);
+        } catch (Exception e) {
+            throw new SubtaskSearchException(e);
+        }
+    }
+
+    public List<Subtask> getSubtasks(int taskId) throws SubtaskSearchException {
+        try {
+            return subtaskMapper.selectByTaskId(taskId);
+        } catch (Exception e) {
+            throw new SubtaskSearchException(e);
+        }
+    }
 
     public void addOrUpdateSubTask(Task task) throws SubtaskAddOrUpdateException {
         try {
@@ -48,6 +65,8 @@ public class SubtaskManager {
                 defaultScheduler.scheduleTask(subtask);
             }
         } catch (SQLSyntaxErrorException e) {
+            throw new SubtaskAddOrUpdateException(e);
+        } catch (Exception e) {
             throw new SubtaskAddOrUpdateException(e);
         }
     }
