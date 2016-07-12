@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.SQLSyntaxErrorException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Hash Zhang
@@ -22,6 +23,8 @@ import java.util.List;
 public class SubtaskManager {
     @Autowired
     private SubtaskMapper subtaskMapper;
+    @Autowired
+    private TaskManager taskManager;
     @Autowired
     private DefaultScheduler defaultScheduler;
     @Autowired
@@ -43,7 +46,7 @@ public class SubtaskManager {
         }
     }
 
-    public void addOrUpdateSubTask(Task task) throws SubtaskAddOrUpdateException {
+    public void addOrUpdateSubTaskFromTask(Task task) throws SubtaskAddOrUpdateException {
         try {
             List<Subtask> subtasks = sqlParser.parse(task);
             for (Subtask subtask : subtasks) {
@@ -52,8 +55,8 @@ public class SubtaskManager {
                     subtaskMapper.insert(subtask);
                 } else {
                     //保证subtask上次生成job时间还有当前调度时间不变
-                    subtask.setLastTime(null);
-                    subtask.setCurrTime(null);
+                    subtask.setLastTime(subtask1.getLastTime());
+                    subtask.setCurrTime(subtask1.getCurrTime());
                     subtask.setId(subtask1.getId());
                     subtaskMapper.updateByPrimaryKeySelective(subtask);
                     if (task.getSubtaskHashMap().containsKey(subtask.getId())) {
@@ -66,6 +69,24 @@ public class SubtaskManager {
             }
         } catch (SQLSyntaxErrorException e) {
             throw new SubtaskAddOrUpdateException(e);
+        } catch (Exception e) {
+            throw new SubtaskAddOrUpdateException(e);
+        }
+    }
+
+    public void updateSubtask(Subtask subtask) throws SubtaskAddOrUpdateException {
+        try {
+            Map<Integer, Task> taskMap = taskManager.getTaskMap();
+            Task task = null;
+            if (taskMap.containsKey(subtask.getTaskId())) {
+                task = taskMap.get(subtask.getTaskId());
+            }
+            if (task != null && task.getSubtaskHashMap().containsKey(subtask.getId())) {
+                defaultScheduler.cancelTask(task.getSubtaskHashMap().get(subtask.getId()));
+            }
+            task.getSubtaskHashMap().put(subtask.getId(), subtask);
+            subtaskMapper.updateByPrimaryKeySelective(subtask);
+            defaultScheduler.scheduleTask(subtask);
         } catch (Exception e) {
             throw new SubtaskAddOrUpdateException(e);
         }

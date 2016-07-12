@@ -36,7 +36,7 @@
         </section>
 
         <!-- Main content -->
-        <section class="content" >
+        <section class="content">
             <div class="row">
                 <label class="text-red"><b>
                     <%
@@ -82,8 +82,12 @@
                                 "        <tbody>\n");
                         for (Job job : jobs) {
                             out.print("<tr>" +
-                                    "<td><button onclick=\"resetJob(" + job.getId() + ")\" type=\"button\" class=\"btn btn-block btn-primary\">重置</button>" +
-                                    "<button onclick=\"removeJob(" + job.getId() + ")\" type=\"button\" class=\"btn btn-block btn-danger\">删除</button></td>" +
+                                    "<td><button onclick=\"resetJob(" + job.getId() + ")\" type=\"button\" class=\"btn btn-block btn-primary\" ");
+                            if (job.getStatus() != Constants.JOB_EXCEPTION_VALUE) {
+                                out.print("disabled");
+                            }
+                            out.print(">重置</button>" +
+                                    "</td>" +
                                     "<td>" + job.getId() + "</td>" +
                                     "<td>" + job.getTimeField() + "</td>" +
                                     "<td>" + formatter1.format(job.getTimeFieldStart()) + "</td>" +
@@ -171,6 +175,10 @@
     $(function () {
         $("#allJobs").DataTable();
     });
+
+    function resetJob(id) {
+        window.location.href = "/collecat-manager/job/reset.do?jobId=" + id
+    }
 </script>
 </body>
 </html>

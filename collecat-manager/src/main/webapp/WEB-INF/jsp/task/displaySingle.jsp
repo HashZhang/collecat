@@ -1,7 +1,5 @@
-<%@ page import="com.sf.collecat.common.model.Subtask" %>
-<%@ page import="com.sf.collecat.common.utils.StrUtils" %>
-<%@ page import="java.util.Date" %>
 <%@ page import="com.sf.collecat.common.model.Task" %>
+<%@ page import="com.sf.collecat.common.utils.StrUtils" %>
 <%--
   Author： HashZhang
   Date: 2016/7/2
@@ -12,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Task display</title>
+    <title>Task</title>
     <jsp:include page="../common/headInclude.jsp"></jsp:include>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -47,7 +45,7 @@
             <div class="box box-primary">
                 <div class="box-header">
                     <%
-                        Task task = (Task) request.getAttribute("subtask");
+                        Task task = (Task) request.getAttribute("task");
                         out.println(StrUtils.makeString("<h3 class=\"box-title\"> TASK-", task.getId(), "</h3>"));
                     %>
 
@@ -108,72 +106,66 @@
 
                         <tr>
                             <td>Current Time Complete percent:</td>
-                            <td><div class="col-xs-6 col-md-3 text-center">
-                                <div style="display: inline; width: 90px; height: 90px;">
-                                    <input type="text" class="knob" value="<%
+                            <td>
+                                <div class="col-xs-6 col-md-3 text-center">
+                                    <div style="display: inline; width: 90px; height: 90px;">
+                                        <input type="text" class="knob" value="<%
                                         out.print(task.getCurrentCompPer());
-                                    %>" data-width="90" data-height="90" readOnly="true" data-fgcolor="#3c8dbc" style="width: 49px; height: 30px; position: absolute; vertical-align: middle; margin-top: 30px; margin-left: -69px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 18px; line-height: normal; font-family: Arial; text-align: center; color: rgb(60, 141, 188); padding: 0px; -webkit-appearance: none; background: none;">
+                                    %>" data-width="90" data-height="90" readOnly="true" data-fgcolor="#3c8dbc"
+                                               style="width: 49px; height: 30px; position: absolute; vertical-align: middle; margin-top: 30px; margin-left: -69px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 18px; line-height: normal; font-family: Arial; text-align: center; color: rgb(60, 141, 188); padding: 0px; -webkit-appearance: none; background: none;">
+                                    </div>
                                 </div>
-                            </div></td>
+                            </td>
                         </tr>
                         <tr>
                             <td>Total Time Complete percent:</td>
-                            <td><div class="col-xs-6 col-md-3 text-center">
-                                <div style="display: inline; width: 90px; height: 90px;">
-                                    <input type="text" class="knob" value="<%
+                            <td>
+                                <div class="col-xs-6 col-md-3 text-center">
+                                    <div style="display: inline; width: 90px; height: 90px;">
+                                        <input type="text" class="knob" value="<%
                                         out.print(task.getTotalCompPer());
-                                    %>" data-width="90" data-height="90" readOnly="true" data-fgcolor="#3c8dbc" style="width: 49px; height: 30px; position: absolute; vertical-align: middle; margin-top: 30px; margin-left: -69px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 18px; line-height: normal; font-family: Arial; text-align: center; color: rgb(60, 141, 188); padding: 0px; -webkit-appearance: none; background: none;">
+                                    %>" data-width="90" data-height="90" readOnly="true" data-fgcolor="#3c8dbc"
+                                               style="width: 49px; height: 30px; position: absolute; vertical-align: middle; margin-top: 30px; margin-left: -69px; border: 0px; font-weight: bold; font-style: normal; font-variant: normal; font-stretch: normal; font-size: 18px; line-height: normal; font-family: Arial; text-align: center; color: rgb(60, 141, 188); padding: 0px; -webkit-appearance: none; background: none;">
+                                    </div>
                                 </div>
-                            </div></td>
+                            </td>
                         </tr>
 
                         <tr>
-                            <td>Last Time:</td>
-                            <td><%out.print(subtask.getLastTime());%></td>
+                            <td>Start Time:</td>
+                            <td><%out.print(task.getStartTime());%></td>
                         </tr>
                         <tr>
                             <td>End Time:</td>
-                            <td><%out.print(subtask.getEndTime());%></td>
+                            <td><%out.print(task.getEndTime());%></td>
                         </tr>
                         <tr>
                             <td>Active?:</td>
-                            <td><%out.print(subtask.getIsActive());%></td>
-                        </tr>
-                        <tr>
-                            <td>MySQL URL:</td>
-                            <td><%out.print(subtask.getMysqlUrl());%></td>
-                        </tr>
-                        <tr>
-                            <td>MySQL USERNAME:</td>
-                            <td><%out.print(subtask.getMysqlUsername());%></td>
-                        </tr>
-                        <tr>
-                            <td>MYSQL Password:</td>
-                            <td><%out.print(subtask.getMysqlPassword());%></td>
+                            <td><%out.print(task.getIsActive());%></td>
                         </tr>
                         <tr>
                             <td>Kafka Cluster Name:</td>
-                            <td><%out.print(subtask.getKafkaClusterName());%></td>
+                            <td><%out.print(task.getKafkaClusterName());%></td>
                         </tr>
                         <tr>
                             <td>Kafka Url:</td>
-                            <td><%out.print(subtask.getKafkaUrl());%></td>
+                            <td><%out.print(task.getKafkaUrl());%></td>
                         </tr>
                         <tr>
                             <td>Kafka Topic:</td>
-                            <td><%out.print(subtask.getKafkaTopic());%></td>
+                            <td><%out.print(task.getKafkaTopic());%></td>
                         </tr>
                         <tr>
                             <td>Kafka Topic Tokens:</td>
-                            <td><%out.print(subtask.getKafkaTopicTokens());%></td>
+                            <td><%out.print(task.getKafkaTopicTokens());%></td>
                         </tr>
                         <tr>
                             <td>Kafka Message size:</td>
-                            <td><%out.print(subtask.getKafkaMessageSize());%></td>
+                            <td><%out.print(task.getKafkaMessageSize());%></td>
                         </tr>
                         <tr>
                             <td>Message Format:</td>
-                            <td><%out.print(subtask.getMessageFormat());%></td>
+                            <td><%out.print(task.getMessageFormat());%></td>
                         </tr>
 
                         </tbody>
@@ -202,6 +194,31 @@
 <script src="/collecat-manager/static/plugins/sparkline/jquery.sparkline.min.js"></script>
 
 <script>
+    function startTask() {
+        window.location.href = "/collecat-manager/task/start.do?taskId=" + <%
+            out.print(task.getId());
+        %>
+    }
+    function stopTask() {
+        window.location.href = "/collecat-manager/task/stop.do?taskId=" + <%
+            out.print(task.getId());
+        %>
+    }
+    function modifyTask() {
+        window.location.href = "/collecat-manager/task/modify.do?taskId=" + <%
+            out.print(task.getId());
+        %>
+    }
+    function removeTask() {
+        if (confirm("你确定要删除task-" + <%
+            out.print(task.getId());
+        %> + "吗？")) {
+            window.location.href = "/collecat-manager/task/remove.do?taskId=" + <%
+            out.print(task.getId());
+        %>
+        }
+    }
+
     $(function () {
         /* jQueryKnob */
 

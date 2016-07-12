@@ -57,12 +57,12 @@ public class RouteController {
                 model.addAttribute("task", task);
                 return new ModelAndView("task/displaySingle");
             } else {
-                return new ModelAndView("/task/taskDashBoard");
+                return new ModelAndView("task/taskDashBoard");
             }
         } catch (SubtaskSearchException | TaskSearchException e) {
             log.error("", e);
             model.addAttribute("message", e.getMessage());
-            return new ModelAndView("/task/taskDashBoard");
+            return new ModelAndView("task/taskDashBoard");
         }
     }
 }

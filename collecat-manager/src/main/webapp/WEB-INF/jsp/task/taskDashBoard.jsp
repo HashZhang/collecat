@@ -1,6 +1,6 @@
 <%@ page import="com.alibaba.fastjson.JSON" %>
-<%@ page import="com.sf.collecat.manager.webapp.common.CytoscapeElements" %>
 <%@ page import="com.sf.collecat.common.utils.StrUtils" %>
+<%@ page import="com.sf.collecat.manager.webapp.common.CytoscapeElements" %>
 <%--
   Author： HashZhang
   Date: 2016/7/1
@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Task</title>
+    <title>Task DashBoard</title>
     <jsp:include page="../common/headInclude.jsp"></jsp:include>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -34,7 +34,16 @@
         </section>
 
         <!-- Main content -->
-        <section class="content" id="cy" style="width: 100%;height: 100%; overflow:scroll;height:inherit">
+        <section class="content"  style="width: 100%;height: 100%; overflow:scroll;height:inherit">
+            <div class="col-lg-2 col-sm-2">
+                <button onclick="allTask()" type="button" class="btn btn-block btn-primary">查看列表</button>
+            </div>
+            <div class="col-lg-2 col-sm-2">
+                <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
+            </div>
+            <div class="col-lg-2 col-sm-2">
+                <button onclick="batchAddTask()" type="button" class="btn btn-block btn-primary">批量添加Task</button>
+            </div>
             <div class="row">
                 <label class="text-red"><b>
                     <%
@@ -42,6 +51,9 @@
                         out.print(StrUtils.transferNull(message));
                     %>
                 </b></label>
+            </div>
+            <div id="cy" style="width: 100%;height: 100%;">
+
             </div>
         </section>
 
@@ -67,6 +79,17 @@
 
 <script src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
 <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js"></script>
+<script>
+    function allTask() {
+        window.location.href = "/collecat-manager/task/all.do"
+    }
+    function addTask() {
+        window.location.href = "/collecat-manager/task/publish.do"
+    }
+    function batchAddTask() {
+        window.location.href = "/collecat-manager/task/batchPublish.do"
+    }
+</script>
 <%
     out.print("<script>");
 
@@ -132,6 +155,7 @@
             "\t\t\t\t\tfoo: 'bar'\n" +
             "\t\t\t\t}, function(evt) {\n" +
             "\t\t\t\t\tvar node = evt.cyTarget;\n" +
+            "if(node.id().indexOf(\"//\")<0)"+
             "\t\t\t\t\twindow.location.href = \"./task/route.do?req=\" + node.id();\n" +
             "\t\t\t\t});\n" +
             "\n" +

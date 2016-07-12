@@ -62,22 +62,8 @@
                         "       <input id=\"timeField\" name=\"timeField\" type=\"text\" class=\"form-control\" value=\"" + task.getTimeField() + "\">\n" +
                         "   </div>");
 
-                out.print("<div class=\"form-group\">\n" +
-                        "                <label>Last Time(抽取的开始日期):</label>\n" +
-                        "\n" +
-                        "                <div class=\"input-group date\">\n" +
-                        "                  <div class=\"input-group-addon\">\n" +
-                        "                    <i class=\"fa fa-calendar\"></i>\n" +
-                        "                  </div>\n" +
-                        "                  <input type=\"text\" class=\"form-control pull-right\" id=\"startDate\" name=\"startDate\" value=\"" +
-                        (task.getStartTime() == null ? "" : formatter1.format(task.getStartTime())) +
-                        "                   \">\n" +
-                        "                </div>\n" +
-                        "                <!-- /.input group -->\n" +
-                        "              </div>");
                 out.print(" <div class=\"form-group\">\n" +
-                        "       <label>Last Time(抽取的开始时间):<</label>\n" +
-                        "       <input id=\"startTime\" name=\"startTime\" type=\"text\" class=\"form-control\" value=\"" + (task.getStartTime() == null ? "" : formatter2.format(task.getStartTime())) + "\">\n" +
+                        "       <label class=\"text-red\">Start Time(抽取開始時間不可修改，可以考慮新建task)</label>\n" +
                         "   </div>");
                 out.print("<div class=\"form-group\">\n" +
                         "                <label>Last Time(抽取的结束日期，留空则为无限期):</label>\n" +
@@ -212,7 +198,10 @@
         );
 
         //Date picker
-        $('#lastdate').datepicker({
+        $('#startDate').datepicker({
+            autoclose: true
+        });
+        $('#endDate').datepicker({
             autoclose: true
         });
 

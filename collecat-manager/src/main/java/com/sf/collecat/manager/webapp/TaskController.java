@@ -3,6 +3,7 @@ package com.sf.collecat.manager.webapp;
 import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;
+import com.sf.collecat.manager.exception.subtask.SubtaskAddOrUpdateException;
 import com.sf.collecat.manager.exception.task.TaskAddException;
 import com.sf.collecat.manager.exception.task.TaskDeleteException;
 import com.sf.collecat.manager.exception.task.TaskModifyException;
@@ -119,7 +120,42 @@ public class TaskController {
             model.addAttribute("task", task);
             return new ModelAndView("/task/modifyTask");
         }
-        String content = StrUtils.makeString(2, ";URL=", "/task.do");
+        String content = StrUtils.makeString(2, ";URL=", "/collecat-manager/task.do");
+        response.setHeader("REFRESH", content);
+        model.addAttribute("item", "task");
+        return new ModelAndView("/common/modifiedSuccessfully");
+    }
+    @RequestMapping(value = "/task/start")
+    public ModelAndView startTask(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        Task task = null;
+        try {
+            task = taskManager.getTask(Integer.parseInt(request.getParameter("taskId")));
+            task.setIsActive(true);
+            taskManager.modifyTask(task);
+        } catch (TaskSearchException|SubtaskAddOrUpdateException|TaskModifyException e) {
+            model.addAttribute("message", StrUtils.makeString("Cannot start Task:",e.getMessage()));
+            model.addAttribute("task", task);
+            return new ModelAndView("/task/displaySingle");
+        }
+        String content = StrUtils.makeString(2, ";URL=", "/collecat-manager/task.do");
+        response.setHeader("REFRESH", content);
+        model.addAttribute("item", "task");
+        return new ModelAndView("/common/modifiedSuccessfully");
+    }
+
+    @RequestMapping(value = "/task/stop")
+    public ModelAndView stopTask(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        Task task = null;
+        try {
+            task = taskManager.getTask(Integer.parseInt(request.getParameter("taskId")));
+            task.setIsActive(false);
+            taskManager.modifyTask(task);
+        } catch (TaskSearchException|SubtaskAddOrUpdateException|TaskModifyException e) {
+            model.addAttribute("message", StrUtils.makeString("Cannot stop Task:",e.getMessage()));
+            model.addAttribute("task", task);
+            return new ModelAndView("/task/displaySingle");
+        }
+        String content = StrUtils.makeString(2, ";URL=", "/collecat-manager/task.do");
         response.setHeader("REFRESH", content);
         model.addAttribute("item", "task");
         return new ModelAndView("/common/modifiedSuccessfully");
@@ -156,9 +192,7 @@ public class TaskController {
             task.setKafkaTopic(request.getParameter("kafkaTopic"));
             task.setKafkaTopicTokens(request.getParameter("kafkaTopicTokens"));
             task.setKafkaUrl(request.getParameter("kafkaUrl"));
-            Date startDate = sdf.parse(StrUtils.makeString(request.getParameter("startDate"), " ", request.getParameter("startTime")));
             String endD = request.getParameter("endDate").trim();
-            task.setStartTime(startDate);
             if (endD != null && !endD.equals("")) {
                 Date endDate = sdf.parse(StrUtils.makeString(request.getParameter("endDate"), " ", request.getParameter("endTime")));
                 task.setEndTime(endDate);
@@ -228,7 +262,7 @@ public class TaskController {
             model.addAttribute("tasksProperties", props);
             return new ModelAndView("/task/batchAddTasks");
         }
-        String content = StrUtils.makeString(2, ";URL=", "/task.do");
+        String content = StrUtils.makeString(2, ";URL=", "/collecat-manager/task.do");
         response.setHeader("REFRESH", content);
         model.addAttribute("item", "task");
         return new ModelAndView("/common/modifiedSuccessfully");
@@ -248,7 +282,7 @@ public class TaskController {
                 cytoscapeElements.getEdges().add(CytoscapeHelper.getEdge(subtask, subtask.getMysqlUrl(), jobManager.hasException(subtask)));
             }
         }
-        model.addAttribute("elements",cytoscapeElements);
+        model.addAttribute("elements", cytoscapeElements);
         return new ModelAndView("/task/taskDashBoard");
     }
 }

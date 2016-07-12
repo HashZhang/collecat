@@ -24,7 +24,7 @@
 
         <section class="content-header">
             <h1>
-                Task
+                Add Task
                 <small></small>
             </h1>
             <ol class="breadcrumb">

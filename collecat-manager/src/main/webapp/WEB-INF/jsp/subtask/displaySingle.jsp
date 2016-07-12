@@ -71,9 +71,6 @@
                     <div class="col-lg-2 col-sm-2">
                         <button onclick="modifySubtask()" type="button" class="btn btn-block btn-primary">修改</button>
                     </div>
-                    <div class="col-lg-2 col-sm-2">
-                        <button onclick="removeSubtask()" type="button" class="btn btn-block btn-primary">删除</button>
-                    </div>
                     <table id="subtask" class="table table-bordered table-striped" cellspacing="1" width="100%">
                         <thead>
                         </thead>
@@ -202,6 +199,22 @@
 <script src="/collecat-manager/static/plugins/sparkline/jquery.sparkline.min.js"></script>
 
 <script>
+    function startSubtask() {
+        window.location.href = "/collecat-manager/subtask/start.do?subtaskId=" + <%
+            out.print(subtask.getId());
+        %>
+    }
+    function stopSubtask() {
+        window.location.href = "/collecat-manager/subtask/stop.do?subtaskId=" + <%
+            out.print(subtask.getId());
+        %>
+    }
+    function modifySubtask() {
+        window.location.href = "/collecat-manager/subtask/modify.do?subtaskId=" + <%
+            out.print(subtask.getId());
+        %>
+    }
+
     $(function () {
         /* jQueryKnob */
 

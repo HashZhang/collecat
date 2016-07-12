@@ -97,7 +97,7 @@ public class TaskManager {
             throw new TaskAddException(e);
         }
         taskMap.put(task.getId(), task);
-        subtaskManager.addOrUpdateSubTask(task);
+        subtaskManager.addOrUpdateSubTaskFromTask(task);
     }
 
     /**
@@ -121,7 +121,7 @@ public class TaskManager {
                 throw new TaskAddException(e);
             }
             taskMap.put(task.getId(), task);
-            subtaskManager.addOrUpdateSubTask(task);
+            subtaskManager.addOrUpdateSubTaskFromTask(task);
         }
     }
 
@@ -139,7 +139,7 @@ public class TaskManager {
         } catch (Exception e) {
             throw new TaskModifyException(e);
         }
-        subtaskManager.addOrUpdateSubTask(task);
+        subtaskManager.addOrUpdateSubTaskFromTask(task);
         taskMap.put(task.getId(), task);
     }
 
@@ -152,12 +152,13 @@ public class TaskManager {
      */
     public void removeTask(Task task) throws TaskDeleteException {
         try {
+            subtaskManager.removeSubTasksFromTask(task);
+            taskMap.remove(task.getId());
             taskMapper.deleteByPrimaryKey(task.getId());
         } catch (Exception e) {
             throw new TaskDeleteException(e);
         }
-        subtaskManager.removeSubTasksFromTask(task);
-        taskMap.remove(task.getId());
+
     }
 
     public void clearTasks() throws TaskSearchException, TaskDeleteException {

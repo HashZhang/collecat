@@ -1,5 +1,6 @@
 package com.sf.collecat.manager.util;
 
+import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;
@@ -81,7 +82,10 @@ public class CytoscapeHelper {
         Data data = edge.getData();
         data.setSource(StrUtils.makeString(SUBTASK_PREFIX, subtask.getId()));
         data.setTarget(dbUrl.substring(dbUrl.indexOf("//"), dbUrl.indexOf("?")));
-        if (noException) {
+        if (!subtask.getIsActive()) {
+            data.setFaveColor(EXCEPTION_EDGE_COLOR);
+            data.setLabel("Stopped!");
+        } else if (noException) {
             data.setFaveColor(EXCEPTION_EDGE_COLOR);
             data.setLabel("Exception!");
         } else {
@@ -91,4 +95,5 @@ public class CytoscapeHelper {
         data.setStrength(BORDER_WEIGHT);
         return edge;
     }
+
 }

@@ -304,6 +304,14 @@ public class JobManager {
         }
     }
 
+    public Job getJob(int jobId) throws JobSearchException {
+        try {
+            return jobMapper.selectByPrimaryKey(jobId);
+        } catch (Exception e) {
+            throw new JobSearchException();
+        }
+    }
+
 //    private boolean tryGetCap(int size) {
 //        if (atomicLock.compareAndSet(false, true)) {
 //            try {

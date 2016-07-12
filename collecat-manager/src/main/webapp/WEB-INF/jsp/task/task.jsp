@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Task</title>
+    <title>All Tasks</title>
     <jsp:include page="../common/headInclude.jsp"></jsp:include>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -35,6 +35,9 @@
 
         <!-- Main content -->
         <section class="content" style="overflow:scroll;height:inherit">
+            <div class="col-lg-2 col-sm-2">
+                <button onclick="taskDashBoard()" type="button" class="btn btn-block btn-primary">Task圖表</button>
+            </div>
             <div class="col-lg-2 col-sm-2">
                 <button onclick="addTask()" type="button" class="btn btn-block btn-primary">添加Task</button>
             </div>
@@ -143,18 +146,21 @@
 <script src="/collecat-manager/static/dist/js/demo.js"></script>
 <script>
     function modifyTask(id) {
-        window.location.href = "./task/modify.do?taskId=" + id
+        window.location.href = "/collecat-manager/task/modify.do?taskId=" + id
     }
     function removeTask(id) {
         if (confirm("你确定要删除task-" + id + "吗？")) {
-            window.location.href = "./task/remove.do?taskId=" + id
+            window.location.href = "/collecat-manager/task/remove.do?taskId=" + id
         }
     }
     function addTask() {
-        window.location.href = "./task/publish.do"
+        window.location.href = "/collecat-manager/task/publish.do"
+    }
+    function taskDashBoard() {
+        window.location.href = "/collecat-manager/task.do"
     }
     function batchAddTask() {
-        window.location.href = "./task/batchPublish.do"
+        window.location.href = "/collecat-manager/task/batchPublish.do"
     }
     $(function () {
         $("#allTasks").DataTable();
