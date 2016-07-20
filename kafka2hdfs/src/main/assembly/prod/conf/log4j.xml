@@ -18,8 +18,7 @@
 	</appender>
 	
 	<root>
-		<priority value="debug" />
-		<appender-ref ref="console" />
+		<priority value="info" />
 		<appender-ref ref="sf-sgs-kafka2hdfs" />
 	</root>
 
