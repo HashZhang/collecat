@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<dataStore storeName="sgs" systemName="inc_sgs_core" nullSplit="">
+
+		<!-- C端  -->
+		<table tableName="ops_app_stat_info" suffix="txt" fileName="appInfo">
+			<property name="waybillNo" 		index="0" value="1"></property>
+			<property name="zoneCode" 		index="1" value="2"></property>
+			<property name="userName" 		index="2" value="3"></property>
+			<property name="startTime" 		index="3" value="4"></property>
+			<property name="completeTime" 	index="4" value="5"></property>
+		</table>
+
+		<!-- begin- exp库 21张表 -->
+		<table tableName="exp_tl_op_history" suffix="txt" fileName="exp_tl_op_history">
+			<property name="id" 			index="0" value="1"></property>
+			<property name="oprid" 			index="1" value="2"></property>
+			<property name="optime" 		index="2" value="3"></property>
+			<property name="optype" 		index="3" value="4"></property>
+			<property name="taskids" 		index="4" value="5"></property>
+			<property name="targetid" 		index="5" value="6"></property>
+		</table>
+
+		<table tableName="exp_tt_delivery_change" suffix="txt"
+			fileName="exp_tt_delivery_change">
+			<property name="id" 			index="0" value="1"></property>
+			<property name="msg_type" 		index="1" value="2"></property>
+			<property name="msg_source" 	index="2" value="3"></property>
+			<property name="waybill_no" 	index="3" value="4"></property>
+			<property name="address" 		index="4" value="5"></property>
+			<property name="contact" 		index="5" value="6"></property>
+			<property name="telephone" 		index="6" value="7"></property>
+			<property name="reason" 		index="7" value="8"></property>
+			<property name="create_tm" 		index="8" value="9"></property>
+			<property name="version_no" 	index="9" value="10"></property>
+			<property name="modified_tm" 	index="10" value="11"></property>
+		</table>
+
+		<table tableName="exp_tt_delivery_order" suffix="txt" fileName="exp_tt_delivery_order">
+			<property name="id" index="0" value="1"></property>
+			<property name="waybill_no" index="1" value="2"></property>
+			<property name="contanct" index="2" value="3"></property>
+			<property name="tel" index="3" value="4"></property>
+			<property name="mobile" index="4" value="5"></property>
+			<property name="addr" index="5" value="6"></property>
+			<property name="addr_detail" index="6" value="7"></property>
+			<property name="company" index="7" value="8"></property>
+			<property name="quantity" index="8" value="9"></property>
+			<property name="source_zone_code" index="9" value="10"></property>
+			<property name="dest_zone_code" index="10" value="11"></property>
+			<property name="dest_city_code" index="11" value="12"></property>
+			<property name="product_code" index="12" value="13"></property>
+			<property name="create_tm" index="13" value="14"></property>
+			<property name="version_no" index="14" value="15"></property>
+			<property name="scan_tm" index="15" value="16"></property>
+			<property name="addr_detail_up_tm" index="16" value="17"></property>
+			<property name="version" index="17" value="18"></property>
+			<property name="oneself_pick_up" index="18" value="19"></property>
+			<property name="consignor_comp_name" index="19" value="20"></property>
+			<property name="consignor_addr" index="20" value="21"></property>
+			<property name="consignor_phone" index="21" value="22"></property>
+			<property name="consignor_cont_name" index="22" value="23"></property>
+			<property name="consignor_mobile" index="23" value="24"></property>
+			<property name="meterage_weight_qty" index="24" value="25"></property>
+			<property name="real_weight_qty" index="25" value="26"></property>
+			<property name="free_parcel_flg" index="26" value="27"></property>
+			<property name="inner_parcel_flg" index="27" value="28"></property>
+			<property name="frangible_parcel_flg" index="28" value="29"></property>
+			<property name="trust_parcel_flg" index="29" value="30"></property>
+			<property name="pre_customs_dt" index="30" value="31"></property>
+			<property name="consignee_emp_code" index="31" value="32"></property>
+			<property name="consigned_tm" index="32" value="33"></property>
+			<property name="deliver_emp_code" index="33" value="34"></property>
+			<property name="subscriber_name" index="34" value="35"></property>
+			<property name="signin_tm" index="35" value="36"></property>
+			<property name="waybill_remk" index="36" value="37"></property>
+			<property name="customs_batchs" index="37" value="38"></property>
+			<property name="audited_flg" index="38" value="39"></property>
+			<property name="inputer_emp_code" index="39" value="40"></property>
+			<property name="input_tm" index="40" value="41"></property>
+			<property name="auditer_emp_code" index="41" value="42"></property>
+			<property name="audited_tm" index="42" value="43"></property>
+			<property name="supp_type_code" index="43" value="44"></property>
+			<property name="customs_type_code" index="44" value="45"></property>
+			<property name="box_type_code" index="45" value="46"></property>
+			<property name="cargo_type_code" index="46" value="47"></property>
+			<property name="limit_type_code" index="47" value="48"></property>
+			<property name="distance_type_code" index="48" value="49"></property>
+			<property name="transport_type_code" index="49" value="50"></property>
+			<property name="express_type_code" index="50" value="51"></property>
+			<property name="lock_version_no" index="51" value="52"></property>
+			<property name="inputed_zone_code" index="52" value="53"></property>
+			<property name="input_type_code" index="53" value="54"></property>
+			<property name="need_signed_back_flg" index="54" value="55"></property>
+			<property name="signed_back_waybill_no" index="55" value="56"></property>
+			<property name="addressee_addr_native" index="56" value="57"></property>
+			<property name="unified_code" index="57" value="58"></property>
+			<property name="modified_emp_code" index="58" value="59"></property>
+			<property name="modified_tm" index="59" value="60"></property>
+			<property name="has_service_prod_flg" index="60" value="61"></property>
+			<property name="ackbill_type_code" index="61" value="62"></property>
+			<property name="cons_ value" index="62" value="63"></property>
+			<property name="other_node_flg" index="63" value="64"></property>
+			<property name="tb_order_no" index="64" value="65"></property>
+			<property name="tb_order_type" index="65" value="66"></property>
+			<property name="free_ticket_no" index="66" value="67"></property>
+			<property name="twinvoice_type_code" index="67" value="68"></property>
+			<property name="self_send_flg" index="68" value="69"></property>
+			<property name="self_send_discount" index="69" value="70"></property>
+			<property name="h value_box_type" index="70" value="71"></property>
+			<property name="volume" index="71" value="72"></property>
+			<property name="sourcearea" index="72" value="73"></property>
+			<property name="consult_code" index="73" value="74"></property>
+			<property name="consignor_postal_code" index="74" value="75"></property>
+			<property name="addressee_postal_code" index="75" value="76"></property>
+			<property name="country_code" index="76" value="77"></property>
+			<property name="invoice_no" index="77" value="78"></property>
+			<property name="is_credit" index="78" value="79"></property>
+			<property name="mawb" index="79" value="80"></property>
+			<property name="airport_code" index="80" value="81"></property>
+			<property name="cons_ value_currency_code" index="81" value="82"></property>
+			<property name="consignor_tax_no" index="82" value="83"></property>
+			<property name="transfer_parcel_flg" index="83" value="84"></property>
+			<property name="cod_bil_flg" index="84" value="85"></property>
+			<property name="cvs_code" index="85" value="86"></property>
+			<property name="cod_type" index="86" value="87"></property>
+			<property name="input_tm_gmt" index="87" value="88"></property>
+			<property name="modifydate_gmt" index="88" value="89"></property>
+			<property name="auditer_tm_gmt" index="89" value="90"></property>
+			<property name="unit_weight" index="90" value="91"></property>
+			<property name="refund_free_parcel_flg" index="91" value="92"></property>
+			<property name="new_input_tm" index="92" value="93"></property>
+			<property name="source_waybill_no" index="93" value="94"></property>
+			<property name="bill_style" index="94" value="95"></property>
+			<property name="b2c_flg" index="95" value="96"></property>
+			<property name="bill_long" index="96" value="97"></property>
+			<property name="bill_width" index="97" value="98"></property>
+			<property name="bill_high" index="98" value="99"></property>
+			<property name="remark_third" index="99" value="100"></property>
+			<property name="goods_deal_type" index="100" value="101"></property>
+			<property name="temperature_range" index="101" value="102"></property>
+			<property name="c_client" index="102" value="103"></property>
+			<property name="auto_fee_flag" index="103" value="104"></property>
+			<property name="is_his" index="104" value="105"></property>
+			<property name="supp_reson_code" index="105" value="106"></property>
+			<property name="last_modified_tm" index="106" value="107"></property>
+			<property name="expected_delivery_time" index="107" value="108"></property>
+			<property name="unit_region" index="108" value="109"></property>
+		</table>
+		
+		<table tableName="exp_tt_delivery_order_child" suffix="txt" fileName="exp_tt_delivery_order_child">
+			<property name="id" index="0" value="1"></property>
+			<property name="waybill_child_no" index="1" value="2"></property>
+			<property name="waybill_no" index="2" value="3"></property>
+			<property name="new_input_tm" index="3" value="4"></property>
+			<property name="modified_tm" index="4" value="5"></property>
+			<property name="is_his" index="5" value="6"></property>
+			<property name="create_tm" index="6" value="7"></property>
+			<property name="parent_id" index="7" value="8"></property>
+			<property name="version_no" index="8" value="9"></property>
+		</table>
+		
+		<table tableName="exp_tt_delivery_order_consign" suffix="txt" fileName="exp_tt_delivery_order_consign">
+			<property name="id" index="0" value="1"></property>
+			<property name="parent_id" index="1" value="2"></property>
+			<property name="waybill_no" index="2" value="3"></property>
+			<property name="qty_unit" index="3" value="4"></property>
+			<property name="cons_name" index="4" value="5"></property>
+			<property name="cons_qty" index="5" value="6"></property>
+			<property name="weight_qty" index="6" value="7"></property>
+			<property name="cons_value" index="7" value="8"></property>
+			<property name="new_input_tm" index="8" value="9"></property>
+			<property name="modified_tm" index="9" value="10"></property>
+			<property name="product_record_no" index="10" value="11"></property>
+			<property name="is_his" index="11" value="12"></property>
+			<property name="create_tm" index="12" value="13"></property>
+			<property name="version_no" index="13" value="14"></property>
+		</table>
+		
+		<table tableName="exp_tt_delivery_order_fee" suffix="txt" fileName="exp_tt_delivery_order_fee">
+			<property name="id" index="0" value="1"></property>
+			<property name="parent_id" index="1" value="2"></property>
+			<property name="waybill_no" index="2" value="3"></property>
+			<property name="fee_type_code" index="3" value="4"></property>
+			<property name="fee_amt" index="4" value="5"></property>
+			<property name="pay_method" index="5" value="6"></property>
+			<property name="cust_id" index="6" value="7"></property>
+			<property name="gather_zone_code" index="7" value="8"></property>
+			<property name="settlement_type_code" index="8" value="9"></property>
+			<property name="currency_code" index="9" value="10"></property>
+			<property name="gather_emp_code" index="10" value="11"></property>
+			<property name="input_type_code" index="11" value="12"></property>
+			<property name="biz_owner_zone_code" index="12" value="13"></property>
+			<property name="gst_fee" index="13" value="14"></property>
+			<property name="source_code_fee_amt" index="14" value="15"></property>
+			<property name="exchange_rate" index="15" value="16"></property>
+			<property name="dest_currency_code" index="16" value="17"></property>
+			<property name="refund_fee_amt" index="17" value="18"></property>
+			<property name="payment_change_type_code" index="18" value="19"></property>
+			<property name="create_tm" index="19" value="20"></property>
+			<property name="version_no" index="20" value="21"></property>
+		</table>
+
+		<table tableName="exp_tt_delivery_order_service" suffix="txt" fileName="exp_tt_delivery_order_service">
+			<property name="id" index="0" value="1"></property>
+			<property name="parent_id" index="1" value="2"></property>
+			<property name="create_time" index="2" value="3"></property>
+			<property name="service_type" index="3" value="4"></property>
+			<property name="service_fee" index="4" value="5"></property>
+			<property name="fee_code" index="5" value="6"></property>
+			<property name="attribute1" index="6" value="7"></property>
+			<property name="attribute2" index="7" value="8"></property>
+			<property name="attribute3" index="8" value="9"></property>
+			<property name="attribute4" index="9" value="10"></property>
+			<property name="attribute5" index="10" value="11"></property>
+		</table>
+		
+		<table tableName="exp_tt_express_task_info" suffix="txt" fileName="exp_tt_express_task_info">
+			<property name="id" index="0" value="1"></property>
+			<property name="item_id" index="1" value="2"></property>
+			<property name="request_id" index="2" value="3"></property>
+			<property name="waybill_no" index="3" value="4"></property>
+			<property name="task_bag_id" index="4" value="5"></property>
+			<property name="publisher_resource_id" index="5" value="6"></property>
+			<property name="publisher_role" index="6" value="7"></property>
+			<property name="publish_time" index="7" value="8"></property>
+			<property name="publish_remark" index="8" value="9"></property>
+			<property name="dept_code" index="9" value="10"></property>
+			<property name="hand_address" index="10" value="11"></property>
+			<property name="hand_time" index="11" value="12"></property>
+			<property name="create_time" index="12" value="13"></property>
+			<property name="cancel_publish_tm" index="13" value="14"></property>
+			<property name="do_cancel_publish_time" index="14" value="15"></property>
+			<property name="pickup_tm" index="15" value="16"></property>
+			<property name="delivery_tm" index="16" value="17"></property>
+			<property name="bidder_id" index="17" value="18"></property>
+			<property name="bade_time" index="18" value="19"></property>
+			<property name="trans_id" index="19" value="20"></property>
+			<property name="handover_time" index="20" value="21"></property>
+			<property name="trans_time" index="21" value="22"></property>
+			<property name="modify_tm" index="22" value="23"></property>
+			<property name="start_trans_id" index="23" value="24"></property>
+			<property name="start_trans_time" index="24" value="25"></property>
+		</table>
+		
+		<table tableName="exp_tt_order_status" suffix="txt" fileName="exp_tt_order_status">
+			<property name="id" index="0" value="1"></property>
+			<property name="msg_type" index="1" value="2"></property>
+			<property name="order_id" index="2" value="3"></property>
+			<property name="receiver_code" index="3" value="4"></property>
+			<property name="receiver_name" index="4" value="5"></property>
+			<property name="receiver_mobile" index="5" value="6"></property>
+			<property name="waybill_no" index="6" value="7"></property>
+			<property name="oper_type" index="7" value="8"></property>
+			<property name="zone_code" index="8" value="9"></property>
+			<property name="op_code" index="9" value="10"></property>
+			<property name="op_name" index="10" value="11"></property>
+			<property name="op_attach_info" index="11" value="12"></property>
+			<property name="courier_code" index="12" value="13"></property>
+			<property name="bar_opr_code" index="13" value="14"></property>
+			<property name="bar_upload_tm" index="14" value="15"></property>
+			<property name="bar_scan_tm" index="15" value="16"></property>
+			<property name="bar_sn" index="16" value="17"></property>
+			<property name="obj_type_code" index="17" value="18"></property>
+			<property name="contnr_code" index="18" value="19"></property>
+			<property name="pay_flg" index="19" value="20"></property>
+			<property name="stay_why_code" index="20" value="21"></property>
+			<property name="subbill_piece_qty" index="21" value="22"></property>
+			<property name="bar_upload_type_code" index="22" value="23"></property>
+			<property name="weight_qty" index="23" value="24"></property>
+			<property name="fee_amt" index="24" value="25"></property>
+			<property name="accountant_code" index="25" value="26"></property>
+			<property name="other_info" index="26" value="27"></property>
+			<property name="product_code" index="27" value="28"></property>
+			<property name="phone_zone" index="28" value="29"></property>
+			<property name="phone" index="29" value="30"></property>
+			<property name="reason" index="30" value="31"></property>
+			<property name="extend_attach_1" index="31" value="32"></property>
+			<property name="extend_attach_2" index="32" value="33"></property>
+			<property name="extend_attach_3" index="33" value="34"></property>
+			<property name="extend_attach_4" index="34" value="35"></property>
+			<property name="extend_attach_5" index="35" value="36"></property>
+			<property name="extend_attach_6" index="36" value="37"></property>
+			<property name="extend_attach_7" index="37" value="38"></property>
+			<property name="extend_attach_8" index="38" value="39"></property>
+			<property name="extend_attach_9" index="39" value="40"></property>
+			<property name="extend_attach_10" index="40" value="41"></property>
+			<property name="extend_attach_11" index="41" value="42"></property>
+			<property name="extend_attach_12" index="42" value="43"></property>
+			<property name="extend_attach_13" index="43" value="44"></property>
+			<property name="extend_attach_14" index="44" value="45"></property>
+			<property name="oper_time" index="45" value="46"></property>
+			<property name="create_tm" index="46" value="47"></property>
+			<property name="version_no" index="47" value="48"></property>
+			<property name="pay_custid" index="48" value="49"></property>
+			<property name="coupon_no" index="49" value="50"></property>
+			<property name="batch_code" index="50" value="51"></property>
+			<property name="medicine_box_code" index="51" value="52"></property>
+			<property name="cod_pay_type" index="52" value="53"></property>
+		</table>
+		
+		<table tableName="exp_tt_receive_order" suffix="txt" fileName="exp_tt_receive_order">
+			<property name="id" index="0" value="1"></property>
+			<property name="order_from" index="1" value="2"></property>
+			<property name="order_id" index="2" value="3"></property>
+			<property name="order_id_plantform" index="3" value="4"></property>
+			<property name="send_type" index="4" value="5"></property>
+			<property name="order_tm" index="5" value="6"></property>
+			<property name="create_tm" index="6" value="7"></property>
+			<property name="empid" index="7" value="8"></property>
+			<property name="emptel" index="8" value="9"></property>
+			<property name="custid" index="9" value="10"></property>
+			<property name="msg" index="10" value="11"></property>
+			<property name="senddate" index="11" value="12"></property>
+			<property name="order_create_tm" index="12" value="13"></property>
+			<property name="sendtime" index="13" value="14"></property>
+			<property name="operator" index="14" value="15"></property>
+			<property name="deptid" index="15" value="16"></property>
+			<property name="order_ciity_code" index="16" value="17"></property>
+			<property name="device" index="17" value="18"></property>
+			<property name="sp" index="18" value="19"></property>
+			<property name="virarea" index="19" value="20"></property>
+			<property name="compabb" index="20" value="21"></property>
+			<property name="custtel" index="21" value="22"></property>
+			<property name="custmobile" index="22" value="23"></property>
+			<property name="custname" index="23" value="24"></property>
+			<property name="resno" index="24" value="25"></property>
+			<property name="edittime" index="25" value="26"></property>
+			<property name="originid" index="26" value="27"></property>
+			<property name="ordertype" index="27" value="28"></property>
+			<property name="flag" index="28" value="29"></property>
+			<property name="serverid" index="29" value="30"></property>
+			<property name="original_fee" index="30" value="31"></property>
+			<property name="original_mailno" index="31" value="32"></property>
+			<property name="sender_type" index="32" value="33"></property>
+			<property name="j_address" index="33" value="34"></property>
+			<property name="weight" index="34" value="35"></property>
+			<property name="d_contanct" index="35" value="36"></property>
+			<property name="d_tel" index="36" value="37"></property>
+			<property name="d_mobile" index="37" value="38"></property>
+			<property name="d_company" index="38" value="39"></property>
+			<property name="d_address" index="39" value="40"></property>
+			<property name="cargo_name" index="40" value="41"></property>
+			<property name="cargo_number" index="41" value="42"></property>
+			<property name="insurance_amount" index="42" value="43"></property>
+			<property name="pay_method" index="43" value="44"></property>
+			<property name="destination_code" index="44" value="45"></property>
+			<property name="month_pay_custid" index="45" value="46"></property>
+			<property name="coupons_verification_code" index="46" value="47"></property>
+			<property name="couponsno" index="47" value="48"></property>
+			<property name="coupons_amount" index="48" value="49"></property>
+			<property name="product_type" index="49" value="50"></property>
+			<property name="product_type_name" index="50" value="51"></property>
+			<property name="freight" index="51" value="52"></property>
+			<property name="mailno" index="52" value="53"></property>
+			<property name="sub_mailnos" index="53" value="54"></property>
+			<property name="transitcode" index="54" value="55"></property>
+			<property name="tableid" index="55" value="56"></property>
+			<property name="optype" index="56" value="57"></property>
+			<property name="jobid" index="57" value="58"></property>
+			<property name="book_time" index="58" value="59"></property>
+			<property name="last_time" index="59" value="60"></property>
+			<property name="auth_code" index="60" value="61"></property>
+			<property name="total_amount" index="61" value="62"></property>
+			<property name="os_flag" index="62" value="63"></property>
+			<property name="is_hht_waybill" index="63" value="64"></property>
+			<property name="makeup" index="64" value="65"></property>
+			<property name="delivery_addr_lat" index="65" value="66"></property>
+			<property name="delivery_addr_lng" index="66" value="67"></property>
+			<property name="version_no" index="67" value="68"></property>
+			<property name="modify_tm" index="68" value="69"></property>
+		</table>
+		
+		<table tableName="exp_tt_receive_order_flow" suffix="txt" fileName="exp_tt_receive_order_flow">
+			<property name="id" index="0" value="1"></property>
+			<property name="tran_time" index="1" value="2"></property>
+			<property name="type" index="2" value="3"></property>
+			<property name="orderid" index="3" value="4"></property>
+			<property name="reason" index="4" value="5"></property>
+			<property name="create_time" index="5" value="6"></property>
+			<property name="parent_id" index="6" value="7"></property>
+		</table>
+		
+		<table tableName="exp_tt_receive_order_service" suffix="txt" fileName="exp_tt_receive_order_service">
+			<property name="id" index="0" value="1"></property>
+			<property name="parent_id" index="1" value="2"></property>
+			<property name="create_time" index="2" value="3"></property>
+			<property name="service_type" index="3" value="4"></property>
+			<property name="service_fee" index="4" value="5"></property>
+			<property name="fee_code" index="5" value="6"></property>
+			<property name="attribute1" index="6" value="7"></property>
+			<property name="attribute2" index="7" value="8"></property>
+			<property name="attribute3" index="8" value="9"></property>
+			<property name="attribute4" index="9" value="10"></property>
+			<property name="attribute5" index="10" value="11"></property>
+		</table>
+		
+		<table tableName="exp_tt_task_bag_rel" suffix="txt" fileName="exp_tt_task_bag_rel">
+			<property name="task_bag_id" index="0" value="1"></property>
+			<property name="task_id" index="1" value="2"></property>
+			<property name="create_time" index="2" value="3"></property>
+		</table>
+		
+		<table tableName="exp_tt_waybill_exception" suffix="txt" fileName="exp_tt_waybill_exception">
+			<property name="id" index="0" value="1"></property>
+			<property name="waybill_no" index="1" value="2"></property>
+			<property name="info" index="2" value="3"></property>
+			<property name="data_type" index="3" value="4"></property>
+			<property name="create_tm" index="4" value="5"></property>
+			<property name="version_no" index="5" value="6"></property>
+			<property name="code" index="6" value="7"></property>
+		</table>
+		
+		<table tableName="exp_tt_waybill_request_rel" suffix="txt" fileName="exp_tt_waybill_request_rel">
+			<property name="waybill_no" index="0" value="1"></property>
+			<property name="request_id" index="1" value="2"></property>
+			<property name="create_time" index="2" value="3"></property>
+		</table>
+				
+		<table tableName="exp_tt_delivery_order_flow" suffix="txt" fileName="exp_tt_delivery_order_flow">
+			<property name="id" index="0" value="1"></property>
+			<property name="tran_time" index="1" value="2"></property>
+			<property name="type" index="2" value="3"></property>
+			<property name="waybill_no" index="3" value="4"></property>
+			<property name="reason" index="4" value="5"></property>
+			<property name="create_time" index="5" value="6"></property>
+			<property name="parent_id" index="6" value="7"></property>
+			<property name="takeout_bigintercept_time" index="7" value="8"></property>
+		</table>
+		
+		<table tableName="exp_tt_customer_delivery_change_info" suffix="txt" fileName="exp_tt_customer_delivery_change_info">
+			<property name="id" index="0" value="1"></property>
+			<property name="waybill_no" index="1" value="2"></property>
+			<property name="contact_type" index="2" value="3"></property>
+			<property name="contact_no" index="3" value="4"></property>
+			<property name="agent_name" index="4" value="5"></property>
+			<property name="agent_tel" index="5" value="6"></property>
+			<property name="dispatch_type" index="6" value="7"></property>
+			<property name="net_name" index="7" value="8"></property>
+			<property name="net_lat" index="8" value="9"></property>
+			<property name="net_lng" index="9" value="10"></property>
+			<property name="net_tel" index="10" value="11"></property>
+			<property name="net_address" index="11" value="12"></property>
+			<property name="net_openinghours" index="12" value="13"></property>
+			<property name="dispatch_start_time" index="13" value="14"></property>
+			<property name="dispatch_end_time" index="14" value="15"></property>
+			<property name="create_time" index="15" value="16"></property>
+			<property name="modified_time" index="16" value="17"></property>
+			<property name="self_take_time" index="17" value="18"></property>
+		</table>
+		
+		<table tableName="exp_tt_customer_delivery_change_info_history" suffix="txt" fileName="exp_tt_customer_delivery_change_info_history">
+			<property name="id" index="0" value="1"></property>
+			<property name="waybill_no" index="1" value="2"></property>
+			<property name="contact_type" index="2" value="3"></property>
+			<property name="contact_no" index="3" value="4"></property>
+			<property name="agent_name" index="4" value="5"></property>
+			<property name="agent_tel" index="5" value="6"></property>
+			<property name="dispatch_type" index="6" value="7"></property>
+			<property name="net_name" index="7" value="8"></property>
+			<property name="net_lat" index="8" value="9"></property>
+			<property name="net_lng" index="9" value="10"></property>
+			<property name="net_tel" index="10" value="11"></property>
+			<property name="net_address" index="11" value="12"></property>
+			<property name="net_openinghours" index="12" value="13"></property>
+			<property name="dispatch_start_time" index="13" value="14"></property>
+			<property name="dispatch_end_time" index="14" value="15"></property>
+			<property name="create_time" index="15" value="16"></property>
+			<property name="modified_time" index="16" value="17"></property>
+			<property name="self_take_time" index="17" value="18"></property>
+		</table>
+		
+		<table tableName="exp_tt_customer_delivery_change_log" suffix="txt" fileName="exp_tt_customer_delivery_change_log">
+			<property name="id" index="0" value="1"></property>
+			<property name="waybill_no" index="1" value="2"></property>
+			<property name="change_type" index="2" value="3"></property>
+			<property name="change_content" index="3" value="4"></property>
+			<property name="change_time" index="4" value="5"></property>
+			<property name="create_time" index="5" value="6"></property>
+		</table>
+		
+		<table tableName="exp_tt_customer_message" suffix="txt" fileName="exp_tt_customer_message">
+			<property name="id" index="0" value="1"></property>
+			<property name="bill_no" index="1" value="2"></property>
+			<property name="bill_type" index="2" value="3"></property>
+			<property name="message" index="3" value="4"></property>
+			<property name="message_type" index="4" value="5"></property>
+			<property name="source_type" index="5" value="6"></property>
+			<property name="message_time" index="6" value="7"></property>
+			<property name="create_time" index="7" value="8"></property>
+			<property name="modified_time" index="8" value="9"></property>
+		</table>
+		
+		<table tableName="exp_tt_special_config" suffix="txt" fileName="exp_tt_special_config">
+			<property name="id" index="0" value="1"></property>
+			<property name="bill_no" index="1" value="2"></property>
+			<property name="type" index="2" value="3"></property>
+			<property name="config_id" index="3" value="4"></property>
+			<property name="value" index="4" value="5"></property>
+			<property name="created_time" index="5" value="6"></property>
+			<property name="modified_time" index="6" value="7"></property>
+			<property name="is_deleted" index="7" value="8"></property>
+		</table>
+		<!-- end- exp库 21张表 -->
+		
+		<!-- begin- mdmtrm库 7张表 -->
+		<table tableName="mdmtrm_tt_task" suffix="txt" fileName="mdmtrm_tt_task">
+			<property name="id" index="0" value="1"></property>
+			<property name="name" index="1" value="2"></property>
+			<property name="type" index="2" value="3"></property>
+			<property name="resource_id" index="3" value="4"></property>
+			<property name="status" index="4" value="5"></property>
+			<property name="container_no" index="5" value="6"></property>
+			<property name="task_resource_property_id" index="6" value="7"></property>
+			<property name="create_tm" index="7" value="8"></property>
+			<property name="version_no" index="8" value="9"></property>
+			<property name="expect_start_tm" index="9" value="10"></property>
+			<property name="expect_finish_tm" index="10" value="11"></property>
+			<property name="exact_start_tm" index="11" value="12"></property>
+			<property name="exact_finish_tm" index="12" value="13"></property>
+			<property name="task_create_tm" index="13" value="14"></property>
+			<property name="modify_tm" index="14" value="15"></property>
+		</table>
+		
+		<table tableName="mdmtrm_tt_task_item" suffix="txt" fileName="mdmtrm_tt_task_item">
+			<property name="id" index="0" value="1"></property>
+			<property name="type" index="1" value="2"></property>
+			<property name="status" index="2" value="3"></property>
+			<property name="task_resource_property_id" index="3" value="4"></property>
+			<property name="request_id" index="4" value="5"></property>
+			<property name="task_id" index="5" value="6"></property>
+			<property name="expect_start_tm" index="6" value="7"></property>
+			<property name="expect_finish_tm" index="7" value="8"></property>
+			<property name="exact_start_tm" index="8" value="9"></property>
+			<property name="exact_finish_tm" index="9" value="10"></property>
+			<property name="valid_flag" index="10" value="11"></property>
+			<property name="container_no" index="11" value="12"></property>
+			<property name="create_tm" index="12" value="13"></property>
+			<property name="version_no" index="13" value="14"></property>
+		</table>
+		
+		<table tableName="mdmtrm_tt_task_item_rel" suffix="txt" fileName="mdmtrm_tt_task_item_rel">
+			<property name="task_id" index="0" value="1"></property>
+			<property name="item_id" index="1" value="2"></property>
+			<property name="create_time" index="2" value="3"></property>
+		</table>
+		
+		<table tableName="mdmtrm_tt_task_request" suffix="txt" fileName="mdmtrm_tt_task_request">
+			<property name="id" index="0" value="1"></property>
+			<property name="appointment_tm_start" index="1" value="2"></property>
+			<property name="appointment_tm_finish" index="2" value="3"></property>
+			<property name="valid_flag" index="3" value="4"></property>
+			<property name="create_tm" index="4" value="5"></property>
+			<property name="version_no" index="5" value="6"></property>
+		</table>
+		
+		<table tableName="mdmtrm_tt_task_resource" suffix="txt" fileName="mdmtrm_tt_task_resource">
+			<property name="task_id" index="0" value="1"></property>
+			<property name="resource_id" index="1" value="2"></property>
+			<property name="bidding_tm" index="2" value="3"></property>
+			<property name="create_time" index="3" value="4"></property>
+		</table>
+		
+		<table tableName="mdmtrm_tl_task_msg_err" suffix="txt" fileName="mdmtrm_tl_task_msg_err">
+			<property name="id" index="0" value="1"></property>
+			<property name="msg_type" index="1" value="2"></property>
+			<property name="msg_content" index="2" value="3"></property>
+			<property name="task_id" index="3" value="4"></property>
+			<property name="task_item_ids" index="4" value="5"></property>
+			<property name="create_tm" index="5" value="6"></property>
+			<property name="current_state" index="6" value="7"></property>
+		</table>
+		
+		<table tableName="mdmtrm_tt_request_item_rel" suffix="txt" fileName="mdmtrm_tt_request_item_rel">
+			<property name="item_id" index="0" value="1"></property>
+			<property name="request_id" index="1" value="2"></property>
+			<property name="create_time" index="2" value="3"></property>
+		</table>
+		<!-- end- mdmtrm库 7张表 -->
+	</dataStore>
+</config>
