@@ -16,4 +16,4 @@ Collecat-Manager将抽取任务抽象成了如下所示的主要三个元素：T
 这时Collecat-Manager根据MyCat配置找到该表的分片配置还有后台分片数据库连接串，根据分片，将task拆分成等于分片个数的Subtask。Subtask中包含具体要抽取的分片信息
 Collecat-Manager根据Subtask，不断生成Job，注意，这里根据用户配置每个Job的SQL语句会被改写加上时间字段还有对应的时间段（这个Job生成机制之后会讲），发到ZK上的Job池。
 每个Collecat-node会从ZK上的每个Job池中抢夺Job，抢夺后，从ZK上读取Job信息，并执行Job的SQL语句写入对应的KafKa Topic（这个其实是在用户提交Task时，task里面配置的）中
-![Collecat-Node工作图](.\document\img\image2.png)
+![Collecat-Node工作图](.\document\img\image3.png)
