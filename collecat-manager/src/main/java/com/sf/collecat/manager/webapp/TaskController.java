@@ -95,9 +95,7 @@ public class TaskController {
                 task.setKafkaTopic(request.getParameter("kafkaTopic"));
                 task.setKafkaTopicTokens(request.getParameter("kafkaTopicTokens"));
                 task.setKafkaUrl(request.getParameter("kafkaUrl"));
-                Date startDate = sdf.parse(StrUtils.makeString(request.getParameter("startDate"), " ", request.getParameter("startTime")));
                 String endD = request.getParameter("endDate").trim();
-                task.setStartTime(startDate);
                 if (endD != null && !endD.equals("")) {
                     Date endDate = sdf.parse(StrUtils.makeString(request.getParameter("endDate"), " ", request.getParameter("endTime")));
                     task.setEndTime(endDate);
@@ -111,12 +109,12 @@ public class TaskController {
                 taskManager.modifyTask(task);
             }
         } catch (TaskSearchException | TaskModifyException | ParseException e) {
-            model.addAttribute("message", "Something wrong in KafKa configuration");
+            model.addAttribute("message", e.getMessage());
             model.addAttribute("task", task);
             return new ModelAndView("/task/modifyTask");
         } catch (Exception e) {
             log.error("", e);
-            model.addAttribute("message", "Something wrong in KafKa configuration");
+            model.addAttribute("message", e.getMessage());
             model.addAttribute("task", task);
             return new ModelAndView("/task/modifyTask");
         }

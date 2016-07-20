@@ -67,6 +67,7 @@ public class CytoscapeHelper {
         return node;
     }
 
+
     public static Edge getEdge(Task task, Subtask subtask) {
         Edge edge = new Edge();
         Data data = edge.getData();
@@ -88,6 +89,9 @@ public class CytoscapeHelper {
         } else if (noException) {
             data.setFaveColor(EXCEPTION_EDGE_COLOR);
             data.setLabel("Exception!");
+        } else if (subtask.getLastTime().getTime() >= subtask.getEndTime().getTime()) {
+            data.setFaveColor(NORMAL_EDGE_COLOR);
+            data.setLabel("Working!");
         } else {
             data.setFaveColor(NORMAL_EDGE_COLOR);
             data.setLabel("Working!");

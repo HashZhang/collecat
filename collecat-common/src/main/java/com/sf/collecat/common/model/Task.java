@@ -1,6 +1,7 @@
 package com.sf.collecat.common.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Task implements Serializable {
     private Integer id;
     @Getter
+    @Setter
     private Map<Integer, Subtask> subtaskHashMap = new ConcurrentHashMap<Integer, Subtask>();
 
     private String initialSql;

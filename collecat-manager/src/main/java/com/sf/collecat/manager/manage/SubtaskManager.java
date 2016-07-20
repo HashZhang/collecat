@@ -4,6 +4,7 @@ import com.sf.collecat.common.mapper.SubtaskMapper;
 import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.manager.exception.subtask.SubtaskAddOrUpdateException;
+import com.sf.collecat.manager.exception.subtask.SubtaskDeleteException;
 import com.sf.collecat.manager.exception.subtask.SubtaskModifyException;
 import com.sf.collecat.manager.exception.subtask.SubtaskSearchException;
 import com.sf.collecat.manager.schedule.DefaultScheduler;
@@ -92,10 +93,13 @@ public class SubtaskManager {
         }
     }
 
-    public void removeSubTasksFromTask(Task task) {
-        List<Subtask> subtaskList = subtaskMapper.selectByTaskId(task.getId());
+    public void removeSubTasksFromTask(Task task) throws SubtaskDeleteException {
+        try { List<Subtask> subtaskList = subtaskMapper.selectByTaskId(task.getId());
         for (Subtask subtask : subtaskList) {
             defaultScheduler.cancelTask(task.getSubtaskHashMap().get(subtask.getId()));
+            subtaskMapper.deleteByPrimaryKey(subtask.getId());
+        }} catch (Exception e) {
+            throw new SubtaskDeleteException(e);
         }
     }
 
