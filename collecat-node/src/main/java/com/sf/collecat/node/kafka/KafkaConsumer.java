@@ -86,15 +86,16 @@ public class KafkaConsumer {
 
 
         public void onMessage(List<String> list) throws KafkaConsumeRetryException {
-            totalcount += list.size();
-            System.out.println(topic + "[" + ++timecount + ":" + totalcount + "]");
-            for (String string : list) {
-                JSONArray jsonArray = JSON.parseArray(string);
-                for (Object object : jsonArray) {
-                    stringSet.add((String) ((JSONObject) object).get("id"));
-                }
-            }
-            System.out.println(stringSet.size());
+//            totalcount += list.size();
+//            System.out.println(topic + "[" + ++timecount + ":" + totalcount + "]");
+//            for (String string : list) {
+//                JSONArray jsonArray = JSON.parseArray(string);
+//                for (Object object : jsonArray) {
+//                    stringSet.add((String) ((JSONObject) object).get("id"));
+//                }
+//            }
+//            System.out.println(stringSet.size());
+            System.out.println(list);
         }
     }
 }

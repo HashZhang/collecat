@@ -139,6 +139,7 @@ public class TaskManager {
         } catch (Exception e) {
             throw new TaskModifyException(e);
         }
+        task.setSubtaskHashMap(taskMap.get(task.getId()).getSubtaskHashMap());
         subtaskManager.addOrUpdateSubTaskFromTask(task);
         taskMap.put(task.getId(), task);
     }
@@ -152,6 +153,7 @@ public class TaskManager {
      */
     public void removeTask(Task task) throws TaskDeleteException {
         try {
+            task.setSubtaskHashMap(taskMap.get(task.getId()).getSubtaskHashMap());
             subtaskManager.removeSubTasksFromTask(task);
             taskMap.remove(task.getId());
             taskMapper.deleteByPrimaryKey(task.getId());
