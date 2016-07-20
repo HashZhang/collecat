@@ -5,4 +5,4 @@
 目前市面上的ETL工具例如Informatica等有些提供了将数据库中数据抽取出来到KafKa中的功能，但是没有一种针对分布式数据库的。
 于是我们针对MyCat开发了按照MyCat配置信息直接抽取MyCat**后台分片**的这样一个系统
 ##整体架构
-![架构图](.\document\img\image1)
+![架构图](.\document\img\image1.png)
