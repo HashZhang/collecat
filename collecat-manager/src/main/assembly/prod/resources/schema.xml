@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://org.opencloudb/">
+
+	<schema name="exp" checkSQLschema="false" sqlMaxLimit="10000">
+		<table name="tm_config" primaryKey="id" type="global"          dataNode="exp1,exp17"></table>
+		<table name="tm_clear_data_config"      type="global"          dataNode="exp$1-64"></table>
+		<table name="tt_delivery_order"         primaryKey="id"        dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_delivery_order_child"   primaryKey="id"        dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
+		<table name="tt_delivery_order_consign" primaryKey="id"        dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
+		<table name="tt_delivery_order_fee"     primaryKey="id"        dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
+		<table name="tt_delivery_order_service" primaryKey="id"        dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
+		<table name="tt_express_task_info"     primaryKey="id"         dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_order_status"          primaryKey="id"         dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_receive_order"         primaryKey="id"         dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_receive_order_service" primaryKey="id"         dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
+		<table name="tt_task_bag_rel"          primaryKey="task_id"    dataNode="exp$1-64" rule="sharding-by-substring-64_task_bag_id"></table>
+		<table name="tt_delivery_change"       primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_waybill_exception"     primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_waybill_request_rel"   primaryKey="waybill_no" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_receive_order_flow"    primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_orderid"></table>
+		<table name="tl_op_history"            primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_oprId"></table>
+
+		<!-- 5.31新增表 -->
+		<table name="tt_customer_delivery_change_info"         primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_customer_delivery_change_log"          primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_customer_message"                      primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_bill_no"></table>
+		<table name="tt_customer_delivery_change_info_history" primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_delivery_order_flow"                   primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
+		<table name="tt_special_config"                        primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_bill_no"></table>
+	</schema>
+
+	<schema name="mdmtrm" checkSQLschema="false" sqlMaxLimit="10000">
+		<table name="tt_task"             primaryKey="id"      dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_task_item"        primaryKey="id"      dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_task_item_rel"    primaryKey="item_id" dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_task_id"></table>
+		<table name="tt_task_request"     primaryKey="id"      dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tt_task_resource"                         dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_task_id"></table>
+		<table name="tt_request_item_rel" primaryKey="item_id" dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_request_id"></table>
+		<table name="tl_task_msg_err"     primaryKey="id"      dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
+		<table name="tm_clear_data_config" type="global"       dataNode="mdmtrm$1-64"></table>
+	</schema>
+
+
+
+
+	<dataNode name="mdmtrm$1-4"	  dataHost="sgsbiz1_mdmtrm_h"  database="mdmtrm$1-4" />
+	<dataNode name="mdmtrm$5-8"	  dataHost="sgsbiz2_mdmtrm_h"  database="mdmtrm$5-8" />
+	<dataNode name="mdmtrm$9-12"  dataHost="sgsbiz3_mdmtrm_h"  database="mdmtrm$9-12" />
+	<dataNode name="mdmtrm$13-16" dataHost="sgsbiz4_mdmtrm_h"  database="mdmtrm$13-16" />
+	<dataNode name="mdmtrm$17-20" dataHost="sgsbiz5_mdmtrm_h"  database="mdmtrm$17-20" />
+	<dataNode name="mdmtrm$21-24" dataHost="sgsbiz6_mdmtrm_h"  database="mdmtrm$21-24" />
+	<dataNode name="mdmtrm$25-28" dataHost="sgsbiz7_mdmtrm_h"  database="mdmtrm$25-28" />
+	<dataNode name="mdmtrm$29-32" dataHost="sgsbiz8_mdmtrm_h"  database="mdmtrm$29-32" />
+	<dataNode name="mdmtrm$33-36" dataHost="sgsbiz9_mdmtrm_h"  database="mdmtrm$33-36" />
+	<dataNode name="mdmtrm$37-40" dataHost="sgsbiz10_mdmtrm_h" database="mdmtrm$37-40" />
+	<dataNode name="mdmtrm$41-44" dataHost="sgsbiz11_mdmtrm_h" database="mdmtrm$41-44" />
+	<dataNode name="mdmtrm$45-48" dataHost="sgsbiz12_mdmtrm_h" database="mdmtrm$45-48" />
+	<dataNode name="mdmtrm$49-52" dataHost="sgsbiz13_mdmtrm_h" database="mdmtrm$49-52" />
+	<dataNode name="mdmtrm$53-56" dataHost="sgsbiz14_mdmtrm_h" database="mdmtrm$53-56" />
+	<dataNode name="mdmtrm$57-60" dataHost="sgsbiz15_mdmtrm_h" database="mdmtrm$57-60" />
+	<dataNode name="mdmtrm$61-64" dataHost="sgsbiz16_mdmtrm_h" database="mdmtrm$61-64" />
+
+	<dataNode name="exp$1-4"	dataHost="sgsbiz1_exp_h"   database="exp$1-4" />
+	<dataNode name="exp$5-8"	dataHost="sgsbiz2_exp_h"   database="exp$5-8" />
+	<dataNode name="exp$9-12"	dataHost="sgsbiz3_exp_h"   database="exp$9-12" />
+	<dataNode name="exp$13-16"	dataHost="sgsbiz4_exp_h"   database="exp$13-16" />
+	<dataNode name="exp$17-20"	dataHost="sgsbiz5_exp_h"   database="exp$17-20" />
+	<dataNode name="exp$21-24"	dataHost="sgsbiz6_exp_h"   database="exp$21-24" />
+	<dataNode name="exp$25-28"	dataHost="sgsbiz7_exp_h"   database="exp$25-28" />
+	<dataNode name="exp$29-32"	dataHost="sgsbiz8_exp_h"   database="exp$29-32" />
+	<dataNode name="exp$33-36"	dataHost="sgsbiz9_exp_h"   database="exp$33-36" />
+	<dataNode name="exp$37-40"	dataHost="sgsbiz10_exp_h"  database="exp$37-40" />
+	<dataNode name="exp$41-44"	dataHost="sgsbiz11_exp_h"  database="exp$41-44" />
+	<dataNode name="exp$45-48"	dataHost="sgsbiz12_exp_h"  database="exp$45-48" />
+	<dataNode name="exp$49-52"	dataHost="sgsbiz13_exp_h"  database="exp$49-52" />
+	<dataNode name="exp$53-56"	dataHost="sgsbiz14_exp_h"  database="exp$53-56" />
+	<dataNode name="exp$57-60"	dataHost="sgsbiz15_exp_h"  database="exp$57-60" />
+	<dataNode name="exp$61-64"	dataHost="sgsbiz16_exp_h"  database="exp$61-64" />
+
+
+
+	<dataHost name="sgsbiz1_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz1_mdmtrm_m" url="sgsbiz1-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz2_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz2_mdmtrm_m" url="sgsbiz2-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz3_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz3_mdmtrm_m" url="sgsbiz3-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz4_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz4_mdmtrm_m" url="sgsbiz4-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz5_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz5_mdmtrm_m" url="sgsbiz5-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz6_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz6_mdmtrm_m" url="sgsbiz6-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+	<dataHost name="sgsbiz7_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz7_mdmtrm_m" url="sgsbiz7-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz8_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz8_mdmtrm_m" url="sgsbiz8-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz9_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz9_mdmtrm_m" url="sgsbiz9-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+	<dataHost name="sgsbiz10_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz10_mdmtrm_m" url="sgsbiz10-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz11_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz11_mdmtrm_m" url="sgsbiz11-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+
+	<dataHost name="sgsbiz12_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz12_mdmtrm_m" url="sgsbiz12-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz13_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz13_mdmtrm_m" url="sgsbiz13-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+
+	<dataHost name="sgsbiz14_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz14_mdmtrm_m" url="sgsbiz14-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz15_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz15_mdmtrm_m" url="sgsbiz15-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+	<dataHost name="sgsbiz16_mdmtrm_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz16_mdmtrm_m" url="sgsbiz16-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+
+	<dataHost name="sgsbiz1_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz1_exp_m" url="sgsbiz1-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz2_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz2_exp_m" url="sgsbiz2-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz3_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz3_exp_m" url="sgsbiz3-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz4_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz4_exp_m" url="sgsbiz4-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz5_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz5_exp_m" url="sgsbiz5-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz6_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz6_exp_m" url="sgsbiz6-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+	<dataHost name="sgsbiz7_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz7_exp_m" url="sgsbiz7-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz8_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz8_exp_m" url="sgsbiz8-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz9_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz9_exp_m" url="sgsbiz9-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+	<dataHost name="sgsbiz10_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz10_exp_m" url="sgsbiz10-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz11_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz11_exp_m" url="sgsbiz11-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+
+	<dataHost name="sgsbiz12_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz12_exp_m" url="sgsbiz12-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz13_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz13_exp_m" url="sgsbiz13-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+
+	<dataHost name="sgsbiz14_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz14_exp_m" url="sgsbiz14-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="sgsbiz15_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz15_exp_m" url="sgsbiz15-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+	<dataHost name="sgsbiz16_exp_h" maxCon="3000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="-1"  slaveThreshold="100">
+		<heartbeat>select 1 from dual</heartbeat>
+		<writeHost host="sgsbiz16_exp_m" url="sgsbiz16-m.db.sfdc.com.cn:3306" user="ETL_TO_BDP"
+				   password="abe_Cmt123">
+		</writeHost>
+	</dataHost>
+
+
+</mycat:schema>

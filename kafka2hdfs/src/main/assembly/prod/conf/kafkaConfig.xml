@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kafka>
+	<cluster id="1" name="other">
+		<properties>
+			<property name="systemUrl">http://10.202.34.30:8292/mom-mon/monitor/requestService.pub</property>
+			<property name="messageGroupSize">20</property>
+			<property name="consumeThreadCount">1</property>
+		</properties>
+		<topics>
+			<topic name="SGS_TL_OP_HISTORY_G">
+				<tableName>exp_tl_op_history</tableName>
+				<partitionCol>opTime</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_CHA_G">
+				<tableName>exp_tt_delivery_change</tableName>
+				<partitionCol>modified_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_ORD_G">
+				<tableName>exp_tt_delivery_order</tableName>
+				<partitionCol>modified_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_ORD_CHILD_G">
+				<tableName>exp_tt_delivery_order_child</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_ORD_CONSIGN_G">
+				<tableName>exp_tt_delivery_order_consign</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_ORD_FEE_G">
+				<tableName>exp_tt_delivery_order_fee</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_ORD_SERVICE_G">
+				<tableName>exp_tt_delivery_order_service</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_EXP_TASK_INFO_G">
+				<tableName>exp_tt_express_task_info</tableName>
+				<partitionCol>modify_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_ORDER_STATUS_G">
+				<tableName>exp_tt_order_status</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_REC_ORD_G">
+				<tableName>exp_tt_receive_order</tableName>
+				<partitionCol>modify_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_REC_ORD_FLOW_G">
+				<tableName>exp_tt_receive_order_flow</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_REC_ORD_SERV_G">
+				<tableName>exp_tt_receive_order_service</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_BAG_REL_G">
+				<tableName>exp_tt_task_bag_rel</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_WB_EXCEP_G">
+				<tableName>exp_tt_waybill_exception</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_WB_REQ_REL_G">
+				<tableName>exp_tt_waybill_request_rel</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_DEL_ORD_FLOW_G">
+				<tableName>exp_tt_delivery_order_flow</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_CUS_DEL_CHG_INF_G">
+				<tableName>exp_tt_customer_delivery_change_info</tableName>
+				<partitionCol>modified_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_CUS_DEL_CHG_INF_H_G">
+				<tableName>exp_tt_customer_delivery_change_info_history</tableName>
+				<partitionCol>modified_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_CUS_DEL_CHG_LOG_G">
+				<tableName>exp_tt_customer_delivery_change_log</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_CUS_MSG_G">
+				<tableName>exp_tt_customer_message</tableName>
+				<partitionCol>modified_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_SPEC_CONF_G">
+				<tableName>exp_tt_special_config</tableName>
+				<partitionCol>modified_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_G">
+				<tableName>mdmtrm_tt_task</tableName>
+				<partitionCol>modify_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_ITEM_G">
+				<tableName>mdmtrm_tt_task_item</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_ITEM_REL_G">
+				<tableName>mdmtrm_tt_task_item_rel</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_REQ_G">
+				<tableName>mdmtrm_tt_task_request</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_RES_G">
+				<tableName>mdmtrm_tt_task_resource</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_TASK_MSG_ERR_G">
+				<tableName>mdmtrm_tl_task_msg_err</tableName>
+				<partitionCol>create_tm</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+			<topic name="SGS_TT_REQ_ITEM_REL_G">
+				<tableName>mdmtrm_tt_request_item_rel</tableName>
+				<partitionCol>create_time</partitionCol>
+				<dataType>JSON_ARR</dataType>
+			</topic>
+		</topics>
+		<consumers>
+			<consumer>COLLECAT_TEST:dZi$*QS4</consumer>
+		</consumers>
+	</cluster>
+	
+	<cluster id="2" name="Other">
+		<properties>
+			<property name="systemUrl">http://MOM-MON-HQ.int.sfdc.com.cn:1080/mom-mon/monitor/requestService.pub</property>
+			<property name="messageGroupSize">20</property>
+			<property name="consumeThreadCount">1</property>
+		</properties>
+		<topics>
+			<topic name="SGS_REPORT_PRODUCER">
+				<tableName>ops_app_stat_info</tableName>
+				<partitionCol>completeTime</partitionCol>
+				<dataType>JSON</dataType>
+			</topic>
+		</topics>
+		<consumers>
+			<consumer>INC_SGS_CORE_CONSUMER:7^P^*n!$</consumer>
+		</consumers>
+	</cluster>
+</kafka>

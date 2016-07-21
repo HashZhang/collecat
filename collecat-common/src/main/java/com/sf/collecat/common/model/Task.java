@@ -1,20 +1,29 @@
 package com.sf.collecat.common.model;
 
-import it.sauronsoftware.cron4j.Scheduler;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Task implements Serializable {
     private Integer id;
-    private Scheduler scheduler;
+    @Getter
+    @Setter
+    private Map<Integer, Subtask> subtaskHashMap = new ConcurrentHashMap<Integer, Subtask>();
+
     private String initialSql;
 
     private String schemaUsed;
 
     private String timeField;
 
-    private Date lastTime;
+    private Date startTime;
+
+    private Date endTime;
 
     private Integer routineTime;
 
@@ -35,6 +44,36 @@ public class Task implements Serializable {
     private String messageFormat;
 
     private static final long serialVersionUID = 1L;
+
+    public int getCurrentCompPer() {
+        return currentCompPer;
+    }
+
+    public void setCurrentCompPer(List<Subtask> subtasks) {
+        int count = 0;
+        for (Subtask subtask : subtasks) {
+            count += subtask.getCurrentCompletePercent(this.startTime);
+        }
+        currentCompPer = count / subtasks.size();
+    }
+
+    private int currentCompPer;
+
+    public int getTotalCompPer() {
+        return totalCompPer;
+    }
+
+    public void setTotalCompPer(List<Subtask> subtasks) {
+        int count = 0;
+        if (this.endTime != null) {
+            for (Subtask subtask : subtasks) {
+                count += subtask.getTotalCompletePercent(this.startTime);
+            }
+        }
+        totalCompPer = count / subtasks.size();
+    }
+
+    private int totalCompPer;
 
     public Integer getId() {
         return id;
@@ -68,12 +107,20 @@ public class Task implements Serializable {
         this.timeField = timeField == null ? null : timeField.trim();
     }
 
-    public Date getLastTime() {
-        return lastTime;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setLastTime(Date lastTime) {
-        this.lastTime = lastTime;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public Integer getRoutineTime() {
@@ -158,7 +205,8 @@ public class Task implements Serializable {
         sb.append(", initialSql=").append(initialSql);
         sb.append(", schemaUsed=").append(schemaUsed);
         sb.append(", timeField=").append(timeField);
-        sb.append(", lastTime=").append(lastTime);
+        sb.append(", startTime=").append(startTime);
+        sb.append(", endTime=").append(endTime);
         sb.append(", routineTime=").append(routineTime);
         sb.append(", allocateRoutine=").append(allocateRoutine);
         sb.append(", isActive=").append(isActive);
@@ -171,13 +219,5 @@ public class Task implements Serializable {
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
-    }
-
-    public Scheduler getScheduler() {
-        return scheduler;
-    }
-
-    public void setScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
     }
 }

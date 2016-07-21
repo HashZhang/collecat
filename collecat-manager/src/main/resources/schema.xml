@@ -1,129 +1,69 @@
 <?xml version="1.0"?>
 <!DOCTYPE mycat:schema SYSTEM "schema.dtd">
-<mycat:schema xmlns:mycat="http://org.opencloudb/">
+<mycat:schema xmlns:mycat="http://org.opencloudb/" >
 
-	<schema name="exp" checkSQLschema="false" sqlMaxLimit="10000">
-		<table name="tm_config" 		primaryKey="id" type="global" dataNode="exp1,exp17"></table>
-		<table name="tm_clear_data_config"			type="global" dataNode="exp1,exp17"></table>
+	<schema name="TESTDB" checkSQLschema="false" sqlMaxLimit="100">
+		<!-- auto sharding by id (long) -->
+		<table name="travelrecord" dataNode="dn1,dn2,dn3" rule="auto-sharding-long" />
 
-		<table name="tt_delivery_order" 	primaryKey="id"		dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_delivery_order_child" 	primaryKey="id"		dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
-		<table name="tt_delivery_order_consign" primaryKey="id"	 	dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
-		<table name="tt_delivery_order_fee" 	primaryKey="id"		dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
-		<table name="tt_delivery_order_service" primaryKey="id"		dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
-		<table name="tt_express_task_info" 	primaryKey="id"		dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_order_status" 		primaryKey="id"		dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_receive_order" 		primaryKey="id" 	dataNode="exp$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_receive_order_service" 	primaryKey="id" 	dataNode="exp$1-64" rule="sharding-by-substring-64_parent_id"></table>
-		<table name="tt_task_bag_rel" 		primaryKey="task_id" 	dataNode="exp$1-64" rule="sharding-by-substring-64_task_bag_id"></table>
-		<table name="tt_delivery_change" 	primaryKey="id"		dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_waybill_exception" 	primaryKey="id"		dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_waybill_request_rel" 	primaryKey="waybill_no" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_receive_order_flow" 	primaryKey="id"		dataNode="exp$1-64" rule="hash-mod-64_orderid"></table>
-		<table name="tl_op_history" 		primaryKey="id" 	dataNode="exp$1-64" rule="hash-mod-64_oprId"></table>
-
-		<table name="tt_customer_delivery_change_info"  primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_customer_delivery_change_log"   primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_customer_message"       primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_bill_no"></table>
-		<table name="tt_customer_delivery_change_info_history" primaryKey="id" dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_delivery_order_flow"    primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_waybill_no"></table>
-		<table name="tt_special_config"         primaryKey="id"         dataNode="exp$1-64" rule="hash-mod-64_bill_no"></table>
+		<!-- global table is auto cloned to all defined data nodes ,so can join
+			with any table whose sharding node is in the same data node -->
+		<table name="company" primaryKey="ID" type="global" dataNode="dn1,dn2,dn3" />
+		<table name="goods" primaryKey="ID" type="global" dataNode="dn1" />
+		<!-- random sharding using mod sharind rule -->
+		<table name="hotnews" primaryKey="ID" autoIncrement="true" dataNode="dn1,dn2,dn3"
+			   rule="mod-long" />
+		<!-- <table name="dual" primaryKey="ID" dataNode="dnx,dnoracle2" type="global"
+			needAddLimit="false"/> <table name="worker" primaryKey="ID" dataNode="jdbc_dn1,jdbc_dn2,jdbc_dn3"
+			rule="mod-long" /> -->
+		<table name="employee" primaryKey="ID" dataNode="dn1,dn2"
+			   rule="sharding-by-intfile" />
+		<table name="customer" primaryKey="ID" dataNode="dn1,dn2"
+			   rule="sharding-by-intfile">
+			<childTable name="orders" primaryKey="ID" joinKey="customer_id"
+						parentKey="id">
+				<childTable name="order_items" joinKey="order_id"
+							parentKey="id" />
+			</childTable>
+			<childTable name="customer_addr" primaryKey="ID" joinKey="customer_id"
+						parentKey="id" />
+		</table>
+		<!-- <table name="oc_call" primaryKey="ID" dataNode="dn1$0-743" rule="latest-month-calldate"
+			/> -->
 	</schema>
-
-	<schema name="mdmtrm" checkSQLschema="false" sqlMaxLimit="1000">
-		<table name="tt_task" 			primaryKey="id" 	dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_task_item" 		primaryKey="id" 	dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_task_item_rel" 		primaryKey="item_id" 	dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_task_id"></table>
-		<table name="tt_task_request" 		primaryKey="id"		dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tt_task_resource" 					dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_task_id"></table>
-		<table name="tt_request_item_rel" 	primaryKey="item_id" 	dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_request_id"></table>
-		<table name="tl_task_msg_err"       	primaryKey="id"         dataNode="mdmtrm$1-64" rule="sharding-by-substring-64_id"></table>
-		<table name="tm_clear_data_config" 	type="global"		dataNode="mdmtrm1,mdmtrm17"></table>
-	</schema>
-
-	<dataNode name="exp$1-8"       dataHost="exphost1" database="exp$1-8" />
-	<dataNode name="exp$9-16"       dataHost="exphost2" database="exp$9-16" />
-	<dataNode name="exp$17-24"      dataHost="exphost3" database="exp$17-24" />
-	<dataNode name="exp$25-32"      dataHost="exphost4" database="exp$25-32" />
-	<dataNode name="exp$33-40"      dataHost="exphost5" database="exp$33-40" />
-	<dataNode name="exp$41-48"      dataHost="exphost6" database="exp$41-48" />
-	<dataNode name="exp$49-56"      dataHost="exphost7" database="exp$49-56" />
-	<dataNode name="exp$57-64"      dataHost="exphost8" database="exp$57-64" />
-	<dataNode name="mdmtrm$1-8"       dataHost="mdmtrmhost1" database="mdmtrm$1-8" />
-	<dataNode name="mdmtrm$9-16"       dataHost="mdmtrmhost2" database="mdmtrm$9-16" />
-	<dataNode name="mdmtrm$17-24"      dataHost="mdmtrmhost3" database="mdmtrm$17-24" />
-	<dataNode name="mdmtrm$25-32"      dataHost="mdmtrmhost4" database="mdmtrm$25-32" />
-	<dataNode name="mdmtrm$33-40"      dataHost="mdmtrmhost5" database="mdmtrm$33-40" />
-	<dataNode name="mdmtrm$41-48"      dataHost="mdmtrmhost6" database="mdmtrm$41-48" />
-	<dataNode name="mdmtrm$49-56"      dataHost="mdmtrmhost7" database="mdmtrm$49-56" />
-	<dataNode name="mdmtrm$57-64"      dataHost="mdmtrmhost8" database="mdmtrm$57-64" />
-
-	<dataHost name="exphost1" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
+	<!-- <dataNode name="dn1$0-743" dataHost="localhost1" database="db$0-743"
+		/> -->
+	<dataNode name="dn1" dataHost="localhost1" database="db1" />
+	<dataNode name="dn2" dataHost="localhost1" database="db2" />
+	<dataNode name="dn3" dataHost="localhost2" database="test" />
+	<!--<dataNode name="dn4" dataHost="sequoiadb1" database="SAMPLE" />
+	 <dataNode name="jdbc_dn1" dataHost="jdbchost" database="db1" />
+	<dataNode	name="jdbc_dn2" dataHost="jdbchost" database="db2" />
+	<dataNode name="jdbc_dn3" 	dataHost="jdbchost" database="db3" /> -->
+	<dataHost name="localhost1" maxCon="1000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="1"  slaveThreshold="100">
 		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3311" user="exp" password="exp"></writeHost>
+		<!-- can have multi write hosts -->
+		<writeHost host="hostM1" url="10.202.44.206:3306" user="root"
+				   password="sf123456">
+			<!-- can have multi read hosts -->
+			<!--<readHost host="hostS2" url="192.168.1.200:3306" user="root" password="xxx" />-->
+		</writeHost>
+		<!--<writeHost host="hostS1" url="localhost:3316" user="root"-->
+		<!--password="123456" />-->
+		<!-- <writeHost host="hostM2" url="localhost:3316" user="root" password="123456"/> -->
 	</dataHost>
-	<dataHost name="exphost2" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
+	<dataHost name="localhost2" maxCon="1000" minCon="10" balance="0"
+			  writeType="0" dbType="mysql" dbDriver="native" switchType="1"  slaveThreshold="100">
 		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3312" user="exp" password="exp"></writeHost>
+		<!-- can have multi write hosts -->
+		<writeHost host="hostM1" url="10.202.44.214:3311" user="exp"
+				   password="exp">
+			<!-- can have multi read hosts -->
+			<!--<readHost host="hostS2" url="192.168.1.200:3306" user="root" password="xxx" />-->
+		</writeHost>
+		<!--<writeHost host="hostS1" url="localhost:3316" user="root"-->
+		<!--password="123456" />-->
+		<!-- <writeHost host="hostM2" url="localhost:3316" user="root" password="123456"/> -->
 	</dataHost>
-	<dataHost name="exphost3" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3348" user="exp" password="exp"></writeHost>
-	</dataHost>
-	<dataHost name="exphost4" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3314" user="exp" password="exp"></writeHost>
-	</dataHost>
-
-	<dataHost name="exphost5" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3348" user="exp" password="exp"></writeHost>
-	</dataHost>
-	<dataHost name="exphost6" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3349" user="exp" password="exp"></writeHost>
-	</dataHost>
-	<dataHost name="exphost7" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3350" user="exp" password="exp"></writeHost>
-	</dataHost>
-	<dataHost name="exphost8" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3351" user="exp" password="exp"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost1" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3311" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost2" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3312" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost3" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3348" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost4" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.214:3314" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-
-	<dataHost name="mdmtrmhost5" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3348" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost6" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3349" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost7" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3350" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-	<dataHost name="mdmtrmhost8" maxCon="2000" minCon="200" balance="0" dbType="mysql" dbDriver="native" switchType="-1">
-		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" url="10.202.44.215:3351" user="mdmtrm" password="mdmtrm"></writeHost>
-	</dataHost>
-
-
 </mycat:schema>

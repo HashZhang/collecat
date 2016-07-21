@@ -6,7 +6,8 @@
     <result column="initial_sql" property="initialSql" jdbcType="VARCHAR" />
     <result column="schema_used" property="schemaUsed" jdbcType="VARCHAR" />
     <result column="time_field" property="timeField" jdbcType="VARCHAR" />
-    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="routine_time" property="routineTime" jdbcType="INTEGER" />
     <result column="allocate_routine" property="allocateRoutine" jdbcType="VARCHAR" />
     <result column="is_active" property="isActive" jdbcType="BIT" />
@@ -18,36 +19,48 @@
     <result column="message_format" property="messageFormat" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, initial_sql, schema_used, time_field, last_time, routine_time, allocate_routine, 
+    id, initial_sql, schema_used, time_field, start_time, end_time, routine_time, allocate_routine, 
     is_active, kafka_topic, kafka_url, kafka_cluster_name, kafka_topic_tokens, kafka_message_size, 
     message_format
   </sql>
+
+  <select id="selectByUniqueKey" resultMap="BaseResultMap" parameterType="com.sf.collecat.common.model.Task" >
+    select
+    *
+    from task
+    where initialSql = #{initialSql,jdbcType=VARCHAR}
+    and schemaUsed = #{schemaUsed,jdbcType=VARCHAR}
+    and timeField = #{timeField,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    *
+    from task
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from task
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectAll"  resultMap="BaseResultMap">
-    select
-   *
-    from task
-  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from task
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Task"  useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Task" >
     insert into task (id, initial_sql, schema_used, 
-      time_field, last_time, routine_time, 
-      allocate_routine, is_active, kafka_topic, 
-      kafka_url, kafka_cluster_name, kafka_topic_tokens, 
-      kafka_message_size, message_format)
+      time_field, start_time, end_time, 
+      routine_time, allocate_routine, is_active, 
+      kafka_topic, kafka_url, kafka_cluster_name, 
+      kafka_topic_tokens, kafka_message_size, message_format
+      )
     values (#{id,jdbcType=INTEGER}, #{initialSql,jdbcType=VARCHAR}, #{schemaUsed,jdbcType=VARCHAR}, 
-      #{timeField,jdbcType=VARCHAR}, #{lastTime,jdbcType=TIMESTAMP}, #{routineTime,jdbcType=INTEGER}, 
-      #{allocateRoutine,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT}, #{kafkaTopic,jdbcType=VARCHAR}, 
-      #{kafkaUrl,jdbcType=VARCHAR}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaTopicTokens,jdbcType=VARCHAR}, 
-      #{kafkaMessageSize,jdbcType=INTEGER}, #{messageFormat,jdbcType=VARCHAR})
+      #{timeField,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{routineTime,jdbcType=INTEGER}, #{allocateRoutine,jdbcType=VARCHAR}, #{isActive,jdbcType=BIT}, 
+      #{kafkaTopic,jdbcType=VARCHAR}, #{kafkaUrl,jdbcType=VARCHAR}, #{kafkaClusterName,jdbcType=VARCHAR}, 
+      #{kafkaTopicTokens,jdbcType=VARCHAR}, #{kafkaMessageSize,jdbcType=INTEGER}, #{messageFormat,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Task" >
     insert into task
@@ -64,8 +77,11 @@
       <if test="timeField != null" >
         time_field,
       </if>
-      <if test="lastTime != null" >
-        last_time,
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
       </if>
       <if test="routineTime != null" >
         routine_time,
@@ -108,8 +124,11 @@
       <if test="timeField != null" >
         #{timeField,jdbcType=VARCHAR},
       </if>
-      <if test="lastTime != null" >
-        #{lastTime,jdbcType=TIMESTAMP},
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
       </if>
       <if test="routineTime != null" >
         #{routineTime,jdbcType=INTEGER},
@@ -152,8 +171,11 @@
       <if test="timeField != null" >
         time_field = #{timeField,jdbcType=VARCHAR},
       </if>
-      <if test="lastTime != null" >
-        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
       </if>
       <if test="routineTime != null" >
         routine_time = #{routineTime,jdbcType=INTEGER},
@@ -190,7 +212,8 @@
     set initial_sql = #{initialSql,jdbcType=VARCHAR},
       schema_used = #{schemaUsed,jdbcType=VARCHAR},
       time_field = #{timeField,jdbcType=VARCHAR},
-      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
       routine_time = #{routineTime,jdbcType=INTEGER},
       allocate_routine = #{allocateRoutine,jdbcType=VARCHAR},
       is_active = #{isActive,jdbcType=BIT},

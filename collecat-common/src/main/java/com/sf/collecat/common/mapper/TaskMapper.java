@@ -17,5 +17,7 @@ public interface TaskMapper {
 
     int updateByPrimaryKey(Task record);
 
+    Task selectByUniqueKey(Task task);
+
     List<Task> selectAll();
 }

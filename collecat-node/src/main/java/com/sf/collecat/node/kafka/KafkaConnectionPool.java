@@ -18,7 +18,7 @@ public class KafkaConnectionPool {
 
     public synchronized KafkaConnection getKafkaConnection(Job job) {
         String key = toKey(job);
-        if (connMap.contains(key)) {
+        if (connMap.containsKey(key)) {
             KafkaConnection kafkaConnection = connMap.get(key);
             if (kafkaConnection == null || kafkaConnection.isAborted()) {
                 kafkaConnection = new KafkaConnection(poolSize, job.getKafkaTopic(), job.getKafkaUrl(), job.getKafkaClusterName(), job.getKafkaTopicTokens());

@@ -77,21 +77,20 @@ public class BeanConfig implements Cloneable {
 
     @Override
     public Object clone() {
+
         BeanConfig bc = null;
         try {
+            super.clone();
             bc = getClass().newInstance();
         } catch (InstantiationException e) {
             throw new ConfigException(e);
         } catch (IllegalAccessException e) {
             throw new ConfigException(e);
-        }
-        if (bc == null) {
-            return null;
+        } catch (CloneNotSupportedException e) {
+            throw new ConfigException(e);
         }
         bc.className = className;
         bc.name = name;
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.putAll(params);
         return bc;
     }
 

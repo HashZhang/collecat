@@ -3,6 +3,7 @@
 <mapper namespace="com.sf.collecat.common.mapper.JobMapper" >
   <resultMap id="BaseResultMap" type="com.sf.collecat.common.model.Job" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="subtask_id" property="subtaskId" jdbcType="INTEGER" />
     <result column="time_field" property="timeField" jdbcType="VARCHAR" />
     <result column="time_field_start" property="timeFieldStart" jdbcType="TIMESTAMP" />
     <result column="time_field_end" property="timeFieldEnd" jdbcType="TIMESTAMP" />
@@ -22,31 +23,37 @@
     <result column="node_assigned_to" property="nodeAssignedTo" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, time_field, time_field_start, time_field_end, job_sql, mysql_url, mysql_username, 
-    mysql_password, created_time, modified_time, kafka_topic, kafka_url, kafka_cluster_name, 
-    kafka_topic_tokens, kafka_message_size, message_format, status, node_assigned_to
+    id, subtask_id, time_field, time_field_start, time_field_end, job_sql, mysql_url, 
+    mysql_username, mysql_password, created_time, modified_time, kafka_topic, kafka_url, 
+    kafka_cluster_name, kafka_topic_tokens, kafka_message_size, message_format, status, 
+    node_assigned_to
   </sql>
-  <select id="selectAllUncompletedByNodeID" resultType="com.sf.collecat.common.model.Job" parameterType="java.lang.Integer">
-    select
-    *
-    from job
-    where status = 0
-    and node_assigned_to = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectAllExceptionJob" resultType="com.sf.collecat.common.model.Job">
+  <select id="selectAllExceptionJob" resultMap="BaseResultMap">
     select
     *
     from job
     where status = 2
   </select>
-  <select id="selectAllJob" resultType="com.sf.collecat.common.model.Job">
+  <select id="selectAllJob" resultMap="BaseResultMap">
     select
     *
     from job
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-    select
-    *
+  <select id="countJobsWithSubtaskId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(*)
+    from job
+    where subtask_id = #{subtaskId,jdbcType=INTEGER}
+  </select>
+
+  <select id="countExceptionJobsWithSubtaskId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select count(*)
+    from job
+    where subtask_id = #{subtaskId,jdbcType=INTEGER}
+    and status = 2
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
     from job
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -54,27 +61,30 @@
     delete from job
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sf.collecat.common.model.Job" useGeneratedKeys="true" keyProperty="id">
-    insert into job (id, time_field, time_field_start,
-      time_field_end, job_sql, mysql_url, 
-      mysql_username, mysql_password, created_time, 
-      modified_time, kafka_topic, kafka_url, 
-      kafka_cluster_name, kafka_topic_tokens, kafka_message_size, 
-      message_format, status, node_assigned_to
-      )
-    values (#{id,jdbcType=INTEGER}, #{timeField,jdbcType=VARCHAR}, #{timeFieldStart,jdbcType=TIMESTAMP}, 
-      #{timeFieldEnd,jdbcType=TIMESTAMP}, #{jobSql,jdbcType=VARCHAR}, #{mysqlUrl,jdbcType=VARCHAR}, 
-      #{mysqlUsername,jdbcType=VARCHAR}, #{mysqlPassword,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
-      #{modifiedTime,jdbcType=TIMESTAMP}, #{kafkaTopic,jdbcType=VARCHAR}, #{kafkaUrl,jdbcType=VARCHAR}, 
-      #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaTopicTokens,jdbcType=VARCHAR}, #{kafkaMessageSize,jdbcType=INTEGER}, 
-      #{messageFormat,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{nodeAssignedTo,jdbcType=INTEGER}
-      )
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.sf.collecat.common.model.Job" >
+    insert into job (id, subtask_id, time_field, 
+      time_field_start, time_field_end, job_sql, 
+      mysql_url, mysql_username, mysql_password, 
+      created_time, modified_time, kafka_topic, 
+      kafka_url, kafka_cluster_name, kafka_topic_tokens, 
+      kafka_message_size, message_format, status, 
+      node_assigned_to)
+    values (#{id,jdbcType=INTEGER}, #{subtaskId,jdbcType=INTEGER}, #{timeField,jdbcType=VARCHAR}, 
+      #{timeFieldStart,jdbcType=TIMESTAMP}, #{timeFieldEnd,jdbcType=TIMESTAMP}, #{jobSql,jdbcType=VARCHAR}, 
+      #{mysqlUrl,jdbcType=VARCHAR}, #{mysqlUsername,jdbcType=VARCHAR}, #{mysqlPassword,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{kafkaTopic,jdbcType=VARCHAR}, 
+      #{kafkaUrl,jdbcType=VARCHAR}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaTopicTokens,jdbcType=VARCHAR}, 
+      #{kafkaMessageSize,jdbcType=INTEGER}, #{messageFormat,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{nodeAssignedTo,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.sf.collecat.common.model.Job" >
     insert into job
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
+      </if>
+      <if test="subtaskId != null" >
+        subtask_id,
       </if>
       <if test="timeField != null" >
         time_field,
@@ -132,6 +142,9 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="subtaskId != null" >
+        #{subtaskId,jdbcType=INTEGER},
+      </if>
       <if test="timeField != null" >
         #{timeField,jdbcType=VARCHAR},
       </if>
@@ -188,6 +201,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sf.collecat.common.model.Job" >
     update job
     <set >
+      <if test="subtaskId != null" >
+        subtask_id = #{subtaskId,jdbcType=INTEGER},
+      </if>
       <if test="timeField != null" >
         time_field = #{timeField,jdbcType=VARCHAR},
       </if>
@@ -244,7 +260,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sf.collecat.common.model.Job" >
     update job
-    set time_field = #{timeField,jdbcType=VARCHAR},
+    set subtask_id = #{subtaskId,jdbcType=INTEGER},
+      time_field = #{timeField,jdbcType=VARCHAR},
       time_field_start = #{timeFieldStart,jdbcType=TIMESTAMP},
       time_field_end = #{timeFieldEnd,jdbcType=TIMESTAMP},
       job_sql = #{jobSql,jdbcType=VARCHAR},

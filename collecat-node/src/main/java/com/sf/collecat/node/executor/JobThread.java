@@ -4,9 +4,12 @@ import com.sf.collecat.common.Constants;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.node.jdbc.JDBCConnection;
 import com.sf.collecat.node.jdbc.JDBCConnectionPool;
+import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
 import com.sf.collecat.node.kafka.KafkaConnection;
 import com.sf.collecat.node.kafka.KafkaConnectionPool;
 import com.sf.collecat.node.zk.CuratorClient;
+import com.sf.kafka.check.KafkaCheckFailException;
+import com.sf.kafka.exception.KafkaException;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,30 +37,46 @@ public class JobThread implements Runnable {
     public void run() {
         KafkaConnection kafkaConnection = null;
         try {
+            LOGGER.warn(job.getId()+" init");
             JDBCConnection jdbcConnection = jdbcConnectionPool.getConnection(job);
             String message[] = null;
             message = jdbcConnection.executeJob();
+            LOGGER.warn(job.getId()+" after jdbc");
             kafkaConnection = kafkaConnectionPool.getKafkaConnection(job);
             if (kafkaConnection == null) {
-                throw new Exception("Can't get KafKa connection!");
+                throw new KafkaException("Can't get KafKa connection!");
             }
             for (int i = 0; i < message.length; i++) {
                 kafkaConnection.send(message[i]);
             }
+            LOGGER.warn(job.getId()+" after kafka");
             complete(job);
         } catch (SQLException e) {
             LOGGER.error("Caught exception when execute SQL:", e);
             setException(job);
-        } catch (Throwable e) {
+        } catch (GetJDBCCConnectionException e) {
+            LOGGER.error("Caught exception when try to get JDBCConnection:", e);
+            setException(job);
+        } catch (KafkaException e) {
             LOGGER.error("Caught exception when writing into KafKa:", e);
             setException(job);
             if (kafkaConnection != null) {
                 kafkaConnection.setAborted(true);
             }
+        } catch (KafkaCheckFailException e) {
+            LOGGER.error("Caught exception when writing into KafKa:", e);
+            setException(job);
+            if (kafkaConnection != null) {
+                kafkaConnection.setAborted(true);
+            }
+        } catch (Exception e){
+            LOGGER.error("Caught exception while executing Jobs:", e);
+            setException(job);
         }
     }
 
     private void complete(Job job) {
+        LOGGER.warn("complete:{}",job.getId());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(Constants.JOB_PATH).append("/").append(job.getId());
         InterProcessSemaphoreMutex interProcessSemaphoreMutex = new InterProcessSemaphoreMutex(curatorClient.getClient(), stringBuilder.toString());

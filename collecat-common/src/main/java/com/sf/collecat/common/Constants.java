@@ -4,11 +4,14 @@ package com.sf.collecat.common;
  * Created by 862911 on 2016/6/16.
  */
 public interface Constants {
+    String SYSTEM_NAME = "ColleCat";
+
     String NODE_PATH = "/collecat/node";
     String TEM_NODE_PATH = "/collecat/node/node";
     String JOB_PATH = "/collecat/job";
     String JOB_DETAIL_PATH = "/collecat/job-detail";
     String COMMON_SEPARATOR = ":";
+    String ZK_SEPARATOR = "/";
     String STRING_ENCODING = "UTF-8";
 
     String JOB_INIT = "unallocated";
@@ -20,4 +23,6 @@ public interface Constants {
     int JOB_EXCEPTION_VALUE = 2;
 
     String ZK_EXCEPTION = "Caught ZK Exception!";
+
+
 }

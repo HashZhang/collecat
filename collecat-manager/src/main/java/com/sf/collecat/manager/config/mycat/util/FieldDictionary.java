@@ -131,7 +131,7 @@ public class FieldDictionary {
                 i++;
                 c = c.getSuperclass();
             }
-            depth = new Integer(i);
+            depth = i;
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.sf.collecat.common.mapper;
 
-import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Node;
 
 import java.util.List;
@@ -18,4 +17,5 @@ public interface NodeMapper {
 
     int updateByPrimaryKey(Node record);
 
+    List<Node> selectAll();
 }

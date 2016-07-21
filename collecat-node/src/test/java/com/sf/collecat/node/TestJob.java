@@ -1,9 +1,9 @@
 package com.sf.collecat.node;
 
-import com.alibaba.fastjson.JSON;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.node.jdbc.JDBCConnection;
 import com.sf.collecat.node.jdbc.JDBCConnectionPool;
+import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
 import com.sf.collecat.node.kafka.KafkaConnection;
 import com.sf.collecat.node.kafka.KafkaConnectionPool;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by 862911 on 2016/6/16.
  */
-@ContextConfiguration(locations = {"/spring-config-service.xml"})
+@ContextConfiguration(locations = {"/META-INF/spring/node-config.xml"})
 public class TestJob extends AbstractJUnit4SpringContextTests {
     @Autowired
     JDBCConnectionPool jdbcConnectionPool;
@@ -55,7 +55,12 @@ public class TestJob extends AbstractJUnit4SpringContextTests {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                JDBCConnection jdbcConnection = jdbcConnectionPool.getConnection(job);
+                JDBCConnection jdbcConnection = null;
+                try {
+                    jdbcConnection = jdbcConnectionPool.getConnection(job);
+                } catch (GetJDBCCConnectionException e) {
+                    e.printStackTrace();
+                }
                 String message[] = null;
                 try {
                     message = jdbcConnection.executeJob();

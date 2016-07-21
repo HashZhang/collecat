@@ -29,6 +29,7 @@ import com.sf.collecat.manager.config.mycat.util.ConfigException;
 import com.sf.collecat.manager.config.mycat.util.ConfigUtil;
 import com.sf.collecat.manager.config.mycat.util.DecryptUtil;
 import com.sf.collecat.manager.config.mycat.util.SplitUtil;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -43,6 +44,7 @@ import java.util.*;
  * @author mycat
  */
 @SuppressWarnings("unchecked")
+@Component
 public class XMLSchemaLoader{
 	
 	private final static String DEFAULT_DTD = "/schema.dtd";

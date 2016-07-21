@@ -22,8 +22,8 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/collecat?useUnicode=true&amp;charaterEncoding=utf-8"
-                        userId="root" password="kingzhx9">
+                        connectionURL="jdbc:mysql://10.202.44.206:3306/test?useUnicode=true&amp;charaterEncoding=utf-8"
+                        userId="root" password="sf123456">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -71,7 +71,7 @@
 		  delimitIdentifiers CDATA #IMPLIED
 		  delimitAllColumns CDATA #IMPLIED
          -->
-        <table schema="" tableName="job" domainObjectName="Job" modelType="flat"
+        <table schema="" tableName="subtask" domainObjectName="Subtask" modelType="flat"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
