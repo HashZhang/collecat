@@ -12,6 +12,7 @@
         <module>collecat-manager</module>
         <module>collecat-node</module>
         <module>collecat-common</module>
+		<module>kafka2hdfs</module>
     </modules>
 
     <properties>
