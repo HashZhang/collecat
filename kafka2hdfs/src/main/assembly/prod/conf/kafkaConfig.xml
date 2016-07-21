@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kafka>
-	<cluster name="other">
+	<cluster id="1" name="other">
 		<properties>
 			<property name="systemUrl">http://10.202.34.30:8292/mom-mon/monitor/requestService.pub</property>
 			<property name="messageGroupSize">20</property>
@@ -150,6 +150,24 @@
 		</topics>
 		<consumers>
 			<consumer>COLLECAT_TEST:dZi$*QS4</consumer>
+		</consumers>
+	</cluster>
+	
+	<cluster id="2" name="Other">
+		<properties>
+			<property name="systemUrl">http://MOM-MON-HQ.int.sfdc.com.cn:1080/mom-mon/monitor/requestService.pub</property>
+			<property name="messageGroupSize">20</property>
+			<property name="consumeThreadCount">1</property>
+		</properties>
+		<topics>
+			<topic name="SGS_REPORT_PRODUCER">
+				<tableName>ops_app_stat_info</tableName>
+				<partitionCol>completeTime</partitionCol>
+				<dataType>JSON</dataType>
+			</topic>
+		</topics>
+		<consumers>
+			<consumer>INC_SGS_CORE_CONSUMER:7^P^*n!$</consumer>
 		</consumers>
 	</cluster>
 </kafka>
