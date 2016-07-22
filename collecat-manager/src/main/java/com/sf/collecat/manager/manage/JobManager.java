@@ -13,8 +13,8 @@ import com.sf.collecat.manager.exception.job.*;
 import com.sf.collecat.manager.exception.node.NodeSearchException;
 import com.sf.collecat.manager.sql.SQLParser;
 import com.sf.collecat.manager.zk.CuratorClient;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0.0
  * @time 2016/6/27
  */
-@Slf4j
 public class JobManager {
+    private final static Logger log = LoggerFactory.getLogger(JobManager.class);
     @Autowired
     private SubtaskMapper subtaskMapper;
     @Autowired
@@ -123,7 +123,7 @@ public class JobManager {
         return curatorClient.getChildren(Constants.JOB_PATH);
     }
 
-    public void publishJob(@NonNull Subtask subtask) throws SQLSyntaxErrorException, JobPulishException {
+    public void publishJob(Subtask subtask) throws SQLSyntaxErrorException, JobPulishException {
         Job job = sqlParser.parse(subtask);
         try {
             if (job == null) {
@@ -140,7 +140,7 @@ public class JobManager {
         }
     }
 
-    public void publishJob(@NonNull Job job) throws SQLSyntaxErrorException, JobPulishException {
+    public void publishJob(Job job) throws SQLSyntaxErrorException, JobPulishException {
         try {
             persistJob(job);
         } catch (Exception e) {
@@ -169,7 +169,7 @@ public class JobManager {
         }
     }
 
-    public void assignJob(@NonNull String jobId, String nodeId) throws JobSearchException, JobAssignException {
+    public void assignJob(String jobId, String nodeId) throws JobSearchException, JobAssignException {
         Job job = null;
         try {
             job = jobMapper.selectByPrimaryKey(Integer.parseInt(jobId));
@@ -191,7 +191,7 @@ public class JobManager {
      * @throws JobCompleteException
      * @throws JobSearchException
      */
-    public void completeJob(@NonNull String jobId) throws JobCompleteException, JobSearchException {
+    public void completeJob(String jobId) throws JobCompleteException, JobSearchException {
         Job job = null;
         try {
             job = jobMapper.selectByPrimaryKey(Integer.parseInt(jobId));
@@ -216,7 +216,7 @@ public class JobManager {
      * @param job
      * @throws JobCompleteException
      */
-    public void completeJob(@NonNull Job job) throws JobCompleteException {
+    public void completeJob(Job job) throws JobCompleteException {
         job.setStatus(Constants.JOB_FINISHED_VALUE);
         try {
             jobMapper.deleteByPrimaryKey(job.getId());
@@ -231,7 +231,7 @@ public class JobManager {
         }
     }
 
-    public void resetJob(@NonNull String jobId) throws JobResetException, JobSearchException {
+    public void resetJob(String jobId) throws JobResetException, JobSearchException {
         Job job = null;
         try {
             job = jobMapper.selectByPrimaryKey(Integer.parseInt(jobId));
@@ -243,7 +243,7 @@ public class JobManager {
         }
     }
 
-    public void resetJob(@NonNull Job job) throws JobResetException {
+    public void resetJob(Job job) throws JobResetException {
         job.setStatus(Constants.JOB_INIT_VALUE);
         try {
             jobMapper.updateByPrimaryKey(job);
@@ -253,7 +253,7 @@ public class JobManager {
         }
     }
 
-    public void removeJob(@NonNull String JobId) throws JobRemoveException {
+    public void removeJob(String JobId) throws JobRemoveException {
         try {
             jobMapper.deleteByPrimaryKey(Integer.parseInt(JobId));
             curatorClient.removePath(StrUtils.getZKJobDetailPath(JobId));
@@ -266,7 +266,7 @@ public class JobManager {
         }
     }
 
-    public void setJobException(@NonNull String jobId) throws JobSearchException {
+    public void setJobException(String jobId) throws JobSearchException {
         Job job = null;
         try {
             job = jobMapper.selectByPrimaryKey(Integer.parseInt(jobId));
@@ -278,7 +278,7 @@ public class JobManager {
         }
     }
 
-    public void setJobException(@NonNull Job job) {
+    public void setJobException(Job job) {
         job.setStatus(Constants.JOB_EXCEPTION_VALUE);
         jobMapper.updateByPrimaryKey(job);
 //        returnCap(1);

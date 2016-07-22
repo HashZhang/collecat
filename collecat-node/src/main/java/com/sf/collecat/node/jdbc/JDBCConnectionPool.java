@@ -5,7 +5,6 @@ import com.alibaba.druid.pool.DruidPooledConnection;
 import com.google.common.base.Optional;
 import com.sf.collecat.common.model.Job;
 import com.sf.collecat.node.jdbc.exception.GetJDBCCConnectionException;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +15,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by 862911 on 2016/6/15.
  */
-@Slf4j
 @Component
 public class JDBCConnectionPool {
-    private final static Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
+    private final static Logger log = LoggerFactory.getLogger(JDBCConnection.class);
     private final ConcurrentHashMap<String, Optional<DruidDataSource>> connMap = new ConcurrentHashMap<>();
     @Value("${jdbc.connection.poolsize}")
     private int maxPoolSize;
@@ -40,18 +37,18 @@ public class JDBCConnectionPool {
             JDBCConnection jdbcConnection = null;
             DruidDataSource druidDataSource = null;
             if (!connMap.containsKey(url) || (connMap.get(url) == null)) {
-                        druidDataSource = new DruidDataSource();
-                        druidDataSource.setUrl(job.getMysqlUrl());
-                        druidDataSource.setUsername(job.getMysqlUsername());
-                        druidDataSource.setPassword(job.getMysqlPassword());
-                        druidDataSource.setInitialSize(1);
-                        druidDataSource.setMinIdle(1);
-                        druidDataSource.setMaxActive(maxPoolSize);
-                        druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
-                        druidDataSource.setMinEvictableIdleTimeMillis(300000);
-                        druidDataSource.init();
-                        connMap.put(url, Optional.of(druidDataSource));
-                        log.warn("Do not panic,new data source generated");
+                druidDataSource = new DruidDataSource();
+                druidDataSource.setUrl(job.getMysqlUrl());
+                druidDataSource.setUsername(job.getMysqlUsername());
+                druidDataSource.setPassword(job.getMysqlPassword());
+                druidDataSource.setInitialSize(1);
+                druidDataSource.setMinIdle(1);
+                druidDataSource.setMaxActive(maxPoolSize);
+                druidDataSource.setTimeBetweenEvictionRunsMillis(60000);
+                druidDataSource.setMinEvictableIdleTimeMillis(300000);
+                druidDataSource.init();
+                connMap.put(url, Optional.of(druidDataSource));
+                log.warn("Do not panic,new data source generated");
             }
             while (connMap.get(url) == null) {
                 System.out.println(Thread.currentThread() + url);

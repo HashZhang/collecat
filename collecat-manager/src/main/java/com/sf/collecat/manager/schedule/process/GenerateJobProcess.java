@@ -3,8 +3,8 @@ package com.sf.collecat.manager.schedule.process;
 import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.manager.exception.job.JobPulishException;
 import com.sf.collecat.manager.manage.JobManager;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLSyntaxErrorException;
 
@@ -13,11 +13,15 @@ import java.sql.SQLSyntaxErrorException;
  * @version 1.0.0
  * @date 2016/7/8
  */
-@Slf4j
-@AllArgsConstructor
 public class GenerateJobProcess implements Runnable {
+    private final static Logger log = LoggerFactory.getLogger(GenerateJobProcess.class);
     private Subtask subtask;
     private JobManager jobManager;
+
+    public GenerateJobProcess(Subtask subtask, JobManager jobManager) {
+        this.subtask = subtask;
+        this.jobManager = jobManager;
+    }
 
     @Override
     public void run() {

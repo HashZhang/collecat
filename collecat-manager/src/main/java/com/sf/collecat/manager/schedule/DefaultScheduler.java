@@ -6,7 +6,6 @@ import com.sf.collecat.manager.schedule.process.CheckJobProcess;
 import com.sf.collecat.manager.schedule.process.CheckNodeProcess;
 import com.sf.collecat.manager.schedule.process.RoundRobinTaskProcess;
 import it.sauronsoftware.cron4j.Scheduler;
-import lombok.Setter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +25,6 @@ public class DefaultScheduler {
     private CheckNodeProcess checkNodeProcess;
     private CheckJobProcess checkJobProcess;
     private RoundRobinTaskProcess roundRobinTaskProcess;
-    @Setter
     private SubtaskManager subtaskManager;
 
     public void scheduleTask(final Subtask subtask) {
@@ -60,5 +58,9 @@ public class DefaultScheduler {
     public void setRoundRobinTaskProcess(RoundRobinTaskProcess roundRobinTaskProcess) {
         this.roundRobinTaskProcess = roundRobinTaskProcess;
         schedulePool.submit(roundRobinTaskProcess);
+    }
+
+    public void setSubtaskManager(SubtaskManager subtaskManager) {
+        this.subtaskManager = subtaskManager;
     }
 }

@@ -12,8 +12,8 @@ import com.sf.collecat.manager.exception.validate.ValidateKafkaException;
 import com.sf.collecat.manager.exception.validate.ValidateSQLException;
 import com.sf.collecat.manager.schedule.DefaultScheduler;
 import com.sf.collecat.manager.util.Validator;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
@@ -29,9 +29,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @time 2016/6/27
  */
-@Slf4j
 public class TaskManager {
-    @Getter
+    private final static Logger log = LoggerFactory.getLogger(TaskManager.class);
+    public Map<Integer, Task> getTaskMap() {
+        return taskMap;
+    }
+
     private final Map<Integer, Task> taskMap = new ConcurrentHashMap<>();
     @Autowired
     private TaskMapper taskMapper;

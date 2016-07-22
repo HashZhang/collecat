@@ -12,7 +12,6 @@ import com.sf.collecat.manager.exception.validate.ValidateKafkaException;
 import com.sf.collecat.manager.exception.validate.ValidateSQLException;
 import com.sf.collecat.manager.manage.JobManager;
 import com.sf.collecat.manager.manage.TaskManager;
-import com.sf.collecat.manager.schedule.DefaultScheduler;
 import com.sf.collecat.manager.util.PropertyLoader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -20,7 +19,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**

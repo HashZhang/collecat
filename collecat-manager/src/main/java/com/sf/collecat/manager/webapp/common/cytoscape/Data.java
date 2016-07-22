@@ -1,8 +1,5 @@
 package com.sf.collecat.manager.webapp.common.cytoscape;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
 /**
@@ -11,31 +8,85 @@ import java.io.Serializable;
  * @date 2016/7/8
  */
 public class Data implements Serializable {
-    @Getter
-    @Setter
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFaveColor() {
+        return faveColor;
+    }
+
+    public void setFaveColor(String faveColor) {
+        this.faveColor = faveColor;
+    }
+
+    public String getFaveShape() {
+        return faveShape;
+    }
+
+    public void setFaveShape(String faveShape) {
+        this.faveShape = faveShape;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public Integer getStrength() {
+        return strength;
+    }
+
+    public void setStrength(Integer strength) {
+        this.strength = strength;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     private String id;
-    @Getter
-    @Setter
     private String name;
-    @Getter
-    @Setter
     private String faveColor;
-    @Getter
-    @Setter
     private String faveShape;
-    @Getter
-    @Setter
     private Integer weight;
-    @Getter
-    @Setter
     private String source;
-    @Getter
-    @Setter
     private String target;
-    @Getter
-    @Setter
     private Integer strength;
-    @Getter
-    @Setter
     private String label;
 }

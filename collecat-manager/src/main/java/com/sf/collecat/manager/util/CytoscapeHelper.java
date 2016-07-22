@@ -1,6 +1,5 @@
 package com.sf.collecat.manager.util;
 
-import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;

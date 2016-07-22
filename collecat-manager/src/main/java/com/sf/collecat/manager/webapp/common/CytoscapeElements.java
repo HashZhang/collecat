@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.sf.collecat.manager.webapp.common.cytoscape.Data;
 import com.sf.collecat.manager.webapp.common.cytoscape.Edge;
 import com.sf.collecat.manager.webapp.common.cytoscape.Node;
-import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -16,9 +15,7 @@ import java.util.List;
  * @date 2016/7/8
  */
 public class CytoscapeElements implements Serializable{
-    @Getter
     private final List<Node> nodes = new LinkedList<>();
-    @Getter
     private final List<Edge> edges = new LinkedList<>();
 
     public static void main(String[] args) {
@@ -53,5 +50,13 @@ public class CytoscapeElements implements Serializable{
         cytoscapeElements.getNodes().add(node);
 
         System.out.println(JSON.toJSONString(cytoscapeElements));
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    public List<Edge> getEdges() {
+        return edges;
     }
 }

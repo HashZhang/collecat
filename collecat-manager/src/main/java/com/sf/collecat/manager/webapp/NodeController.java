@@ -1,11 +1,10 @@
 package com.sf.collecat.manager.webapp;
 
-import com.sf.collecat.common.model.Job;
 import com.sf.collecat.common.model.Node;
-import com.sf.collecat.manager.exception.job.JobSearchException;
 import com.sf.collecat.manager.exception.node.NodeSearchException;
 import com.sf.collecat.manager.manage.NodeManager;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,9 +19,9 @@ import java.util.List;
  * @version 1.0.0
  * @date 2016/7/5
  */
-@Slf4j
 @Controller
 public class NodeController {
+    private final static Logger log = LoggerFactory.getLogger(NodeController.class);
     @Autowired
     private NodeManager nodeManager;
 
@@ -30,14 +29,14 @@ public class NodeController {
     public ModelAndView job(HttpServletRequest request, ModelMap model) {
         List<Node> nodes = null;
         String message = null;
-        try{
+        try {
             nodes = nodeManager.getAllNodesFromDB();
         } catch (NodeSearchException e) {
             log.error("", e);
             message = e.getMessage();
         }
-        model.addAttribute("allNodes",nodes);
-        model.addAttribute("message",message);
+        model.addAttribute("allNodes", nodes);
+        model.addAttribute("message", message);
         return new ModelAndView("/node/node");
     }
 }

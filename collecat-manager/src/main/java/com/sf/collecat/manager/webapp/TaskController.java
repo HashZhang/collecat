@@ -16,7 +16,8 @@ import com.sf.collecat.manager.manage.TaskManager;
 import com.sf.collecat.manager.util.CytoscapeHelper;
 import com.sf.collecat.manager.util.PropertyLoader;
 import com.sf.collecat.manager.webapp.common.CytoscapeElements;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -41,9 +42,9 @@ import java.util.Properties;
  * @version 1.0.0
  * @date 2016/7/1
  */
-@Slf4j
 @Controller
 public class TaskController {
+    private final static Logger log = LoggerFactory.getLogger(SubtaskController.class);
     @Autowired
     private TaskManager taskManager;
     @Autowired
@@ -123,6 +124,7 @@ public class TaskController {
         model.addAttribute("item", "task");
         return new ModelAndView("/common/modifiedSuccessfully");
     }
+
     @RequestMapping(value = "/task/start")
     public ModelAndView startTask(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         Task task = null;
@@ -130,8 +132,8 @@ public class TaskController {
             task = taskManager.getTask(Integer.parseInt(request.getParameter("taskId")));
             task.setIsActive(true);
             taskManager.modifyTask(task);
-        } catch (TaskSearchException|SubtaskAddOrUpdateException|TaskModifyException e) {
-            model.addAttribute("message", StrUtils.makeString("Cannot start Task:",e.getMessage()));
+        } catch (TaskSearchException | SubtaskAddOrUpdateException | TaskModifyException e) {
+            model.addAttribute("message", StrUtils.makeString("Cannot start Task:", e.getMessage()));
             model.addAttribute("task", task);
             return new ModelAndView("/task/displaySingle");
         }
@@ -148,8 +150,8 @@ public class TaskController {
             task = taskManager.getTask(Integer.parseInt(request.getParameter("taskId")));
             task.setIsActive(false);
             taskManager.modifyTask(task);
-        } catch (TaskSearchException|SubtaskAddOrUpdateException|TaskModifyException e) {
-            model.addAttribute("message", StrUtils.makeString("Cannot stop Task:",e.getMessage()));
+        } catch (TaskSearchException | SubtaskAddOrUpdateException | TaskModifyException e) {
+            model.addAttribute("message", StrUtils.makeString("Cannot stop Task:", e.getMessage()));
             model.addAttribute("task", task);
             return new ModelAndView("/task/displaySingle");
         }

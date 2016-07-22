@@ -42,7 +42,9 @@ public class DefaultMyCatSQLParser implements SQLParser {
     @Autowired
     private XMLSchemaLoader xmlSchemaLoader;
     @Value("${job.time.shift}")
-    private int TIME_SHIFT = 2;//服务器之间最大时间差
+    private int TIME_SHIFT = 0;//服务器之间最大时间差
+    @Value("${job.time.delay}")
+    private long TIME_DELAY = 0;//抽取时延
     public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private boolean intervalLT1S(Date date1, Date date2) {
@@ -78,13 +80,13 @@ public class DefaultMyCatSQLParser implements SQLParser {
             calendar.add(Calendar.SECOND, -TIME_SHIFT);
             lastDate = calendar.getTime();
             calendar.add(Calendar.SECOND, TIME_SHIFT);
-            while (calendar.getTime().getTime() < now) {
+            while (calendar.getTime().getTime() < (now - TIME_DELAY*1000L)) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, calendar.getTime());
                 jobList.add(job);
                 lastDate = calendar.getTime();
                 calendar.add(Calendar.SECOND, routineTime);
             }
-            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) > 1000L) {
+            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) > TIME_DELAY*1000L) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, lastTT);
                 jobList.add(job);
             }

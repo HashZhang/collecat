@@ -8,8 +8,8 @@ import com.sf.collecat.manager.exception.node.NodeAddException;
 import com.sf.collecat.manager.exception.node.NodeRemoveException;
 import com.sf.collecat.manager.exception.node.NodeSearchException;
 import com.sf.collecat.manager.zk.CuratorClient;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -22,14 +22,14 @@ import java.util.List;
  * @version 1.0.0
  * @time 2016/6/29
  */
-@Slf4j
 public class NodeManager {
+    private final static Logger log = LoggerFactory.getLogger(NodeManager.class);
     @Autowired
     private NodeMapper nodeMapper;
     @Autowired
     private CuratorClient curatorClient;
 
-    public void addNode(@NonNull String path, @NonNull String ip) throws NodeAddException {
+    public void addNode(String path, String ip) throws NodeAddException {
         String currentNode = path.substring(path.lastIndexOf("/") + 1);
         Node node = new Node();
         node.setCurrentNodeId(currentNode);
@@ -43,7 +43,7 @@ public class NodeManager {
         }
     }
 
-    public void removeNode(@NonNull String data) throws NodeRemoveException {
+    public void removeNode(String data) throws NodeRemoveException {
         try {
             int id = Integer.parseInt(data.substring(data.lastIndexOf(Constants.COMMON_SEPARATOR) + 1));
             nodeMapper.deleteByPrimaryKey(id);
@@ -52,7 +52,7 @@ public class NodeManager {
         }
     }
 
-    public void removeNode(@NonNull Node node) throws NodeRemoveException {
+    public void removeNode(Node node) throws NodeRemoveException {
         try {
             nodeMapper.deleteByPrimaryKey(node.getId());
         } catch (Exception e) {

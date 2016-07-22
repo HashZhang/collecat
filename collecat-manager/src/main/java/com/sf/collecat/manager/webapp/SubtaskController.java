@@ -1,16 +1,14 @@
 package com.sf.collecat.manager.webapp;
 
 import com.sf.collecat.common.model.Subtask;
-import com.sf.collecat.common.model.Task;
 import com.sf.collecat.common.utils.StrUtils;
 import com.sf.collecat.manager.exception.subtask.SubtaskAddOrUpdateException;
 import com.sf.collecat.manager.exception.subtask.SubtaskSearchException;
-import com.sf.collecat.manager.exception.task.TaskModifyException;
-import com.sf.collecat.manager.exception.task.TaskSearchException;
 import com.sf.collecat.manager.manage.JobManager;
 import com.sf.collecat.manager.manage.SubtaskManager;
 import com.sf.collecat.manager.manage.TaskManager;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,9 +26,9 @@ import java.util.Date;
  * @version 1.0.0
  * @date 2016/7/12
  */
-@Slf4j
 @Controller
 public class SubtaskController {
+    private final static Logger log = LoggerFactory.getLogger(SubtaskController.class);
     @Autowired
     private TaskManager taskManager;
     @Autowired
@@ -106,8 +103,8 @@ public class SubtaskController {
             subtask = subtaskManager.getSubtask(Integer.parseInt(request.getParameter("subtaskId")));
             subtask.setIsActive(true);
             subtaskManager.updateSubtask(subtask);
-        } catch (SubtaskAddOrUpdateException |SubtaskSearchException e) {
-            model.addAttribute("message", StrUtils.makeString("Cannot start subtask:",e.getMessage()));
+        } catch (SubtaskAddOrUpdateException | SubtaskSearchException e) {
+            model.addAttribute("message", StrUtils.makeString("Cannot start subtask:", e.getMessage()));
             model.addAttribute("subtask", subtask);
             return new ModelAndView("/task/displaySingle");
         }
@@ -124,8 +121,8 @@ public class SubtaskController {
             subtask = subtaskManager.getSubtask(Integer.parseInt(request.getParameter("subtaskId")));
             subtask.setIsActive(false);
             subtaskManager.updateSubtask(subtask);
-        } catch (SubtaskAddOrUpdateException |SubtaskSearchException e) {
-            model.addAttribute("message", StrUtils.makeString("Cannot stop subtask:",e.getMessage()));
+        } catch (SubtaskAddOrUpdateException | SubtaskSearchException e) {
+            model.addAttribute("message", StrUtils.makeString("Cannot stop subtask:", e.getMessage()));
             model.addAttribute("subtask", subtask);
             return new ModelAndView("/task/displaySingle");
         }
