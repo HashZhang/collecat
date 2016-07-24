@@ -77,8 +77,8 @@
 <script src="/collecat-manager/static/dist/js/demo.js"></script>
 <script src="/collecat-manager/static/dist/js/cytoscape.min.js"></script>
 
-<script src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
-<script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js"></script>
+<script src="/collecat-manager/static/dist/js/dagre.min.js"></script>
+<script src="/collecat-manager/static/dist/js/cytoscape-dagre.js"></script>
 <script>
     function allTask() {
         window.location.href = "/collecat-manager/task/all.do"

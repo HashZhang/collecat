@@ -54,6 +54,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
             return true;
         }
     }
+
     @Cacheable("JobCache")
     public List<Job> parse(Task task, Date lastTT) throws SQLSyntaxErrorException, ParserException {
         List<Job> jobList = new ArrayList<>();
@@ -80,13 +81,13 @@ public class DefaultMyCatSQLParser implements SQLParser {
             calendar.add(Calendar.SECOND, -TIME_SHIFT);
             lastDate = calendar.getTime();
             calendar.add(Calendar.SECOND, TIME_SHIFT);
-            while (calendar.getTime().getTime() < (now - TIME_DELAY*1000L)) {
+            while (calendar.getTime().getTime() < (now - TIME_DELAY * 1000L)) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, calendar.getTime());
                 jobList.add(job);
                 lastDate = calendar.getTime();
                 calendar.add(Calendar.SECOND, routineTime);
             }
-            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) > TIME_DELAY*1000L) {
+            if (lastDate.getTime() < lastTT.getTime() && (lastTT.getTime() - lastDate.getTime()) > TIME_DELAY * 1000L) {
                 Job job = getJob(table, task.getInitialSql(), task, stringBuilder.toString(), username, password, lastDate, lastTT);
                 jobList.add(job);
             }
@@ -97,7 +98,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
     @Override
     public Job parse(Subtask subtask) throws SQLSyntaxErrorException, ParserException {
         Date lastTime = subtask.getLastTime();
-        Date currTime = subtask.getCurrTime();
+        Date currTime = new Date(subtask.getCurrTime().getTime() - TIME_DELAY * 1000L);
         Date endTime = subtask.getEndTime();
         long routineTime = subtask.getRoutineTime();
         long scheduleTime = lastTime.getTime() + 1000 * routineTime;
@@ -190,6 +191,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
 
         job.setJobSql(SQLUtils.toMySqlString(statement));
     }
+
     public List<Subtask> parse(Task task) throws SQLSyntaxErrorException {
         List<Subtask> subtasks = new ArrayList<>();
         String table = getTable(task);

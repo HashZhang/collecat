@@ -88,6 +88,9 @@ public class CytoscapeHelper {
         } else if (noException) {
             data.setFaveColor(EXCEPTION_EDGE_COLOR);
             data.setLabel("Exception!");
+        } else if (subtask.getEndTime() == null) {
+            data.setFaveColor(NORMAL_EDGE_COLOR);
+            data.setLabel("Working!");
         } else if (subtask.getLastTime().getTime() >= subtask.getEndTime().getTime()) {
             data.setFaveColor(NORMAL_EDGE_COLOR);
             data.setLabel("Working!");

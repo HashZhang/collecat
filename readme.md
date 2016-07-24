@@ -17,3 +17,5 @@ Collecat-Manager将抽取任务抽象成了如下所示的主要三个元素：T
 Collecat-Manager根据Subtask，不断生成Job，注意，这里根据用户配置每个Job的SQL语句会被改写加上时间字段还有对应的时间段（这个Job生成机制之后会讲），发到ZK上的Job池。
 每个Collecat-node会从ZK上的每个Job池中抢夺Job，抢夺后，从ZK上读取Job信息，并执行Job的SQL语句写入对应的KafKa Topic（这个其实是在用户提交Task时，task里面配置的）中
 ![Collecat-Node工作图](./document/img/image3.png)
+##工作流程&使用说明：
+###1.部署
