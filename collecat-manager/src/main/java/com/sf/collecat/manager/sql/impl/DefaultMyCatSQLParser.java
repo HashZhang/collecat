@@ -24,6 +24,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLSyntaxErrorException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,10 +46,16 @@ public class DefaultMyCatSQLParser implements SQLParser {
     private int TIME_SHIFT = 0;//服务器之间最大时间差
     @Value("${job.time.delay}")
     private long TIME_DELAY = 0;//抽取时延
-    public final static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private static ThreadLocal<SimpleDateFormat> formatter = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+    };
 
     private boolean intervalLT1S(Date date1, Date date2) {
-        if (formatter.format(date1).equals(formatter.format(date2))) {
+        if (formatter.get().format(date1).equals(formatter.get().format(date2))) {
             return false;
         } else {
             return true;
@@ -143,6 +150,9 @@ public class DefaultMyCatSQLParser implements SQLParser {
         job.setTimeField(subtask.getTimeField());
         job.setTimeFieldStart(new Date(subtask.getLastTime().getTime() - TIME_SHIFT * 1000));
         job.setTimeFieldEnd(endTime);
+        if (!intervalLT1S(job.getTimeFieldStart(), job.getTimeFieldEnd())) {
+            return null;
+        }
         modifySQL(job, subtask.getInitialSql(), getTable(subtask), subtask, job.getTimeFieldStart(), job.getTimeFieldEnd());
         return job;
     }
@@ -161,8 +171,9 @@ public class DefaultMyCatSQLParser implements SQLParser {
 
     private void modifySQL(Job job, String sql, String table, Subtask subtask, Date start, Date end) {
         StringBuilder stringBuilder = new StringBuilder();
+
         stringBuilder.append("select * from ").append(table).append(" where ").append(subtask.getTimeField()).append("<'")
-                .append(formatter.format(end)).append("' and ").append(subtask.getTimeField()).append(">='").append(formatter.format(start))
+                .append(formatter.get().format(end)).append("' and ").append(subtask.getTimeField()).append(">='").append(formatter.get().format(start))
                 .append("' order by ").append(subtask.getTimeField());
         MySqlStatementParser parser1 = new MySqlStatementParser(stringBuilder.toString());
         SQLSelectStatement statement1 = (SQLSelectStatement) parser1.parseStatement();
@@ -288,7 +299,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
     private void modifySQL(Job job, String sql, String table, Task task, Date start, Date end) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("select * from ").append(table).append(" where ").append(task.getTimeField()).append("<'")
-                .append(formatter.format(end)).append("' and ").append(task.getTimeField()).append(">='").append(formatter.format(start))
+                .append(formatter.get().format(end)).append("' and ").append(task.getTimeField()).append(">='").append(formatter.get().format(start))
                 .append("' order by ").append(task.getTimeField());
         MySqlStatementParser parser1 = new MySqlStatementParser(stringBuilder.toString());
         SQLSelectStatement statement1 = (SQLSelectStatement) parser1.parseStatement();
