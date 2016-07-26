@@ -81,7 +81,7 @@
 <script src="/collecat-manager/static/dist/js/cytoscape-dagre.js"></script>
 <script>
     function allTask() {
-        window.location.href = "/collecat-manager/task/all.do"
+        window.location.href = "/collecat-manager/task.do"
     }
     function addTask() {
         window.location.href = "/collecat-manager/task/publish.do"

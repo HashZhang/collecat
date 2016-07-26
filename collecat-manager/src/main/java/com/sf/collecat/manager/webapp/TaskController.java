@@ -52,7 +52,7 @@ public class TaskController {
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
-    @RequestMapping("/task/all")
+    @RequestMapping("/task")
     public ModelAndView task(HttpServletRequest request, ModelMap model) {
         List<Task> tasks = null;
         String message = null;
@@ -268,7 +268,7 @@ public class TaskController {
         return new ModelAndView("/common/modifiedSuccessfully");
     }
 
-    @RequestMapping("/task")
+    @RequestMapping("/task/all")
     public ModelAndView taskDashBoard(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         CytoscapeElements cytoscapeElements = new CytoscapeElements();
         Map<Integer, Task> taskMap = taskManager.getTaskMap();

@@ -98,7 +98,7 @@ public class DefaultMyCatSQLParser implements SQLParser {
     @Override
     public Job parse(Subtask subtask) throws SQLSyntaxErrorException, ParserException {
         Date lastTime = subtask.getLastTime();
-        Date currTime = new Date(subtask.getCurrTime().getTime() - TIME_DELAY * 1000L);
+        Date currTime = new Date(subtask.getCurrTime().getTime() - TIME_DELAY * 1000L - TIME_SHIFT * 1000);
         Date endTime = subtask.getEndTime();
         long routineTime = subtask.getRoutineTime();
         long scheduleTime = lastTime.getTime() + 1000 * routineTime;

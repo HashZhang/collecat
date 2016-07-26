@@ -86,7 +86,7 @@
                                     "<td>" + task.getSchemaUsed() + "</td>" +
                                     "<td>" + task.getTimeField() + "</td>" +
                                     "<td>" + formatter1.format(task.getStartTime()) + "</td>" +
-                                    "<td>" + formatter1.format(task.getEndTime()) + "</td>" +
+                                    "<td>" + task.getEndTime() + "</td>" +
                                     "<td>" + task.getRoutineTime() + "</td>" +
                                     "<td>" + task.getAllocateRoutine() + "</td>" +
                                     "<td>" + task.getIsActive() + "</td>" +
@@ -157,7 +157,7 @@
         window.location.href = "/collecat-manager/task/publish.do"
     }
     function taskDashBoard() {
-        window.location.href = "/collecat-manager/task.do"
+        window.location.href = "/collecat-manager/task/all.do"
     }
     function batchAddTask() {
         window.location.href = "/collecat-manager/task/batchPublish.do"

@@ -38,7 +38,6 @@ public class JobController {
             log.error("", e);
             message = e.getMessage();
         }
-        System.out.println(jobs);
         model.addAttribute("allJobs", jobs);
         model.addAttribute("message", message);
         return new ModelAndView("/job/job");
