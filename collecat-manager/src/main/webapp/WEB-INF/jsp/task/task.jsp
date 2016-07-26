@@ -81,7 +81,7 @@
                             out.print("<tr>" +
                                     "<td><button onclick=\"modifyTask(" + task.getId() + ")\" type=\"button\" class=\"btn btn-block btn-primary\">修改</button>" +
                                     "<button onclick=\"removeTask(" + task.getId() + ")\" type=\"button\" class=\"btn btn-block btn-danger\">删除</button></td>" +
-                                    "<td>" + task.getId() + "</td>" +
+                                    "<td><a href=\"/collecat-manager/task/get.do?taskId="+ task.getId()+"\">" + task.getId() + "</a></td>" +
                                     "<td>" + task.getInitialSql() + "</td>" +
                                     "<td>" + task.getSchemaUsed() + "</td>" +
                                     "<td>" + task.getTimeField() + "</td>" +

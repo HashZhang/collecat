@@ -156,7 +156,7 @@
             "\t\t\t\t}, function(evt) {\n" +
             "\t\t\t\t\tvar node = evt.cyTarget;\n" +
             "if(node.id().indexOf(\"//\")<0)"+
-            "\t\t\t\t\twindow.location.href = \"./task/route.do?req=\" + node.id();\n" +
+            "\t\t\t\t\twindow.location.href = \"/collecat-manager/task/route.do?req=\" + node.id();\n" +
             "\t\t\t\t});\n" +
             "\n" +
             "\t\t\t});");

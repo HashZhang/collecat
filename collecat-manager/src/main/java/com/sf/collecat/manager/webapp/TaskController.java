@@ -269,7 +269,7 @@ public class TaskController {
     }
 
     @RequestMapping("/task/all")
-    public ModelAndView taskDashBoard(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+    public ModelAndView tasksDashBoard(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         CytoscapeElements cytoscapeElements = new CytoscapeElements();
         Map<Integer, Task> taskMap = taskManager.getTaskMap();
         for (Task task : taskMap.values()) {
@@ -285,4 +285,25 @@ public class TaskController {
         model.addAttribute("elements", cytoscapeElements);
         return new ModelAndView("/task/taskDashBoard");
     }
+
+    @RequestMapping("/task/get")
+    public ModelAndView taskDashBoard(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
+        Map<Integer, Task> taskMap = taskManager.getTaskMap();
+        Task task = taskMap.get(Integer.parseInt(request.getParameter("taskId")));
+        if(task == null){
+            return new ModelAndView("redirect:/task.do");
+        }
+        CytoscapeElements cytoscapeElements = new CytoscapeElements();
+        cytoscapeElements.getNodes().add(CytoscapeHelper.getNode(task));
+        Map<Integer, Subtask> subtaskHashMap = task.getSubtaskHashMap();
+        for (Subtask subtask : subtaskHashMap.values()) {
+            cytoscapeElements.getNodes().add(CytoscapeHelper.getNode(subtask));
+            cytoscapeElements.getEdges().add(CytoscapeHelper.getEdge(task, subtask));
+            cytoscapeElements.getNodes().add(CytoscapeHelper.getNode(subtask.getMysqlUrl()));
+            cytoscapeElements.getEdges().add(CytoscapeHelper.getEdge(subtask, subtask.getMysqlUrl(), jobManager.hasException(subtask)));
+        }
+        model.addAttribute("elements", cytoscapeElements);
+        return new ModelAndView("/task/taskDashBoard");
+    }
+
 }
