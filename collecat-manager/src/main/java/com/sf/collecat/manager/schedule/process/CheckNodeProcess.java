@@ -29,10 +29,6 @@ public class CheckNodeProcess implements Runnable {
             try {
                 nodeManager.checkNodes();
                 TimeUnit.SECONDS.sleep(1);
-            } catch (NodeSearchException e) {
-                log.error("", e);
-            } catch (NodeRemoveException e) {
-                log.error("", e);
             } catch (Throwable e) {
                 log.error("", e);
             }

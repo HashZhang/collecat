@@ -12,6 +12,9 @@ import com.sf.collecat.manager.sql.SQLParser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLSyntaxErrorException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,13 @@ public class SubtaskManager {
     private DefaultScheduler defaultScheduler;
     @Autowired
     private SQLParser sqlParser;
+
+    private static ThreadLocal<SimpleDateFormat> formatter = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        }
+    };
 
     public Subtask getSubtask(int subtaskId) throws SubtaskSearchException {
         try {
@@ -94,18 +104,21 @@ public class SubtaskManager {
     }
 
     public void removeSubTasksFromTask(Task task) throws SubtaskDeleteException {
-        try { List<Subtask> subtaskList = subtaskMapper.selectByTaskId(task.getId());
-        for (Subtask subtask : subtaskList) {
-            defaultScheduler.cancelTask(task.getSubtaskHashMap().get(subtask.getId()));
-            subtaskMapper.deleteByPrimaryKey(subtask.getId());
-        }} catch (Exception e) {
+        try {
+            List<Subtask> subtaskList = subtaskMapper.selectByTaskId(task.getId());
+            for (Subtask subtask : subtaskList) {
+                defaultScheduler.cancelTask(task.getSubtaskHashMap().get(subtask.getId()));
+                subtaskMapper.deleteByPrimaryKey(subtask.getId());
+            }
+        } catch (Exception e) {
             throw new SubtaskDeleteException(e);
         }
     }
 
     public void scheduleNow(Subtask subtask) throws SubtaskModifyException {
-        subtask.setCurrTime(new Date());
+        String format = formatter.get().format(new Date());
         try {
+            subtask.setCurrTime(formatter.get().parse(format));
             subtaskMapper.updateByPrimaryKey(subtask);
         } catch (Exception e) {
             throw new SubtaskModifyException(e);

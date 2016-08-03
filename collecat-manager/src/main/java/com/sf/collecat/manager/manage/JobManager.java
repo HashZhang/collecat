@@ -47,6 +47,10 @@ public class JobManager {
     private int jobPoolSize;
     private AtomicBoolean poolLock = new AtomicBoolean(false);
 
+    public List<Job> selectAllExceptionJob() {
+        return jobMapper.selectAllExceptionJob();
+    }
+
     public boolean hasException(Subtask subtask) {
         if (jobMapper.countExceptionJobsWithSubtaskId(subtask.getId()) > 0) {
             return true;
@@ -246,8 +250,8 @@ public class JobManager {
     public void resetJob(Job job) throws JobResetException {
         job.setStatus(Constants.JOB_INIT_VALUE);
         try {
-            jobMapper.updateByPrimaryKey(job);
             curatorClient.setData(StrUtils.getZKJobPath(job.getId()), Constants.JOB_INIT);
+            jobMapper.updateByPrimaryKey(job);
         } catch (Exception e) {
             throw new JobResetException(e);
         }

@@ -35,6 +35,7 @@
     <bean class="com.sf.collecat.manager.schedule.DefaultScheduler" id="defaultScheduler">
         <property name="checkNodeProcess" ref="checkNodeProcess"/>
         <property name="checkJobProcess" ref="checkJobProcess"/>
+        <property name="resetExceptionJobProcess" ref="resetExceptionJobProcess"/>
         <property name="roundRobinTaskProcess" ref="roundRobinTaskProcess"/>
         <property name="subtaskManager" ref="subtaskManager"/>
     </bean>

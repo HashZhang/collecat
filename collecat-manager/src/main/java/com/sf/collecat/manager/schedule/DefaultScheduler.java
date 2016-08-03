@@ -4,6 +4,7 @@ import com.sf.collecat.common.model.Subtask;
 import com.sf.collecat.manager.manage.SubtaskManager;
 import com.sf.collecat.manager.schedule.process.CheckJobProcess;
 import com.sf.collecat.manager.schedule.process.CheckNodeProcess;
+import com.sf.collecat.manager.schedule.process.ResetExceptionJobProcess;
 import com.sf.collecat.manager.schedule.process.RoundRobinTaskProcess;
 import it.sauronsoftware.cron4j.Scheduler;
 
@@ -22,8 +23,10 @@ public class DefaultScheduler {
     private ExecutorService updatePool = Executors.newFixedThreadPool(10);
     private ExecutorService checkPool1 = Executors.newSingleThreadExecutor();
     private ExecutorService checkPool2 = Executors.newSingleThreadExecutor();
+    private ExecutorService checkPool3 = Executors.newSingleThreadExecutor();
     private CheckNodeProcess checkNodeProcess;
     private CheckJobProcess checkJobProcess;
+    private ResetExceptionJobProcess resetExceptionJobProcess;
     private RoundRobinTaskProcess roundRobinTaskProcess;
     private SubtaskManager subtaskManager;
 
@@ -62,5 +65,10 @@ public class DefaultScheduler {
 
     public void setSubtaskManager(SubtaskManager subtaskManager) {
         this.subtaskManager = subtaskManager;
+    }
+
+    public void setResetExceptionJobProcess(ResetExceptionJobProcess resetExceptionJobProcess) {
+        this.resetExceptionJobProcess = resetExceptionJobProcess;
+        checkPool3.submit(resetExceptionJobProcess);
     }
 }
